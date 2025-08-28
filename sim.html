@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<!-- 96% chatgpt, 3% claude sonnet, 1% me just asking ai to write this line -->
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>Alt-Sim</title>
+  <meta name="description" content="Calculate base multiplier with stat recs."/>
+  <style>
+   /* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+:root {
+  --bg:#f9f9fb;
+  --text:#2e2e2e;
+  --label:#1a1a1a;
+  --primary:#3f51b5;
+  --secondary:#607d8b;
+  --danger:#f44336;
+  --border:#e6e9ef;
+  --radius:12px;
+  --shadow:0 4px 12px rgba(0,0,0,0.06);
+}
+body {
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* Container */
+.container {
+  max-width: 980px;
+  margin: 24px auto;
+  padding: 20px;
+}
+
+/* Form */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 20px;
+  margin-bottom: 16px;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+.form-group label {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #111;
+  letter-spacing: 0.3px;
+}
+
+/* Select */
+.input-wrap select {
+  font-size: 0.95rem;
+  height: 44px;
+  padding: 8px 36px 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: var(--shadow);
+  width: 100%;
+  color: #999;
+  transition: background 0.2s, opacity 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='gray'><path d='M4 6l4 4 4-4z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+.input-wrap select:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(63,81,181,0.2);
+}
+
+/* Input */
+.input-wrap input {
+  font-size: 0.95rem;
+  height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: var(--shadow);
+  width: 100%;
+  color: #999;
+  transition: background 0.2s, opacity 0.2s;
+}
+.input-wrap input:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(63,81,181,0.2);
+}
+
+/* Disabled state */
+.input-wrap select:disabled,
+.input-wrap input:disabled {
+  background: #f1f1f1;
+  color: #999;
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Buttons */
+.btn-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+.btn-row button {
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: #fff;
+  transition: opacity .2s ease;
+}
+#submitBtn { background: var(--primary); }
+#resetRekomenBtn { background: var(--secondary); }
+#resetAllBtn { background: var(--danger); }
+#submitBtn:disabled,
+#resetRekomenBtn:disabled,
+#resetAllBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Results */
+#hasil, #recommendations {
+  background: #fff;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  margin-top: 16px;
+  box-shadow: var(--shadow);
+}
+
+/* Recommendations Layout */
+#recommendations {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  padding: 0;
+  margin: 0;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+  background: #fff;
+}
+#recommendations table {
+  width: 100%;
+  border-collapse: collapse;
+  background: transparent;
+  border: none;
+  border-radius: inherit;
+  margin: 0;
+}
+#recommendations caption {
+  text-align: left;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 12px 14px;
+  background: #f5f6f8;
+  border-bottom: 1px solid var(--border);
+  border-radius: 8px 8px 0 0;
+}
+#recommendations th,
+#recommendations td {
+  padding: 10px;
+  border: 1px solid #eee;
+  text-align: center;
+  font-size: 0.9rem;
+}
+#recommendations th {
+  background: #f5f6f8;
+  font-weight: 600;
+  color: #444;
+}
+
+/* Factor arrows */
+#recommendations td span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+span.up::before {
+  content: "\25B2";
+  color: #4CAF50;
+  font-size: 0.55em;
+  margin-right: 1px;
+  position: relative;
+  top: 0.5px;
+}
+
+span.down::before {
+  content: "\25BC";
+  color: #2196F3;
+  font-size: 0.55em;
+  margin-right: 1px;
+  position: relative;
+  top: 0.5px;
+}
+
+span.neutral::before {
+  content: "\25A0";
+  color: #9E9E9E;
+  font-size: 0.45em;
+  margin-right: 1px;
+  position: relative;
+  top: 0.5px;
+}
+
+td.mult {
+  font-weight: bold;
+}
+
+td.delta {
+  color: #4CAF50;
+  font-weight: 500;
+}
+
+/* Snackbar */
+.snackbar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 16px;
+  background: rgba(20,20,20,0.9);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease;
+}
+.snackbar.show { opacity: 1; pointer-events: auto; }
+
+/* Utility */
+.hidden { display: none !important; }
+
+/* Responsive */
+@media (max-width: 800px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .form-group { margin-bottom: 0; }
+  .btn-row { flex-direction: column; }
+  #recommendations { grid-template-columns: 1fr; }
+}
+#multiplier-breakdown {
+  background: #f9f9fb; /* soft background */
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  color: #222; /* readable but not pure black */
+  font-family: Inter, system-ui, sans-serif;
+}
+
+/* header */
+#multiplier-breakdown > p:first-of-type {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+/* inline factor string */
+#multiplier-breakdown > p:nth-of-type(2) {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  background: #fff;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #e3e3e3;
+  font-variant-numeric: tabular-nums;
+  color: #222;
+}
+
+/* breakdown list */
+.factor-breakdown {
+  margin: 0;
+  padding: 0;       /* no indent for top-level */
+  list-style: none;
+  font-size: 0.93rem;
+  color: #222;
+}
+
+.factor-breakdown > li {
+  margin: 8px 0;
+  line-height: 1.4;
+  padding-left: 0;  /* top-level flush left */
+}
+
+/* nested list */
+.factor-breakdown li ul {
+  margin-top: 6px;
+  margin-left: 14px;     /* keep indent only for nested */
+  padding-left: 10px;
+  border-left: 2px solid #e9edf3; /* soft blue-gray */
+  list-style: none;
+  color: #555;
+  font-size: 0.9rem;
+  border-radius: 4px;
+}
+
+.factor-breakdown li ul li {
+  margin: 4px 0;
+  font-weight: 500;
+}
+
+/* neutral note */
+.factor-breakdown li ul li.note {
+  font-size: 0.85rem;
+  color: #777;
+  font-style: italic;
+}
+
+/* selected-empty indicator */
+.factor-breakdown > li span.neutral-flag {
+  color: #666;
+  font-weight: 500;
+  margin-left: 6px;
+  font-size: 0.9rem;
+  font-family: ui-monospace, monospace;
+}
+
+/* blockquote / disclaimer */
+#multiplier-breakdown blockquote.noted {
+  margin-top: 12px;
+  padding: 8px 10px;
+  border-left: 3px solid #e9edf3;
+  background: #f1f3f6;
+  color: #444;
+  font-size: 0.88rem;
+  border-radius: 6px;
+}
+  </style>
+ </head>
+ <body>
+  <div class="container">
+   <div class="form-row">
+    <div class="form-group">
+     <label for="penCritSelect" id="atkTypeLabel">
+      Attack Type
+     </label>
+     <div class="input-wrap">
+      <select id="penCritSelect">
+      </select>
+     </div>
+    </div>
+    <div class="form-group">
+     <label for="weaponSelect" id="weaponLabel">
+      Weapon Type
+     </label>
+     <div class="input-wrap">
+      <select id="weaponSelect">
+      </select>
+     </div>
+    </div>
+    <div class="form-group">
+     <label for="weaponElementSelect" id="wElemLabel">
+      Weapon Attribute
+     </label>
+     <div class="input-wrap">
+      <select id="weaponElementSelect">
+      </select>
+     </div>
+    </div>
+    <div class="form-group">
+     <label for="targetSizeSelect" id="tSizeLabel">
+      Target Size
+     </label>
+     <div class="input-wrap">
+      <select id="targetSizeSelect">
+      </select>
+     </div>
+    </div>
+    <div class="form-group">
+     <label for="targetRaceSelect" id="tRaceLabel">
+      Target Race
+     </label>
+     <div class="input-wrap">
+      <select id="targetRaceSelect">
+      </select>
+     </div>
+    </div>
+    <div class="form-group">
+     <label for="targetElementSelect" id="tAttrLabel">
+      Target Attribute
+     </label>
+     <div class="input-wrap">
+      <select id="targetElementSelect">
+      </select>
+     </div>
+    </div>
+   </div>
+   <div class="form-row">
+    <div class="form-group pen-group">
+     <label for="pen" id="penLabel">
+      Final P M PEN %
+     </label>
+     <div class="input-wrap">
+      <input disabled="" id="pen" min="1" placeholder="ur total converted raw pen + fpen..." type="number"/>
+     </div>
+    </div>
+    <div class="form-group crit-group">
+     <label for="crit" id="critLabel">
+      Critical DMG Bonus %
+     </label>
+     <div class="input-wrap">
+      <input disabled="" id="crit" min="1" placeholder="ur crit dmg bns..." type="number"/>
+     </div>
+    </div>
+    <div class="form-group">
+     <label for="dmg" id="dmgLabel">
+      Final P M DMG Bonus %
+     </label>
+     <div class="input-wrap">
+      <input id="dmg" min="1" placeholder="input your f. p/m dmg bns..." type="number"/>
+     </div>
+    </div>
+    <div class="form-group">
+     <label for="elemEnhance" id="elemEnhLabel">
+      Element Enhance %
+     </label>
+     <div class="input-wrap">
+      <input id="elemEnhance" min="1" type="number"/>
+     </div>
+    </div>
+    <div class="form-group">
+     <label for="sizeEnhance" id="sizeLabel">
+      DMG to Size %
+     </label>
+     <div class="input-wrap">
+      <input id="sizeEnhance" min="1" type="number"/>
+     </div>
+    </div>
+    <div class="form-group">
+     <label for="race" id="raceLabel">
+      DMG to Race %
+     </label>
+     <div class="input-wrap">
+      <input disabled="" id="race" min="1" type="number"/>
+     </div>
+    </div>
+    <div class="form-group">
+     <label for="attr" id="attrLabel">
+      DMG to Attribute %
+     </label>
+     <div class="input-wrap">
+      <input disabled="" id="attr" min="1" type="number"/>
+     </div>
+    </div>
+   </div>
+   <div class="btn-row">
+    <button id="submitBtn" type="button">
+     Calculate
+    </button>
+    <button disabled="" id="resetRekomenBtn" type="button">
+     Refresh Recommendations
+    </button>
+    <button disabled="" id="resetAllBtn" type="button">
+     Reset All
+    </button>
+   </div>
+   <div id="hasil">
+    Input your stats to see the result...
+   </div>
+   <div id="recommendations">
+    Balancing stat recommendations for a higher output multiplier.
+   </div>
+  </div>
+  <div aria-live="polite" class="snackbar" id="snackbar" role="status">
+  </div>
+  <script>
+   const elementCounter = {
+  Neutral:{Neutral:1,Fire:1,Water:1,Earth:1,Wind:1,Poison:1,Holy:1,
+           Shadow:1,Ghost:0.70,Undead:1},
+  Fire:{Neutral:1,Fire:0.25,Water:1,Earth:1.25,Wind:1,Poison:1,Holy:0.75,
+        Shadow:1,Ghost:1,Undead:1.125},
+  Water:{Neutral:1,Fire:1.25,Water:0.25,Earth:1,Wind:0.90,Poison:1,Holy:0.75,
+         Shadow:1,Ghost:1,Undead:1},
+  Earth:{Neutral:1,Fire:0.90,Water:1,Earth:0.25,Wind:1.25,Poison:1,Holy:0.75,
+         Shadow:1,Ghost:1,Undead:1},
+  Wind:{Neutral:1,Fire:1,Water:1.375,Earth:0.90,Wind:0.25,Poison:1,Holy:0.70,
+        Shadow:1,Ghost:1,Undead:1},
+  Poison:{Neutral:1,Fire:1.125,Water:1,Earth:1.125,Wind:1.125,Poison:0,Holy:0.75,
+          Shadow:0.50,Ghost:1,Undead:-0.25},
+  Holy:{Neutral:1,Fire:1,Water:1,Earth:1,Wind:1,Poison:1,Holy:0,
+        Shadow:1.375,Ghost:1,Undead:1.375},
+  Shadow:{Neutral:1.125,Fire:1,Water:1,Earth:1,Wind:1,Poison:0.50,Holy:1.375,
+          Shadow:0,Ghost:1,Undead:-0.25},
+  Ghost:{Neutral:0.90,Fire:1,Water:1,Earth:1,Wind:1,Poison:1,Holy:0.75,
+         Shadow:0.75,Ghost:1.375,Undead:1},
+  Undead:{Neutral:1,Fire:1,Water:1,Earth:1,Wind:1,Poison:0.50,Holy:1.375,
+          Shadow:0,Ghost:1.25,Undead:0}
+};
+
+
+const weaponSizeModifier = {
+  "Empty Handed":{Large:0.5,Medium:0.5,Small:0.5},
+  "One-Handed Sword":{Large:0.75,Medium:1,Small:0.75},
+  "Two-Handed Sword":{Large:1,Medium:0.75,Small:0.75},
+  "Two-Handed Spear":{Large:1,Medium:0.75,Small:0.75},
+  "Dagger":{Large:0.75,Medium:0.75,Small:1},
+  "Katar":{Large:0.75,Medium:1,Small:0.75},
+  "Light Knuckle":{Large:0.75,Medium:0.75,Small:1},
+  "Heavy Knuckle":{Large:1,Medium:0.75,Small:0.75},
+  "GS":{Large:1,Medium:1,Small:1},
+  "Ninja Sword":{Large:1,Medium:0.75,Small:0.75},
+  "Huuma Shuriken":{Large:1,Medium:1,Small:1},
+  "Tome":{Large:0.75,Medium:1,Small:1},
+  "Book":{Large:1,Medium:1,Small:1},
+  "Two-Handed Rod":{Large:1,Medium:1,Small:1},
+  "One-Handed Rod":{Large:1,Medium:1,Small:1},
+  "Mace":{Large:1,Medium:0.75,Small:0.75},
+  "One-Handed Axe":{Large:0.75,Medium:0.75,Small:0.75},
+  "Two-Handed Axe":{Large:0.5,Medium:0.75,Small:0.75},
+  "Bow":{Large:0.75,Medium:1,Small:1},
+  "Instrument":{Large:0.75,Medium:1,Small:0.75},
+  "Whip":{Large:0.75,Medium:1,Small:0.75}
+};
+
+
+const raceTypes = [
+  "Angel","Demon","Formless","Insect","Fish",
+  "Demi-Human","Undead","Dragon","Plant","Brute"
+];
+
+
+const els = {
+  atkType: document.getElementById('penCritSelect'),
+  weapon: document.getElementById('weaponSelect'),
+  wElem: document.getElementById('weaponElementSelect'),
+  tSize: document.getElementById('targetSizeSelect'),
+  tRace: document.getElementById('targetRaceSelect'),
+  tAttr: document.getElementById('targetElementSelect'),
+  atkTypeLabel: document.getElementById('atkTypeLabel'),
+  weaponLabel: document.getElementById('weaponLabel'),
+  wElemLabel: document.getElementById('wElemLabel'),
+  tSizeLabel: document.getElementById('tSizeLabel'),
+  tRaceLabel: document.getElementById('tRaceLabel'),
+  tAttrLabel: document.getElementById('tAttrLabel'),
+  pen: document.getElementById('pen'),
+  crit: document.getElementById('crit'),
+  dmg: document.getElementById('dmg'),
+  elemEnh: document.getElementById('elemEnhance'),
+  sizeEnh: document.getElementById('sizeEnhance'),
+  race: document.getElementById('race'),
+  attr: document.getElementById('attr'),
+  penLabel: document.getElementById('penLabel'),
+  critLabel: document.getElementById('critLabel'),
+  dmgLabel: document.getElementById('dmgLabel'),
+  elemEnhLabel: document.getElementById('elemEnhLabel'),
+  sizeLabel: document.getElementById('sizeLabel'),
+  raceLabel: document.getElementById('raceLabel'),
+  attrLabel: document.getElementById('attrLabel'),
+  hasil: document.getElementById('hasil'),
+  rec: document.getElementById('recommendations'),
+  submit: document.getElementById('submitBtn'),
+  resetRek: document.getElementById('resetRekomenBtn'),
+  resetAll: document.getElementById('resetAllBtn'),
+  snackbar: document.getElementById('snackbar')
+};
+
+
+function isEmpty(v) {
+  return v === null || v === undefined || v === '';
+}
+function clearNumeric(el) {
+  if (el) el.value = '';
+}
+function scrollAndFocus(el, msg) {
+  showSnack(msg);
+  const top = el.getBoundingClientRect().top + window.scrollY - 80;
+  window.scrollTo({ top, behavior: 'smooth' });
+  if (!el.disabled) el.focus({ preventScroll: true });
+  return false;
+}
+let snackTimer = null;
+function showSnack(text) {
+  let sb = document.getElementById('snackbar');
+
+  sb.textContent = text;
+  if (snackTimer) clearTimeout(snackTimer);
+  sb.classList.add('show');
+  snackTimer = setTimeout(() => sb.classList.remove('show'), 3000);
+}
+function normalizeInput(el) {
+  if (!el) return;
+  let v = el.value.trim();
+
+  if (v.includes('.')) {
+    showSnack("No decimals.");
+    el.value = '';
+    return;
+  }
+
+  if (!/^\d*$/.test(v)) {
+    showSnack("Numbers only.");
+    el.value = '';
+    return;
+  }
+
+  if (/^0\d+/.test(v)) {
+    showSnack("No leading zeros.");
+    el.value = String(Number(v));
+    return;
+  }
+
+  if (v === '' || v === '0') {
+    showSnack("Min value is 1.");
+    el.value = '';
+    return;
+  }
+
+  el.value = v;
+}
+
+
+function getWeaponSizeMod(weapon, size) {
+  const map = weaponSizeModifier[weapon];
+  if (!map) {
+    return 1.0;
+  }
+  return map[size] ?? 1.0;
+}
+
+function getElemCounter(welem, tElem) {
+  const map = elementCounter[welem] || elementCounter['Neutral'];
+  return (tElem ? (map[tElem] ?? 1.0) : (map['Neutral'] ?? 1.0));
+}
+
+function calcAttackFactor(type, pen, crit) {
+  if (type === 'pen') return (pen >= 150 ? pen*2 - 150 : pen || 0) / 100;
+  if (type === 'crit') return (crit || 0) / 100;
+  return 0;
+}
+function computeMultiplier() {
+  const atkType = els.atkType.value;
+  const penVal = Number(els.pen.value) || 0;
+  const critVal = Number(els.crit.value) || 0;
+  const dmgVal = Number(els.dmg.value) || 0;
+  const sizeEnhVal = Number(els.sizeEnh.value) || 0;
+  const elemEnhVal = Number(els.elemEnh.value) || 0;
+  const raceVal = Number(els.race.value) || 0;
+  const attrVal = Number(els.attr.value) || 0;
+
+  const sizeMod = getWeaponSizeMod(els.weapon.value, els.tSize.value);
+  const elemCtr = getElemCounter(els.wElem.value, els.tAttr.value);
+  const atkF = calcAttackFactor(atkType, penVal, critVal);
+  
+  const mult = (1 + atkF) *
+    (1 + dmgVal / 100) *
+    (sizeMod + sizeEnhVal / 100) *
+    (elemCtr + elemEnhVal / 100) *
+    (1 + (els.tAttr.value ? attrVal / 100 : 0)) *
+    (1 + (els.tRace.value ? raceVal / 100 : 0));
+
+  return { atkType, penVal, critVal, dmgVal, sizeEnhVal, elemEnhVal, raceVal, attrVal, mult };
+}
+
+
+const TABLE_CONFIG = {
+  
+  jitter: 0.5,
+  randomMode: 'clamp',
+  
+  centerScale: 0.6,
+  
+  raceAttrCap: 480,
+  
+  bias: { main: 1.2, dmg: 1.0, elem: 0.95, size: 0.9, race: 0.8, attr: 0.8 },
+  
+  
+  cats: [
+    { label: '<8%',    min: 1.00, max: 1.08 },
+    { label: '10-20%', min: 1.10, max: 1.20 },
+    { label: '20-30%', min: 1.20, max: 1.30 },
+    { label: '50-100%',min: 1.50, max: 2.00 }
+  ]
+};
+
+
+function calculateWeights({ includeRace, includeAttr, baseMain, baseDmg, baseElem, baseSize, baseRace, baseAttr }) {
+  const B = TABLE_CONFIG.bias;
+  const s1 = (v) => Math.max(Number(v) || 0, 0);
+  
+  const rawMain = s1(baseMain) * B.main;
+  const rawDmg = s1(baseDmg) * B.dmg;
+  const rawElem = s1(baseElem) * B.elem;
+  const rawSize = s1(baseSize) * B.size;
+  const maxRaw = Math.max(rawMain, rawDmg, rawElem, rawSize, 1);
+  const nMain = rawMain / maxRaw;
+  const nDmg = rawDmg / maxRaw;
+  const nElem = rawElem / maxRaw;
+  const nSize = rawSize / maxRaw;
+  const coreSum = nMain + nDmg + nElem + nSize || 1;
+  const coreShare = (includeRace || includeAttr) ? 0.8 : 1.0;
+  const addShare = 1 - coreShare;
+  const w = {
+    main: (nMain / coreSum) * coreShare,
+    dmg: (nDmg / coreSum) * coreShare,
+    elem: (nElem / coreSum) * coreShare,
+    size: (nSize / coreSum) * coreShare,
+    race: 0,
+    attr: 0
+  };
+  const raceAvailable = includeRace && baseRace < TABLE_CONFIG.raceAttrCap;
+  const attrAvailable = includeAttr && baseAttr < TABLE_CONFIG.raceAttrCap;
+  
+  if (raceAvailable && attrAvailable) {
+    const rSum = s1(baseRace) + s1(baseAttr);
+    w.race = (s1(baseRace) / rSum) * addShare;
+    w.attr = (s1(baseAttr) / rSum) * addShare;
+  } else if (raceAvailable) {
+    w.race = addShare;
+  } else if (attrAvailable) {
+    w.attr = addShare;
+  } else if (includeRace || includeAttr) {
+    w.main += (nMain / coreSum) * addShare;
+    w.dmg += (nDmg / coreSum) * addShare;
+    w.elem += (nElem / coreSum) * addShare;
+    w.size += (nSize / coreSum) * addShare;
+  }
+  
+  let totalW = Object.values(w).reduce((s, x) => s + (x || 0), 0) || 1;
+  for (const k in w) w[k] = w[k] / totalW;
+  
+  return w;
+}
+
+
+
+function generateRecommendations(state) {
+  const base = state.mult;
+  const recRoot = els.rec;
+  recRoot.innerHTML = '';
+
+  const includeRace = !!els.tRace.value;
+  const includeAttr = !!els.tAttr.value;
+  const isPen = state.atkType === 'pen';
+
+  
+  const s1 = (v)=>Math.max(Number(v)||0,0);
+  const randAround = (val, j = TABLE_CONFIG.jitter) => {
+    const v = Number(val) || 0;
+    const mode = TABLE_CONFIG.randomMode;
+    
+    if (mode === "clamp") {
+      const delta = (Math.random() * 2 - 1) * j;
+      const maxClamp = Math.min(0.6 * j, 0.3);
+      const clamped = Math.max(Math.min(delta, maxClamp), -maxClamp);
+      return Math.max(0, v * (1 + clamped));
+    }
+    
+    if (mode === "normal") {
+      let u = 0, v2 = 0;
+      while (u === 0) u = Math.random();
+      while (v2 === 0) v2 = Math.random();
+      const num = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v2);
+      return Math.max(0, v * (1 + num * j * 0.5));
+    }
+    
+    const delta = (Math.random() * 2 - 1) * j;
+    return Math.max(0, v * (1 + delta));
+  };
+
+  const renderFactorCell = (val, baseVal)=>{
+    const rounded = Math.round(val), baseRounded = Math.round(baseVal);
+    let cls = 'neutral'; if (rounded >= baseRounded+6) cls='up'; else if (rounded <= baseRounded-6) cls='down';
+    const span = document.createElement('span'); span.className=cls; span.textContent=rounded;
+    const td = document.createElement('td'); td.appendChild(span); return td;
+  };
+
+  
+  const sizeMod = getWeaponSizeMod(els.weapon.value, els.tSize.value);
+  const elemCtr = getElemCounter(els.wElem.value, els.tAttr.value);
+
+  
+  const basePen  = state.penVal||0;
+  const baseCrit = state.critVal||0;
+  const baseMain = isPen ? basePen : baseCrit;
+  const baseDmg  = state.dmgVal||0;
+  const baseSize = state.sizeEnhVal||0;
+  const baseElem = state.elemEnhVal||0;
+  const baseAttr = includeAttr ? (state.attrVal||0) : 0;
+  const baseRace = includeRace ? (state.raceVal||0) : 0;
+
+  
+  const W = calculateWeights({ includeRace, includeAttr, baseMain, baseDmg, baseElem, baseSize, baseRace, baseAttr });
+  const CS = TABLE_CONFIG.centerScale;
+  const center = (base, w)=> s1(base) * (1 + w*CS);
+
+  const cMain = center(baseMain, W.main);
+  const cDmg  = center(baseDmg,  W.dmg);
+  const cElem = center(baseElem, W.elem);
+  const cSize = center(baseSize, W.size);
+  const cAttr = includeAttr ? Math.min(center(baseAttr, W.attr), TABLE_CONFIG.raceAttrCap) : 0;
+  const cRace = includeRace ? Math.min(center(baseRace, W.race), TABLE_CONFIG.raceAttrCap) : 0;
+
+  for (const cat of TABLE_CONFIG.cats) {
+    const tbl = document.createElement('table'); tbl.className='recommend-table';
+    const cap = document.createElement('caption'); cap.textContent='Category '+cat.label; tbl.appendChild(cap);
+    const trHead = document.createElement('tr');
+    const headers = [isPen?'PEN':'CRIT','F P/M BNS','Element','Size']; if (includeRace) headers.push('Race'); if (includeAttr) headers.push('Attribute'); headers.push('Multiplier','\u2206');
+    headers.forEach(h=>{ const th=document.createElement('th'); th.textContent=h; trHead.appendChild(th); });
+    tbl.appendChild(trHead);
+
+    const tbody = document.createElement('tbody');
+    const seen = new Set(), seenDelta = new Set();
+    const seenMain = new Set(), seenDmg = new Set(), seenElem = new Set(),
+          seenSize = new Set(), seenAttr = new Set(), seenRace = new Set();
+    const rows = [];
+    const MAX_ATTEMPTS = 2000;
+    let attempts = 0, jitter = TABLE_CONFIG.jitter;
+
+    while (rows.length < 5 && attempts < MAX_ATTEMPTS) {
+      attempts++;
+
+      let rPen = basePen, rCrit = baseCrit;
+      if (isPen) { rPen = randAround(cMain, jitter); } else { rCrit = randAround(cMain, jitter); }
+      const rDmg  = randAround(cDmg,  jitter);
+      const rElem = randAround(cElem, jitter);
+      const rSize = randAround(cSize, jitter);
+      let rAttr = 0, rRace = 0;
+
+      if (includeAttr && includeRace) {
+        const userTotal = Math.max(baseRace, 0) + Math.max(baseAttr, 0) || 1;
+        const total = randAround(userTotal, jitter);
+        const rSum = (baseRace + baseAttr) || 1;
+        const baseRatio = (rSum ? (baseRace / rSum) : 0.5);
+        const noise = (Math.random() * 0.2) - 0.1;
+        let ratio = Math.min(Math.max(baseRatio + noise, 0.3), 0.7);
+        let rRaceTmp = Math.min(total * ratio, TABLE_CONFIG.raceAttrCap);
+        let rAttrTmp = Math.min(total * (1 - ratio), TABLE_CONFIG.raceAttrCap);
+        const assigned = rRaceTmp + rAttrTmp;
+        if (assigned < total) {
+          let leftover = total - assigned;
+          const capLeftRace = TABLE_CONFIG.raceAttrCap - rRaceTmp;
+          const capLeftAttr = TABLE_CONFIG.raceAttrCap - rAttrTmp;
+          const raceExtra = Math.min(leftover * (baseRatio || 0.5), capLeftRace);
+          rRaceTmp += raceExtra;
+          leftover -= raceExtra;
+          const attrExtra = Math.min(leftover, capLeftAttr);
+          rAttrTmp += attrExtra;
+          leftover -= attrExtra;
+        }
+        rRace = rRaceTmp; rAttr = rAttrTmp;
+      } else if (includeRace) {
+        rRace = Math.min(randAround(cRace, jitter), TABLE_CONFIG.raceAttrCap);
+      } else if (includeAttr) {
+        rAttr = Math.min(randAround(cAttr, jitter), TABLE_CONFIG.raceAttrCap);
+      } 
+      const atkF = calcAttackFactor(isPen?'pen':'crit', rPen, rCrit);
+      const newMult = (1 + atkF) *
+        (1 + rDmg/100) *
+        (sizeMod + rSize/100) *
+        (elemCtr + rElem/100) *
+        (1 + (includeRace ? rRace/100 : 0)) *
+        (1 + (includeAttr ? rAttr/100 : 0));
+      if (newMult <= base) continue;
+      const ratio = newMult / Math.max(base, 1e-9);
+      if (ratio < cat.min || ratio > cat.max) continue;
+
+      const mainVal = Math.round(isPen ? rPen : rCrit);
+      const dmgVal  = Math.round(rDmg);
+      const elemVal = Math.round(rElem);
+      const sizeVal = Math.round(rSize);
+      const raceVal = includeRace ? Math.round(rRace) : null;
+      const attrVal = includeAttr ? Math.round(rAttr) : null;
+      const key = [mainVal,dmgVal,elemVal,sizeVal,raceVal||'-',attrVal||'-'].join('|');
+      if (seen.has(key)) continue;
+      if (seenMain.has(mainVal)) continue;
+      if (seenDmg.has(dmgVal)) continue;
+      if (seenElem.has(elemVal)) continue;
+      if (seenSize.has(sizeVal)) continue;
+      if (includeAttr && seenAttr.has(attrVal)) continue;
+      if (includeRace && seenRace.has(raceVal)) continue;
+
+      const deltaPct = ((newMult - base)/base)*100;
+      const deltaKey = Number(deltaPct.toFixed(1));
+      if (seenDelta.has(deltaKey)) continue;
+
+      seen.add(key); seenDelta.add(deltaKey);
+      seenMain.add(mainVal); seenDmg.add(dmgVal); seenElem.add(elemVal); seenSize.add(sizeVal);
+      if (includeAttr) seenAttr.add(attrVal);
+      if (includeRace) seenRace.add(raceVal);
+
+      rows.push({ main: mainVal, dmg: dmgVal, elem: elemVal, size: sizeVal,
+        attr: attrVal, race: raceVal, newMult, deltaPct });
+
+      if (rows.length < 5 && attempts % 800 === 0) {
+        jitter = Math.min(jitter + 0.1, 0.9);
+      }
+    }
+
+    rows.sort((a,b)=> b.deltaPct-a.deltaPct || b.newMult-a.newMult || b.main-a.main);
+
+    if (rows.length) {
+      for (const row of rows) {
+        const tr = document.createElement('tr');
+        tr.appendChild(renderFactorCell(row.main, baseMain));
+        tr.appendChild(renderFactorCell(row.dmg,  baseDmg));
+        tr.appendChild(renderFactorCell(row.elem, baseElem));
+        tr.appendChild(renderFactorCell(row.size, baseSize));
+        if (includeRace) tr.appendChild(renderFactorCell(row.race, baseRace));
+        if (includeAttr) tr.appendChild(renderFactorCell(row.attr, baseAttr));
+        const tdMult = document.createElement('td'); tdMult.className='mult';  tdMult.textContent='x'+row.newMult.toFixed(2); tr.appendChild(tdMult);
+        const tdDelta= document.createElement('td'); tdDelta.className='delta'; tdDelta.textContent='+'+row.deltaPct.toFixed(1)+'%'; tr.appendChild(tdDelta);
+        tbody.appendChild(tr);
+      }
+    } else {
+      const tr = document.createElement('tr'); const td = document.createElement('td');
+      td.colSpan = headers.length; td.textContent = 'No combination found'; tr.appendChild(td); tbody.appendChild(tr);
+    }
+    tbl.appendChild(tbody);
+    const wrap = document.createElement('div'); wrap.className='table-wrapper'; wrap.appendChild(tbl); recRoot.appendChild(wrap);
+  }
+  showSnack('Recommendations updated');
+}
+
+let resultShown = false;
+function onDropdownChange(e) {
+  if (resultShown) return;
+  const id = e?.target?.id; if (!id) return;
+  if (id==='penCritSelect'){clearNumeric(els.pen);clearNumeric(els.crit);updateAtkUI();}
+  if (id==='targetRaceSelect') clearNumeric(els.race);
+  if (id==='targetElementSelect') clearNumeric(els.attr);
+  updateDynamicUI();
+}
+function updateAtkUI() {
+  const atkType=els.atkType.value;
+  const penGroup=document.querySelector('.form-group.pen-group');
+  const critGroup=document.querySelector('.form-group.crit-group');
+  if(penGroup&&critGroup){penGroup.classList.add('hidden');critGroup.classList.add('hidden');}
+  if(atkType==='pen'){if(penGroup)penGroup.classList.remove('hidden');
+    els.pen.disabled=false;els.crit.disabled=true;els.crit.value='';}
+  else if(atkType==='crit'){if(critGroup)critGroup.classList.remove('hidden');
+    els.crit.disabled=false;els.pen.disabled=true;els.pen.value='';}
+  else{els.pen.disabled=true;els.crit.disabled=true;els.pen.value='';els.crit.value='';}
+}
+function updateDynamicUI() {
+  
+  if (els.tRace.value) {
+    els.race.disabled = false;
+    els.raceLabel.textContent = 'DMG to ' + els.tRace.value + ' %';
+    els.race.placeholder = 'input ur dmg to '+els.tRace.value+'...';
+  } else {
+    els.race.disabled = true;
+    els.raceLabel.textContent = 'DMG to Race %';
+    els.race.placeholder = 'Select target race first';
+    els.race.value = '';
+  }
+  
+  
+  if (els.tAttr.value) {
+    els.attr.disabled = false;
+    els.attrLabel.textContent = 'DMG to ' + els.tAttr.value + ' %';
+    els.attr.placeholder = 'input ur dmg to '+els.tAttr.value+' attr mob...';
+  } else {
+    els.attr.disabled = true;
+    els.attrLabel.textContent = 'DMG to Attribute %';
+    els.attr.placeholder = 'Select target attribute first';
+    els.attr.value = '';
+  }
+  
+  
+  if (els.wElem.value) {
+    els.elemEnh.disabled = false;
+    els.elemEnhLabel.textContent = els.wElem.value + ' Enhance %';
+    els.elemEnh.placeholder = 'input ur '+els.wElem.value+' enhance...';
+  } else {
+    els.elemEnh.disabled = true;
+    els.elemEnhLabel.textContent = 'Element Enhance %';
+    els.elemEnh.placeholder = 'Select weapon attribute first';
+    els.elemEnh.value = '';
+  }
+  
+  
+  
+  if (els.tSize.value) {
+    els.sizeEnh.disabled = false;
+    els.sizeLabel.textContent = 'DMG to ' + els.tSize.value + ' %';
+    els.sizeEnh.placeholder = 'input ur dmg to '+els.tSize.value+'...';
+  } else {
+    els.sizeEnh.disabled = true;
+    els.sizeLabel.textContent = 'DMG to Size %';
+    els.sizeEnh.placeholder = 'Select target size first';
+    els.sizeEnh.value = '';
+  }
+}
+function validateRequired() {
+  const dropdowns=[{el:els.atkType,label:'Attack Type'},{el:els.weapon,label:'Weapon Type'},
+    {el:els.wElem,label:'Weapon Attribute'},{el:els.tSize,label:'Target Size'}];
+  for(const f of dropdowns){if(!f.el)continue;if(isEmpty(f.el.value))return scrollAndFocus(f.el,`Please fill ${f.label}`);}
+  if(!els.race.disabled && isEmpty(els.tRace.value)) return scrollAndFocus(els.tRace,'Please fill Target Race');
+  if(!els.attr.disabled && isEmpty(els.tAttr.value)) return scrollAndFocus(els.tAttr,'Please fill Target Attribute');
+  const atk=(els.atkType.value||'').toLowerCase();
+  if(atk==='pen'&&isEmpty(els.pen.value)) return scrollAndFocus(els.pen,'Please fill Final P M PEN %');
+  if(atk==='crit'&&isEmpty(els.crit.value)) return scrollAndFocus(els.crit,'Please fill Critical DMG Bonus %');
+  const inputs=[{el:els.dmg,label:'Final P M DMG Bonus %'},{el:els.elemEnh,label:'Element Enhance %'},
+    {el:els.sizeEnh,label:'DMG to Size %'},{el:els.race,label:'DMG to Race %',optional:true},
+    {el:els.attr,label:'DMG to Attribute %',optional:true}];
+  for(const f of inputs){if(!f.el)continue;if(f.optional&&f.el.disabled)continue;
+    if(isEmpty(f.el.value))return scrollAndFocus(f.el,`Please fill ${f.label}`);}
+  return true;
+}
+function processCalculation() {
+  if (!validateRequired()) return;
+  const state = computeMultiplier();
+  const isPen = state.atkType === 'pen';
+  const atkF = calcAttackFactor(isPen ? 'pen' : 'crit', state.penVal, state.critVal);
+
+  const sizeMod = getWeaponSizeMod(els.weapon.value, els.tSize.value);
+  const elemCtr = getElemCounter(els.wElem.value, els.tAttr.value);
+
+  const includeRace = !!els.tRace.value;
+  const includeAttr = !!els.tAttr.value;
+
+  const list = [
+    { key: 'main', label: (isPen ? 'Type (PEN)' : 'Type (CRIT)'), val: isPen ? state.penVal : state.critVal, mult: 1 + atkF },
+    { key: 'dmg', label: 'Final P/M DMG BNS', val: state.dmgVal, mult: 1 + state.dmgVal / 100 },
+    { key: 'elem', label: 'Element', val: state.elemEnhVal, mult: elemCtr + state.elemEnhVal / 100, extra: `counter ${elemCtr.toFixed(2)}` },
+    { key: 'size', label: 'Size', val: state.sizeEnhVal, mult: sizeMod + state.sizeEnhVal / 100, extra: `mod ${sizeMod.toFixed(2)}` },
+    { key: 'race', label: 'Race', val: state.raceVal, mult: 1 + state.raceVal / 100, show: includeRace },
+    { key: 'attr', label: 'Attribute', val: state.attrVal, mult: 1 + state.attrVal / 100, show: includeAttr }
+  ];
+
+els.hasil.innerHTML = `<div id="multiplier-breakdown" class="multiplier-breakdown">
+  <ul class="factor-breakdown">
+    ${
+      list.map(f => {
+        if (f.show === false) {
+          return `<li>${f.label}: &#215;1.00 (not selected)</li>`;
+        }
+        if (f.key === 'main') {
+          let html = `${f.label}: ${f.val} &#8594; &#215;${f.mult.toFixed(2)}`;
+          if (isPen && state.penVal >= 150) {
+            const effPercent = state.penVal * 2 - 150;
+            html += `<ul><li>PEN ≥ 150 Special Rule ((2 x ${state.penVal}) - 150)<br/>${effPercent} &#8594; &#215;${f.mult.toFixed(2)}</li></ul>`;
+          }
+          return `<li>${html}</li>`;
+        }
+        if (f.key === 'elem') {
+          let note = '';
+          if (!els.tAttr.value) {
+            note = `<li>Tools assume target Neutral if youre not targeting any attribute.</li>`;
+          }
+          return `<li>${f.label}: ${els.wElem.value || 'Neutral'} vs ${els.tAttr.value || 'Neutral'}
+                    <ul>
+                      <li>Counter: ${elemCtr.toFixed(2)}</li>
+                      <li>${els.wElem.value} Enhance: ${f.val}</li>
+                      <li>${elemCtr.toFixed(2)} + ${(f.val/100).toFixed(2)} &#8594; &#215;${f.mult.toFixed(2)}</li>
+                      ${note}
+                    </ul>
+                  </li>`;
+        }
+        if (f.key === 'size') {
+          return `<li>${f.label}: ${els.weapon.value} vs ${els.tSize.value}
+                    <ul>
+                      <li>Modifier: ${sizeMod.toFixed(2)}</li>
+                      <li>${els.tSize.value} Enhance: ${f.val}</li>
+                      <li>${sizeMod.toFixed(2)} + ${(f.val/100).toFixed(2)} &#8594; &#215;${f.mult.toFixed(2)}</li>
+                    </ul>
+                  </li>`;
+        }
+        return `<li>${f.label}: ${f.val} &#8594; &#215;${f.mult.toFixed(2)}</li>`;
+      }).join('')
+    }
+  </ul>
+  <p>your final base multiplier:</p>
+  <p>
+    1 ${
+      list.map(f => {
+        if (f.show === false) {
+          return `&#215; 1.00 (${f.label.toLowerCase()} not selected)`;
+        }
+        return `&#215; ${f.mult.toFixed(2)}`;
+      }).join(' ')
+    }
+    = &#215;${state.mult.toFixed(2)}
+  </p>
+  <blockquote class="noted">
+    Only base multipliers! Real output depends on class, skills, buffs, and more.<br/>
+    More accurate? Just use job sims.
+  </blockquote>
+  <blockquote class="noted">In the table, an upward arrow means higher than your stat, a square means roughly equal (±6%), and a downward arrow means lower.
+</blockquote></div>
+`;
+
+  generateRecommendations(state);
+  resultShown = true;
+  els.submit.disabled = true;
+  els.resetRek.disabled = false;
+  els.resetAll.disabled = false;
+  lockInputs();
+}
+
+function resetRecommendations(){
+  if(!resultShown)return;
+  const state=computeMultiplier();
+  generateRecommendations(state);
+}
+function resetAll() {
+  if(!confirm('Reset all data'))return;
+  document.querySelectorAll('input').forEach(i=>i.value='');
+  document.querySelectorAll('select').forEach(s=>s.selectedIndex=0);
+  resultShown=false;
+  els.hasil.textContent='Input your stats to see the result...';
+  els.rec.textContent='Balancing stat recommendations for a higher output multiplier.';
+  els.submit.disabled=false;els.resetRek.disabled=true;els.resetAll.disabled=true;
+  unlockInputs();updateAtkUI();updateDynamicUI();
+}
+function lockInputs() {
+  document.querySelectorAll('.input-wrap').forEach(w => {
+    const el = w.querySelector('select,input');
+    if (!el) return;
+    el.disabled = true;
+    w.addEventListener('click', showLockedSnack);
+    w.addEventListener('touchstart', showLockedSnack);
+  });
+}
+
+function unlockInputs() {
+  document.querySelectorAll('.input-wrap').forEach(w => {
+    const el = w.querySelector('select,input');
+    if (!el) return;
+    el.disabled = false;
+    w.removeEventListener('click', showLockedSnack);
+    w.removeEventListener('touchstart', showLockedSnack);
+  });
+}
+function showLockedSnack(e) {
+  if (resultShown) {
+    showSnack('Inputs locked, reset first');
+    if (e && typeof e.preventDefault === 'function' && e.cancelable) {
+      e.preventDefault();
+    }
+  }
+}
+function fillDropdowns() {
+  const atkSel=els.atkType;atkSel.innerHTML='<option value="">Select Attack Type</option>'+
+    '<option value="pen">P/M Penetration</option><option value="crit">Critical</option>';
+  const wSel=els.weapon;wSel.innerHTML='<option value="">Select Weapon</option>'+
+    Object.keys(weaponSizeModifier).map(w=>`<option value="${w}">${w}</option>`).join('');
+  const weSel=els.wElem;weSel.innerHTML='<option value="">Select Attribute</option>'+
+    Object.keys(elementCounter).map(a=>`<option value="${a}">${a}</option>`).join('');
+  const tSizeSel=els.tSize;tSizeSel.innerHTML='<option value="">Select Target Size</option>'+
+    '<option value="Small">Small</option><option value="Medium">Medium</option><option value="Large">Large</option>';
+  const tRaceSel=els.tRace;
+  tRaceSel.innerHTML='<option value="">Select Target Race (none)</option>'+
+    raceTypes.map(r=>`<option value="${r}">${r}</option>`).join('');
+
+  const tAttrSel=els.tAttr;
+  tAttrSel.innerHTML='<option value="">Select Target Attribute (none)</option>'+
+    Object.keys(elementCounter).map(a=>`<option value="${a}">${a}</option>`).join('');
+}
+function bindEvents() {
+  fillDropdowns();
+  els.submit.addEventListener('click', processCalculation);
+  els.resetRek.addEventListener('click', resetRecommendations);
+  els.resetAll.addEventListener('click', resetAll);
+
+  [
+    'penCritSelect','weaponSelect','weaponElementSelect',
+    'targetSizeSelect','targetRaceSelect','targetElementSelect'
+  ].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.addEventListener('change', onDropdownChange);
+  });
+}
+
+
+document.addEventListener('DOMContentLoaded',()=>{
+  bindEvents();
+  updateAtkUI();
+  updateDynamicUI();
+  document.querySelectorAll('input[type=number]').forEach(el=>{
+    el.addEventListener('blur',()=>normalizeInput(el));
+  });
+});
+  </script>
+  <script>
+   function testCalc({
+  type="pen",       
+  weapon="",        
+  tSize="",         
+  tRace="",         
+  pen=0,            
+  crit=0,           
+  dmg=0,            
+  elemEnh=0,        
+  sizeEnh=0,        
+  wElem="",         
+  tAttr="",         
+  racedmg=0,        
+  attrdmg=0         
+} = {}) {
+
+  const atkF = calcAttackFactor(type, pen, crit);
+  const sizeMod = getWeaponSizeMod(weapon, tSize);
+  const elemCtr = getElemCounter(wElem, tAttr);
+
+  const factors = [];
+
+  if (pen || crit) factors.push(`Atk Factor (${type}): x${(1+atkF).toFixed(2)}`);
+  if (dmg) factors.push(`DMG Bonus: x${(1 + dmg/100).toFixed(2)}`);
+  if (sizeEnh || sizeMod !== 1) factors.push(`Size: x${(sizeMod + sizeEnh/100).toFixed(2)}`);
+  if (elemEnh || elemCtr !== 1) factors.push(`Element: x${(elemCtr + elemEnh/100).toFixed(2)}`);
+  if (attrdmg && tAttr) factors.push(`DMG to vs ${tAttr}: x${(1 + attrdmg/100).toFixed(2)}`);
+  if (racedmg && tRace) factors.push(`DMG to ${tRace}: x${(1 + racedmg/100).toFixed(2)}`);
+
+  const mult = (1 + atkF) *
+    (1 + dmg / 100) *
+    (sizeMod + sizeEnh / 100) *
+    (elemCtr + elemEnh / 100) *
+    (1 + (tAttr ? attrdmg / 100 : 0)) *
+    (1 + (tRace ? racedmg / 100 : 0));
+
+  console.log("==================================");
+  console.log("Test Run");
+  console.log("==================================");
+  if (weapon) console.log(`Weapon: ${weapon}`);
+  if (wElem) console.log(`Weapon Elem: ${wElem}`);
+  if (tAttr) console.log(`Target Attr: ${tAttr}`);
+  if (tRace) console.log(`Target Race: ${tRace}`);
+  if (tSize) console.log(`Target Size: ${tSize}`);
+  console.log("----------------------------------");
+  factors.forEach(f => console.log(f));
+  console.log("----------------------------------");
+  console.log(`Final Multiplier: x${mult.toFixed(2)}`);
+  console.log("==================================");
+
+  return mult;
+}
+  </script>
+ </body>
+</html>
