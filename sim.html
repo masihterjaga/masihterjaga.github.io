@@ -336,6 +336,14 @@ from { opacity: 0; transform: translateY(20px); }
 to { opacity: 1; transform: translateY(0); }
 }
 </style>
+<!-- script async src="https://www.googletagmanager.com/gtag/js?id=G-5XWWWBSH8P"></script -->
+<!--script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5XWWWBSH8P');
+</script-->
 <script>
   (function() {
 
@@ -671,7 +679,7 @@ const isAllowed =
   <div id="hasil">Input stats to see the result...</div>
 
   <div id="recommendations">
-    Randomize stat for a higher output multiplier.
+    Recommended stat allocations will show up here. This tool randomizes your stats to find the best combination for higher output.
   </div>
   <div class="footer"><i>Have an issue?</i><br/>
   Silja [Odin-Nastia] <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 512 512"><path fill="#5865F2" d="M105 0h302c57.928.155 104.845 47.072 105 104.996V407c-.155 57.926-47.072 104.844-104.996 104.998L105 512C47.074 511.844.156 464.926.002 407.003L0 105C.156 47.072 47.074.155 104.997 0H105z"/><g data-name=""><g data-name="Discord Logos"><path fill="#fff" fill-rule="nonzero" d="M368.896 153.381a269.506 269.506 0 00-67.118-20.637 186.88 186.88 0 00-8.57 17.475 250.337 250.337 0 00-37.247-2.8c-12.447 0-24.955.946-37.25 2.776-2.511-5.927-5.427-11.804-8.592-17.454a271.73 271.73 0 00-67.133 20.681c-42.479 62.841-53.991 124.112-48.235 184.513a270.622 270.622 0 0082.308 41.312c6.637-8.959 12.582-18.497 17.63-28.423a173.808 173.808 0 01-27.772-13.253c2.328-1.688 4.605-3.427 6.805-5.117 25.726 12.083 53.836 18.385 82.277 18.385 28.442 0 56.551-6.302 82.279-18.387 2.226 1.817 4.503 3.557 6.805 5.117a175.002 175.002 0 01-27.823 13.289 197.847 197.847 0 0017.631 28.4 269.513 269.513 0 0082.363-41.305l-.007.007c6.754-70.045-11.538-130.753-48.351-184.579zM201.968 300.789c-16.04 0-29.292-14.557-29.292-32.465s12.791-32.592 29.241-32.592 29.599 14.684 29.318 32.592c-.282 17.908-12.919 32.465-29.267 32.465zm108.062 0c-16.066 0-29.267-14.557-29.267-32.465s12.791-32.592 29.267-32.592c16.475 0 29.522 14.684 29.241 32.592-.281 17.908-12.894 32.465-29.241 32.465z" data-name="Discord Logo - Large - White"/></g></g></svg>sanditama#7047</div>
@@ -970,13 +978,13 @@ function computeMultiplier() {
   };
 }
 const TABLE_CONFIG = {
-  jitter: 0.4,
+  jitter: 0.3,
   randomMode: 'clamp',
-  centerScale: 0.4,
+  centerScale: 0.5,
   raceAttrCap: 480,
-  bias: { main: 1, dmg: 1.2, elem: 0.9, size: 0.9, race: 0.8, attr: 0.8 },
+  bias: { main: 1.2, dmg: 1, elem: 0.9, size: 0.9, race: 0.8, attr: 0.8 },
   cats: [
-    { label: '<8%',    min: 1.00, max: 1.08 },
+    { label: '0-8%',    min: 1.00, max: 1.08 },
     { label: '10-20%', min: 1.10, max: 1.20 },
     { label: '20-30%', min: 1.20, max: 1.30 },
     { label: '50-100%',min: 1.50, max: 2.00 }
@@ -1090,7 +1098,7 @@ function generateRecommendations(state) {
   const cRace = includeRace ? Math.min(center(baseRace, W.race), TABLE_CONFIG.raceAttrCap) : 0;
   for (const cat of TABLE_CONFIG.cats) {
     const tbl = document.createElement('table'); tbl.className='recommend-table';
-    const cap = document.createElement('caption'); cap.textContent='Category '+cat.label; tbl.appendChild(cap);
+    const cap = document.createElement('caption'); cap.textContent='Increases '+cat.label; tbl.appendChild(cap);
     const trHead = document.createElement('tr');
     const headers = [isPen?'PEN':'CRIT','P/M BO','Element','Size'];
     if (includeRace) headers.push('Race');
@@ -1103,7 +1111,7 @@ function generateRecommendations(state) {
     const seenMain = new Set(), seenDmg = new Set(), seenElem = new Set(),
           seenSize = new Set(), seenAttr = new Set(), seenRace = new Set();
     const rows = [];
-    const MAX_ATTEMPTS = 1200;
+    const MAX_ATTEMPTS = 600;
     let attempts = 0, jitter = TABLE_CONFIG.jitter;
     while (rows.length < 5 && attempts < MAX_ATTEMPTS) {
       attempts++;
@@ -1179,7 +1187,7 @@ function generateRecommendations(state) {
       if (includeRace) seenRace.add(raceVal);
       rows.push({ main: mainVal, dmg: dmgVal, elem: elemVal, size: sizeVal,
         attr: attrVal, race: raceVal, newMult, deltaPct });
-      if (rows.length < 5 && attempts % 800 === 0) {
+      if (rows.length < 5 && attempts % 200 === 0) {
         jitter = Math.min(jitter + 0.1, 0.9);
       }
     }
@@ -1445,7 +1453,7 @@ function renderMultiplierBreakdown(state, list, elemCtr, sizeMod, isPen) {
       li.textContent = `Race: ${raceLabel}`;
       const ulSub = document.createElement('ul');
       const liRaw = document.createElement('li');
-      liRaw.textContent = `Race Bonus: ${f.val}`;
+      liRaw.textContent = `DMG to ${raceLabel}: ${f.val}`;
       ulSub.appendChild(liRaw);
       const liRes = document.createElement('li');
       liRes.textContent = `1.00 + (${f.val} / 100) → ×${f.mult.toFixed(2)}`;
@@ -1459,7 +1467,7 @@ function renderMultiplierBreakdown(state, list, elemCtr, sizeMod, isPen) {
       li.textContent = `Attribute: ${attrLabel}`;
       const ulSub = document.createElement('ul');
       const liRaw = document.createElement('li');
-      liRaw.textContent = `Attribute Bonus: ${f.val}`;
+      liRaw.textContent = `DMG to ${attrLabel} Attribute: ${f.val}`;
       ulSub.appendChild(liRaw);
       const liRes = document.createElement('li');
       liRes.textContent = `1.00 + (${f.val} / 100) → ×${f.mult.toFixed(2)}`;
@@ -1484,6 +1492,10 @@ function renderMultiplierBreakdown(state, list, elemCtr, sizeMod, isPen) {
   breakdown += ` = ×${state.mult.toFixed(2)}`;
   p2.textContent = breakdown;
   container.appendChild(p2);
+  const bq1 = document.createElement('blockquote');
+  bq1.className = "noted";
+  bq1.textContent = "Only base multipliers! Real output depends on class, skills, buffs, and more. More accurate? Just use job sims.";
+  container.appendChild(bq1);
   const DEF_SWAP_OPTIONS = [
     { key: "0def", label: "Dummy (0 DEF)" },
     { key: "130boss", label: "Avg. 130 BOSS" },
@@ -1540,10 +1552,10 @@ if (!els.tDef.dataset.swapBound) {
   });
   els.tDef.dataset.swapBound = '1';
 }
-  const bq1 = document.createElement('blockquote');
-  bq1.className = "noted";
-  bq1.textContent = "Only base multipliers! Real output depends on class, skills, buffs, and more. More accurate? Just use job sims.";
-  container.appendChild(bq1);
+  const bq3 = document.createElement('blockquote');
+  bq3.className = "noted";
+  bq3.textContent = "DEF target’s not accurate yet, we’re still collecting boss data for better averages!";
+  container.appendChild(bq3);
   const bq2 = document.createElement('blockquote');
   bq2.className = "noted";
   bq2.textContent = "In the table, an upward arrow means higher than your stat, a square means roughly equal (±6%), and a downward arrow means lower.";
