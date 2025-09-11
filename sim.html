@@ -533,11 +533,12 @@ const isAllowed =
 <ol>
   <li><strong>Dropdowns</strong>
     <ul>
-      <li>Pick <strong>Attack Type</strong>, <strong>Weapon</strong>, and <strong>Weapon Attribute</strong>.</li>
-      <li>For <strong>Target Boss</strong>:
+      <li>Set <strong>Attack Type</strong>, <strong>Weapon</strong>, and <strong>Weapon Attribute</strong>.</li>
+      <li>For <strong>MVP/MINI</strong>:
         <ul>
-          <li>Choosing a specific MVP/Mini will auto-lock its size, race, and element. <em>(Example: Phreeoni = Large / Brute / Neutral. The fields stay fixed and you’ll need to fill the related numbers.)</em></li>
-          <li>Choosing an <strong>Average Lv.</strong> boss leaves race and element open. You can skip or set manually.</li>
+          <li>Selecting a specific MVP/Mini will auto-lock its size, race, and attribute. <em>(Example: Phreeoni = Large / Brute / Neutral. The fields stay fixed and you’ll need to fill the related numbers.)</em></li>
+          <li>Selecting an <strong>Average Lv.</strong> can skip or set target race/attribute manually.</li>
+          <li><em>If you don’t have race and/or attribute enchants, better go with Average Boss and skip those.</em></li>
         </ul>
       </li>
     </ul>
@@ -546,20 +547,20 @@ const isAllowed =
   <li><strong>Stat Inputs</strong>
     <ul>
       <li>Enter your stats exactly as shown in game.</li>
-      <li>Don’t type “%”.</li>
+      <li>Only numbers, don’t type “%”.</li>
       <li>Decimals are fine. <em>(Example: 888.88)</em></li>
     </ul>
   </li>
   
   <li><strong>Calculate</strong>
     <ul>
-      <li>Once everything is filled, press <strong>Calculate</strong>.</li>
+      <li>Once everything is filled, hit <strong>Calculate</strong>.</li>
     </ul>
   </li>
   
   <li><strong>Results</strong>
     <ul>
-      <li>You’ll see your multiplier and a breakdown of your stats.</li>
+      <li>You’ll see base multiplier and a breakdown of your stats.</li>
     </ul>
   </li>
   
@@ -1591,7 +1592,7 @@ function renderMultiplierBreakdown(state, list, elemCtr, sizeMod, isPen) {
     createBreakdownItems(),
     h("hr", {class: "separ"}),
 h("p", {}, [
-  "Your base multiplier to ",
+  "Your multiplier to ",
   h("i", {}, [
     [tSizeEl.value, tRaceEl.value, tAttrEl.value]
     .filter(function(v) { return v; })
