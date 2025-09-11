@@ -119,6 +119,12 @@ td.delta{color:#4CAF50;font-weight:500}
   margin-top:12px;padding:8px 10px;border-left:3px solid #e9edf3;background:#f1f3f6;
   color:#444;font-size:.88rem;border-radius:6px
 }
+hr.separ {
+  margin: 10px auto 8px;
+  border: none;
+  height: 2px;
+  background-color: #ddd;
+}
 
 .breakdown-swap-wrapper{display:flex;align-items:center;gap:8px;margin:12px 0}
 .breakdown-swap-wrapper label{font-size:14px;color:#444;font-weight:500;white-space:nowrap}
@@ -126,7 +132,7 @@ td.delta{color:#4CAF50;font-weight:500}
   appearance:none;-webkit-appearance:none;-moz-appearance:none;
   background:#fff url("data:image/svg+xml;utf8,<svg fill='%23777' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 10px center/16px;
   border:1px solid #ccc;border-radius:6px;padding:6px 32px 6px 12px;font-size:14px;font-family:inherit;
-  cursor:pointer;outline:none;transition:all .2s ease;width:180px;max-width:100%;
+  cursor:pointer;outline:none;transition:all .2s ease;width:180px;max-width:50%;
   text-overflow:ellipsis;white-space:nowrap;overflow:hidden
 }
 .breakdown-swap:hover{border-color:#666}
@@ -193,7 +199,7 @@ td.delta{color:#4CAF50;font-weight:500}
   margin-top: 20px;
   font-size: 11px;
 }
-.footer svg {
+svg {
   display: inline-block;
   margin: 0 2px -2px 0;
 }
@@ -208,12 +214,14 @@ button, a, input, .snackbar, .sticky-btn, .card, summary::after {
 #version {
 margin-bottom: 20px;
 font-size: 11px;
+display: flex;
+justify-content: space-between;
 }
-#version button {
+#version button, #version a {
 font-family: monospace;
 font-weight: bolder;
 font-size: 11px;
-text-decoration: underline dotted;
+text-decoration: none;
 outline: none;
 border: 0;
 background: none;
@@ -328,6 +336,15 @@ cursor: pointer;
 #log .changelog {
 max-width: 80%;
 max-height: 500px;
+}
+.breakdown-swap-wrapper {
+  justify-content: space-between;
+}
+.breakdown-swap-wrapper label{
+  max-width: 35%;
+}
+.breakdown-swap{
+  max-width: 60%;
 }
 }
 
@@ -504,7 +521,9 @@ const isAllowed =
  <body>
 <div class="container">
 <div id="version">
-  <p>[<button id="openLog" type="button">Changelog</button>] <i>v1.0.8 - Aug 31, 25</i></p>
+  <p><a href="https://discord.gg/9j2WnTAnMu" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 512 512"><path fill="#5865F2" d="M105 0h302c57.928.155 104.845 47.072 105 104.996V407c-.155 57.926-47.072 104.844-104.996 104.998L105 512C47.074 511.844.156 464.926.002 407.003L0 105C.156 47.072 47.074.155 104.997 0H105z"/><g data-name=""><g data-name="Discord Logos"><path fill="#fff" fill-rule="nonzero" d="M368.896 153.381a269.506 269.506 0 00-67.118-20.637 186.88 186.88 0 00-8.57 17.475 250.337 250.337 0 00-37.247-2.8c-12.447 0-24.955.946-37.25 2.776-2.511-5.927-5.427-11.804-8.592-17.454a271.73 271.73 0 00-67.133 20.681c-42.479 62.841-53.991 124.112-48.235 184.513a270.622 270.622 0 0082.308 41.312c6.637-8.959 12.582-18.497 17.63-28.423a173.808 173.808 0 01-27.772-13.253c2.328-1.688 4.605-3.427 6.805-5.117 25.726 12.083 53.836 18.385 82.277 18.385 28.442 0 56.551-6.302 82.279-18.387 2.226 1.817 4.503 3.557 6.805 5.117a175.002 175.002 0 01-27.823 13.289 197.847 197.847 0 0017.631 28.4 269.513 269.513 0 0082.363-41.305l-.007.007c6.754-70.045-11.538-130.753-48.351-184.579zM201.968 300.789c-16.04 0-29.292-14.557-29.292-32.465s12.791-32.592 29.241-32.592 29.599 14.684 29.318 32.592c-.282 17.908-12.919 32.465-29.267 32.465zm108.062 0c-16.066 0-29.267-14.557-29.267-32.465s12.791-32.592 29.267-32.592c16.475 0 29.522 14.684 29.241 32.592-.281 17.908-12.894 32.465-29.241 32.465z" data-name="Discord Logo - Large - White"/></g></g></svg>Ragnarok X University</a></p>
+  <p><i>v1.0.9</i> [<button id="openLog" type="button">Changelog</button>]</p>
+
 </div>
 <details id="howto">
   <summary>
@@ -512,57 +531,57 @@ const isAllowed =
   </summary>
   <div class="body">
 <ol>
-  <li>Set All Required Dropdowns
+  <li><strong>Dropdowns</strong>
     <ul>
-      <li>Attack Type → choose <b>PEN</b> or <b>CRIT</b></li>
-      <li>Weapon Type → select your weapon</li>
-      <li>Weapon Attribute → select element</li>
-      <li>Target DEF → choose <b>0 / 130 / 140 / 150</b></li>
-      <li>Target Size → select <b>Small / Medium / Large</b></li>
-      <li>(Optional) Target Race / Target Attribute</li>
-    </ul>
-    <ul>
-      <li><i>Note: If Race or Attribute is chosen, the related % input becomes mandatory.</i></li>
-    </ul>
-  </li>
-
-  <li>Enter Your Stats
-    <ul>
-      <li>If PEN → Final P/M PEN %</li>
-      <li>If CRIT → Critical DMG Bonus %</li>
-      <li>Final P/M DMG Bonus %</li>
-      <li>Element Enhance %</li>
-      <li>Size Enhance %</li>
-      <li>Race % / Attribute % (required if you selected Race/Attribute)</li>
-    </ul>
-  </li>
-
-  <li>Calculate
-    <ul>
-      <li>Click <b>Calculate</b></li>
-      <li>All inputs will lock after calculation</li>
-      <li>Validation prevents:
+      <li>Pick <strong>Attack Type</strong>, <strong>Weapon</strong>, and <strong>Weapon Attribute</strong>.</li>
+      <li>For <strong>Target Boss</strong>:
         <ul>
-          <li>PEN ≤ target DEF</li>
-          <li>Final P/M DMG Bonus ≤ target damage reduction</li>
+          <li>Choosing a specific MVP/Mini will auto-lock its size, race, and element. <em>(Example: Phreeoni = Large / Brute / Neutral. The fields stay fixed and you’ll need to fill the related numbers.)</em></li>
+          <li>Choosing an <strong>Average Lv.</strong> boss leaves race and element open. You can skip or set manually.</li>
         </ul>
       </li>
     </ul>
   </li>
-
-  <li>Multiplier Breakdown
+  
+  <li><strong>Stat Inputs</strong>
     <ul>
-      <li>Shows all factor contributions</li>
-      <li>Can <b>Swap Target DEF</b> to see the difference</li>
-      <li>Only base multipliers are shown (skills, buffs, etc. not included)</li>
+      <li>Enter your stats exactly as shown in game.</li>
+      <li>Don’t type “%”.</li>
+      <li>Decimals are fine. <em>(Example: 888.88)</em></li>
     </ul>
   </li>
-
-  <li>Recommendations
+  
+  <li><strong>Calculate</strong>
     <ul>
-      <li>Generates stat combos that give higher multipliers</li>
-      <li><b>Refresh Recommendations</b> → re-roll random suggestions</li>
-      <li><b>Reset All</b> → clear all inputs and unlock fields</li>
+      <li>Once everything is filled, press <strong>Calculate</strong>.</li>
+    </ul>
+  </li>
+  
+  <li><strong>Results</strong>
+    <ul>
+      <li>You’ll see your multiplier and a breakdown of your stats.</li>
+    </ul>
+  </li>
+  
+  <li><strong>Swap Target</strong>
+    <ul>
+      <li>Lets you switch bosses without starting over.</li>
+      <li>If the new boss has different size/race/element, the inputs unlock and you’ll need to re-enter the numbers.</li>
+      <li>If it’s the same type, the calc updates instantly.</li>
+      <li><em>Examples:</em>
+        <ul>
+          <li>Phreeoni 140 → Deviling 150 → re-enter Medium / Demon / Shadow.</li>
+          <li>Phreeoni 140 → Phreeoni 150 → auto updates, no changes.</li>
+          <li>Phreeoni 150 → Avg. 140 → race/element are cleared, treated as average Large boss Lv.140.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  
+  <li><strong>Recommendations</strong>
+    <ul>
+      <li>At the bottom you’ll see a table with recommended stat allocations.</li>
+      <li>Hit <strong>Refresh</strong> to roll new sets until you see one you can actually use.</li>
     </ul>
   </li>
 </ol>
@@ -575,28 +594,24 @@ const isAllowed =
         <select id="penCritSelect"></select>
       </div>
     </div>
-
-    <div class="form-group">
-      <label for="targetDefSelect" id="tDefLabel">Target Defense</label>
-      <div class="input-wrap">
-        <select id="targetDefSelect"></select>
-      </div>
-    </div>
-
     <div class="form-group">
       <label for="weaponSelect" id="weaponLabel">Weapon Type</label>
       <div class="input-wrap">
         <select id="weaponSelect"></select>
       </div>
     </div>
-
     <div class="form-group">
       <label for="weaponElementSelect" id="wElemLabel">Weapon Attribute</label>
       <div class="input-wrap">
         <select id="weaponElementSelect"></select>
       </div>
     </div>
-
+    <div class="form-group">
+      <label for="targetDefSelect" id="tDefLabel">MVP/MINI</label>
+      <div class="input-wrap">
+        <select id="targetDefSelect"></select>
+      </div>
+    </div>
     <div class="form-group">
       <label for="targetSizeSelect" id="tSizeLabel">Target Size</label>
       <div class="input-wrap">
@@ -690,14 +705,43 @@ const isAllowed =
     <div class="header-log"><span class="close" id="closeLog">&times;</span>
     <h2>Changelog</h2>
     </div>
-<div class="version">
+    <div class="version">
   <h3>[Unreleased]</h3>
   <ul>
     <li>MINIGAME!</li>
   </ul>
 </div>
-
-<div class="version">
+    <div class="version">
+  <h3>[v1.0.9] - Sept 11, 2025</h3>
+  <ul>
+    <li><span class="sub-cats">Added</span>
+      <ul>
+        <li>MVP/MINI Lvl. 140 & Lvl. 150
+          <ul>
+            <li>Including DEF stats</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><span class="sub-cats">Updated</span>
+      <ul>
+        <li>"How to Use"</li>
+      </ul>
+    </li>
+    <li><span class="sub-cats">Improved</span>
+      <ul>
+        <li>Breakdown results</li>
+        <li>Balancing stats logic</li>
+        <li>Swap Boss
+          <ul>
+            <li>Can edit stats when swapping to another boss</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    <div class="version">
   <h3>[v1.0.8] - Aug 31, 2025</h3>
   <ul>
     <li><span class="sub-cats">Added</span>
@@ -739,7 +783,6 @@ const isAllowed =
     </li>
   </ul>
 </div>
-    
     <div class="version">
       <h3>[v1.0.0] - Aug 28, 2025</h3>
       <ul>
@@ -806,9 +849,99 @@ const weaponSizeModifier = {
 const defTable = {
   "0def": { def: 0, dmgred: 0 },
   "130boss": { def: 200, dmgred:150 },
-  "140boss": { def: 150, dmgred: 200 },
-  "150boss": { def: 175, dmgred: 300 }
+  "140boss": { def: 160, dmgred: 215 },
+  "150boss": { def: 200, dmgred: 305},
+
+  "Phreeoni Lv.140": { def: 106.98, dmgred: 204.60, sizeMob: "Large", raceMob: "Brute", attributeMob: "Neutral" },
+  "Mistress Lv.140": { def: 130.18, dmgred: 272.80, sizeMob: "Small", raceMob: "Insect", attributeMob: "Wind" },
+  "Eddga Lv.140": { def: 106.98, dmgred: 204.60, sizeMob: "Large", raceMob: "Brute", attributeMob: "Fire" },
+  "Kraken Lv.140": { def: 130.18, dmgred: 272.80, sizeMob: "Large", raceMob: "Fish", attributeMob: "Water" },
+  "Maya Lv.140": { def: 98.97, dmgred: 136.40, sizeMob: "Large", raceMob: "Insect", attributeMob: "Earth" },
+  "Orc Hero Lv.140": { def: 82.47, dmgred: 136.40, sizeMob: "Large", raceMob: "Demi-Human", attributeMob: "Earth" },
+  "Pharaoh Lv.140": { def: 98.97, dmgred: 136.40, sizeMob: "Large", raceMob: "Demi-Human", attributeMob: "Shadow" },
+  "Doppelganger Lv.140": { def: 172.98, dmgred: 204.60, sizeMob: "Medium", raceMob: "Demon", attributeMob: "Shadow" },
+  "Amon Ra Lv.140": { def: 106.98, dmgred: 204.60, sizeMob: "Large", raceMob: "Demi-Human", attributeMob: "Earth" },
+  "Morroc Lv.140": { def: 131.97, dmgred: 136.40, sizeMob: "Large", raceMob: "Demon", attributeMob: "Shadow" },
+  "Time Holder Lv.140": { def: 164.97, dmgred: 136.40, sizeMob: "Large", raceMob: "Demon", attributeMob: "Neutral" },
+  "Tao Gunka Lv.140": { def: 172.98, dmgred: 204.60, sizeMob: "Large", raceMob: "Demon", attributeMob: "Neutral" },
+  "Lost Dragon Lv.140": { def: 172.98, dmgred: 204.60, sizeMob: "Large", raceMob: "Dragon", attributeMob: "Shadow" },
+  "Fallen Bishop Lv.140": { def: 164.97, dmgred: 136.40, sizeMob: "Medium", raceMob: "Demon", attributeMob: "Shadow" },
+  "Lord of the Dead Lv.140": { def: 131.97, dmgred: 136.40, sizeMob: "Large", raceMob: "Demon", attributeMob: "Shadow" },
+  "Arc Angeling Lv.140": { def: 164.97, dmgred: 136.40, sizeMob: "Medium", raceMob: "Angel", attributeMob: "Holy" },
+  "Gioia Lv.140": { def: 212.68, dmgred: 272.80, sizeMob: "Large", raceMob: "Formless", attributeMob: "Wind" },
+  "RSX-0806 Lv.140": { def: 238.66, dmgred: 202.00, sizeMob: "Medium", raceMob: "Formless", attributeMob: "Neutral" },
+  "Nidhoggr's Shadow Lv.140": { def: 181.21, dmgred: 134.00, sizeMob: "Large", raceMob: "Dragon", attributeMob: "Shadow" },
+  "Gloom Under Night Lv.140": { def: 306.00, dmgred: 300.00, sizeMob: "Large", raceMob: "Formless", attributeMob: "Ghost" },
+  "Retribution Lv.140": { def: 256.50, dmgred: 300.00, sizeMob: "Medium", raceMob: "Angel", attributeMob: "Shadow" },
+  "Dragon Fly Lv.140": { def: 106.98, dmgred: 204.60, sizeMob: "Small", raceMob: "Insect", attributeMob: "Wind" },
+  "Eclipse Lv.140": { def: 130.18, dmgred: 272.80, sizeMob: "Small", raceMob: "Brute", attributeMob: "Neutral" },
+  "Mastering Lv.140": { def: 130.18, dmgred: 272.80, sizeMob: "Medium", raceMob: "Plant", attributeMob: "Water" },
+  "Ghostring Lv.140": { def: 106.98, dmgred: 204.60, sizeMob: "Medium", raceMob: "Demon", attributeMob: "Ghost" },
+  "Toad Lv.140": { def: 98.97, dmgred: 136.40, sizeMob: "Small", raceMob: "Fish", attributeMob: "Water" },
+  "King Dramoh Lv.140": { def: 82.47, dmgred: 136.40, sizeMob: "Large", raceMob: "Fish", attributeMob: "Water" },
+  "Angeling Lv.140": { def: 98.97, dmgred: 136.40, sizeMob: "Medium", raceMob: "Angel", attributeMob: "Holy" },
+  "Deviling Lv.140": { def: 82.47, dmgred: 136.40, sizeMob: "Medium", raceMob: "Demon", attributeMob: "Shadow" },
+  "Dark Priest Lv.140": { def: 212.68, dmgred: 272.80, sizeMob: "Medium", raceMob: "Demon", attributeMob: "Undead" },
+  "Vagabond Wolf Lv.140": { def: 172.98, dmgred: 204.60, sizeMob: "Medium", raceMob: "Brute", attributeMob: "Earth" },
+  "Chimera Lv.140": { def: 172.98, dmgred: 204.60, sizeMob: "Large", raceMob: "Brute", attributeMob: "Fire" },
+  "Mysteltainn Lv.140": { def: 172.98, dmgred: 204.60, sizeMob: "Large", raceMob: "Formless", attributeMob: "Shadow" },
+  "Ogretooth Lv.140": { def: 212.68, dmgred: 306.35, sizeMob: "Medium", raceMob: "Formless", attributeMob: "Shadow" },
+  "Necromancer Lv.140": { def: 131.97, dmgred: 150.75, sizeMob: "Medium", raceMob: "Undead", attributeMob: "Undead" },
+  "Coelacanth Lv.140": { def: 139.98, dmgred: 204.60, sizeMob: "Large", raceMob: "Fish", attributeMob: "Water" },
+  "Naght Sieger Lv.140": { def: 212.68, dmgred: 272.80, sizeMob: "Large", raceMob: "Demon", attributeMob: "Ghost" },
+  "Observation Lv.140": { def: 146.68, dmgred: 272.80, sizeMob: "Medium", raceMob: "Angel", attributeMob: "Neutral" },
+  "Skeggiold Lv.140": { def: 172.98, dmgred: 204.60, sizeMob: "Small", raceMob: "Angel", attributeMob: "Holy" },
+  "Queen Scaraba Lv.140": { def: 212.30, dmgred: 268.70, sizeMob: "Small", raceMob: "Insect", attributeMob: "Earth" },
+  "Faceworm Queen Lv.140": { def: 245.30, dmgred: 268.70, sizeMob: "Small", raceMob: "Insect", attributeMob: "Poison" },
+  "Ktullanux Lv.140": { def: 256.50, dmgred: 542.27, sizeMob: "Large", raceMob: "Dragon", attributeMob: "Water" },
+  "Shelter Lv.140": { def: 251.18, dmgred: 258.00, sizeMob: "Medium", raceMob: "Angel", attributeMob: "Holy" },
+
+  "Phreeoni Lv.150": { def: 136.62, dmgred: 311.20, sizeMob: "Large", raceMob: "Brute", attributeMob: "Neutral" },
+  "Mistress Lv.150": { def: 161.98, dmgred: 361.00, sizeMob: "Small", raceMob: "Insect", attributeMob: "Wind" },
+  "Eddga Lv.150": { def: 136.62, dmgred: 311.20, sizeMob: "Large", raceMob: "Brute", attributeMob: "Fire" },
+  "Kraken Lv.150": { def: 161.98, dmgred: 361.00, sizeMob: "Large", raceMob: "Fish", attributeMob: "Water" },
+  "Maya Lv.150": { def: 118.76, dmgred: 186.70, sizeMob: "Large", raceMob: "Insect", attributeMob: "Earth" },
+  "Orc Hero Lv.150": { def: 110.67, dmgred: 261.40, sizeMob: "Large", raceMob: "Demi-Human", attributeMob: "Earth" },
+  "Pharaoh Lv.150": { def: 118.76, dmgred: 186.70, sizeMob: "Large", raceMob: "Demi-Human", attributeMob: "Shadow" },
+  "Orc Lord Lv.150": { def: 110.67, dmgred: 261.40, sizeMob: "Large", raceMob: "Demi-Human", attributeMob: "Earth" },
+  "Doppelganger Lv.150": { def: 214.62, dmgred: 311.20, sizeMob: "Medium", raceMob: "Demon", attributeMob: "Shadow" },
+  "Amon Ra Lv.150": { def: 136.62, dmgred: 311.20, sizeMob: "Large", raceMob: "Demi-Human", attributeMob: "Earth" },
+  "Morroc Lv.150": { def: 169.17, dmgred: 261.40, sizeMob: "Large", raceMob: "Demon", attributeMob: "Shadow" },
+  "Time Holder Lv.150": { def: 196.76, dmgred: 186.70, sizeMob: "Large", raceMob: "Demon", attributeMob: "Neutral" },
+  "Tao Gunka Lv.150": { def: 214.62, dmgred: 311.20, sizeMob: "Large", raceMob: "Demon", attributeMob: "Neutral" },
+  "Lost Dragon Lv.150": { def: 214.62, dmgred: 311.20, sizeMob: "Large", raceMob: "Dragon", attributeMob: "Shadow" },
+  "Fallen Bishop Lv.150": { def: 196.76, dmgred: 186.70, sizeMob: "Medium", raceMob: "Demon", attributeMob: "Shadow" },
+  "Lord of the Dead Lv.150": { def: 169.17, dmgred: 261.40, sizeMob: "Large", raceMob: "Demon", attributeMob: "Shadow" },
+  "Arc Angeling Lv.150": { def: 196.76, dmgred: 186.70, sizeMob: "Medium", raceMob: "Angel", attributeMob: "Holy" },
+  "Gioia Lv.150": { def: 259.48, dmgred: 361.00, sizeMob: "Large", raceMob: "Formless", attributeMob: "Wind" },
+  "RSX-0806 Lv.150": { def: 293.16, dmgred: 317.00, sizeMob: "Medium", raceMob: "Formless", attributeMob: "Neutral" },
+  "Nidhoggr's Shadow Lv.150": { def: 228.13, dmgred: 266.00, sizeMob: "Large", raceMob: "Dragon", attributeMob: "Shadow" },
+  "Gloom Under Night Lv.150": { def: 357.57, dmgred: 367.00, sizeMob: "Large", raceMob: "Formless", attributeMob: "Ghost" },
+  "Retribution Lv.150": { def: 299.07, dmgred: 367.00, sizeMob: "Medium", raceMob: "Angel", attributeMob: "Shadow" },
+  "Dragon Fly Lv.150": { def: 136.62, dmgred: 311.20, sizeMob: "Small", raceMob: "Insect", attributeMob: "Wind" },
+  "Eclipse Lv.150": { def: 161.98, dmgred: 361.00, sizeMob: "Small", raceMob: "Brute", attributeMob: "Neutral" },
+  "Mastering Lv.150": { def: 161.98, dmgred: 361.00, sizeMob: "Medium", raceMob: "Plant", attributeMob: "Water" },
+  "Ghostring Lv.150": { def: 136.62, dmgred: 311.20, sizeMob: "Medium", raceMob: "Demon", attributeMob: "Ghost" },
+  "Toad Lv.150": { def: 118.76, dmgred: 186.70, sizeMob: "Small", raceMob: "Fish", attributeMob: "Water" },
+  "King Dramoh Lv.150": { def: 110.67, dmgred: 261.40, sizeMob: "Large", raceMob: "Fish", attributeMob: "Water" },
+  "Angeling Lv.150": { def: 118.76, dmgred: 186.70, sizeMob: "Medium", raceMob: "Angel", attributeMob: "Holy" },
+  "Deviling Lv.150": { def: 110.66, dmgred: 261.40, sizeMob: "Medium", raceMob: "Demon", attributeMob: "Shadow" },
+  "Dark Priest Lv.150": { def: 259.48, dmgred: 361.00, sizeMob: "Medium", raceMob: "Demon", attributeMob: "Undead" },
+  "Vagabond Wolf Lv.150": { def: 214.62, dmgred: 311.20, sizeMob: "Medium", raceMob: "Brute", attributeMob: "Earth" },
+  "Chimera Lv.150": { def: 214.62, dmgred: 311.20, sizeMob: "Large", raceMob: "Brute", attributeMob: "Fire" },
+  "Mysteltainn Lv.150": { def: 214.62, dmgred: 311.20, sizeMob: "Large", raceMob: "Formless", attributeMob: "Shadow" },
+  "Ogretooth Lv.150": { def: 259.48, dmgred: 385.89, sizeMob: "Medium", raceMob: "Formless", attributeMob: "Shadow" },
+  "Necromancer Lv.150": { def: 169.17, dmgred: 272.00, sizeMob: "Medium", raceMob: "Undead", attributeMob: "Undead" },
+  "Coelacanth Lv.150": { def: 175.62, dmgred: 311.20, sizeMob: "Large", raceMob: "Fish", attributeMob: "Water" },
+  "Naght Sieger Lv.150": { def: 259.48, dmgred: 361.00, sizeMob: "Large", raceMob: "Demon", attributeMob: "Ghost" },
+  "Observation Lv.150": { def: 181.48, dmgred: 361.00, sizeMob: "Medium", raceMob: "Angel", attributeMob: "Neutral" },
+  "Skeggiold Lv.150": { def: 214.62, dmgred: 311.20, sizeMob: "Small", raceMob: "Angel", attributeMob: "Holy" },
+  "Queen Scaraba Lv.150": { def: 258.55, dmgred: 351.40, sizeMob: "Small", raceMob: "Insect", attributeMob: "Earth" },
+  "Faceworm Queen Lv.150": { def: 297.55, dmgred: 351.40, sizeMob: "Small", raceMob: "Insect", attributeMob: "Poison" },
+  "Ktullanux Lv.150": { def: 299.07, dmgred: 575.77, sizeMob: "Large", raceMob: "Dragon", attributeMob: "Water" },
+  "Shelter Lv.150": { def: 293.16, dmgred: 317.00, sizeMob: "Medium", raceMob: "Angel", attributeMob: "Holy" }
 };
+
 const raceTypes = [
   "Angel","Demon","Formless","Insect","Fish",
   "Demi-Human","Undead","Dragon","Plant","Brute"
@@ -880,7 +1013,7 @@ function normalizeInput(el, pastedValue) {
     v = v.slice(0, -1);
   }
   if (!/^\d+(\.\d+)?$/.test(v)) {
-    showSnack("Numbers only!");
+    showSnack("Input valid number!");
     el.value = '';
     return;
   }
@@ -981,32 +1114,39 @@ const TABLE_CONFIG = {
   jitter: 0.3,
   randomMode: 'clamp',
   centerScale: 0.5,
-  raceAttrCap: 480,
+  raceAttrCap: 380,
+  weightMode: 'sqrt', // 'linear' | 'sqrt'
   bias: { main: 1.2, dmg: 1, elem: 0.9, size: 0.9, race: 0.8, attr: 0.8 },
   cats: [
-    { label: '0-8%',    min: 1.00, max: 1.08 },
+    { label: '0-8%', min: 1.00, max: 1.08 },
     { label: '10-20%', min: 1.10, max: 1.20 },
     { label: '20-30%', min: 1.20, max: 1.30 },
-    { label: '50-100%',min: 1.50, max: 2.00 }
+    { label: '50-100%', min: 1.50, max: 2.00 }
   ]
 };
+
 function calculateWeights({ includeRace, includeAttr, baseMain, baseDmg, baseElem, baseSize, baseRace, baseAttr }) {
   const B = TABLE_CONFIG.bias;
   const s1 = v => Math.max(Number(v) || 0, 0);
-
+  
+  const f = (x) => {
+    if (TABLE_CONFIG.weightMode === 'sqrt') return Math.sqrt(x);
+    return x;
+  };
+  
   const raws = [
-    s1(baseMain) * B.main,
-    s1(baseDmg) * B.dmg,
-    s1(baseElem) * B.elem,
-    s1(baseSize) * B.size
+    f(s1(baseMain)) * B.main,
+    f(s1(baseDmg)) * B.dmg,
+    f(s1(baseElem)) * B.elem,
+    f(s1(baseSize)) * B.size
   ];
-
+  
   const maxRaw = Math.max(...raws, 1);
   const norms = raws.map(v => v / maxRaw);
   const coreSum = norms.reduce((a, b) => a + b, 0) || 1;
   const coreShare = (includeRace || includeAttr) ? 0.8 : 1.0;
   const addShare = 1 - coreShare;
-
+  
   let w = {
     main: norms[0] / coreSum * coreShare,
     dmg: norms[1] / coreSum * coreShare,
@@ -1015,10 +1155,10 @@ function calculateWeights({ includeRace, includeAttr, baseMain, baseDmg, baseEle
     race: 0,
     attr: 0
   };
-
+  
   const raceAvail = includeRace && baseRace < TABLE_CONFIG.raceAttrCap;
   const attrAvail = includeAttr && baseAttr < TABLE_CONFIG.raceAttrCap;
-
+  
   if (raceAvail && attrAvail) {
     const rSum = s1(baseRace) + s1(baseAttr);
     if (rSum > 0) {
@@ -1038,10 +1178,10 @@ function calculateWeights({ includeRace, includeAttr, baseMain, baseDmg, baseEle
       w[keys[i]] += (v / coreSum) * addShare;
     });
   }
-
+  
   const total = Object.values(w).reduce((a, b) => a + b, 0) || 1;
   Object.keys(w).forEach(k => { w[k] /= total; });
-
+  
   return w;
 }
 function generateRecommendations(state) {
@@ -1212,7 +1352,7 @@ function generateRecommendations(state) {
     tbl.appendChild(tbody);
     const wrap = document.createElement('div'); wrap.className='table-wrapper'; wrap.appendChild(tbl); recRoot.appendChild(wrap);
   }
-  showSnack('Recommendations updated');
+  showSnack('Output and Recommendations updated');
 }
 let resultShown = false;
 function onDropdownChange(e) {
@@ -1279,9 +1419,9 @@ function updateDynamicUI() {
 function validateRequired() {
   const dropdowns = [
     { el: els.atkType, label: 'Attack Type' },
-    { el: els.tDef, label: 'Target Defense' },
     { el: els.weapon, label: 'Weapon Type' },
     { el: els.wElem, label: 'Weapon Attribute' },
+    { el: els.tDef, label: 'Target Boss' },
     { el: els.tSize, label: 'Target Size' }
   ];
   for (const f of dropdowns) {
@@ -1340,228 +1480,349 @@ function validateValueVsDef(state) {
   }
 }
 function renderMultiplierBreakdown(state, list, elemCtr, sizeMod, isPen) {
-  const container = document.createElement('div');
-  container.id = "multiplier-breakdown";
-  container.className = "multiplier-breakdown";
-  const bq0 = document.createElement('blockquote');
-  bq0.className = "noted";
-  bq0.textContent = "By default, every factor starts at ×1.00. Numbers show how it changes with your stats.";
-  container.appendChild(bq0);
-  const ul = document.createElement('ul');
-  ul.className = "factor-breakdown";
-  list.forEach(f => {
-    const li = document.createElement('li');
-    if (f.show === false) {
-      li.textContent = `${f.label}: ×1.00 (not selected)`;
-      ul.appendChild(li);
-      return;
+  const resultEl = els.hasil;
+  const tDefEl = els.tDef;
+  const tSizeEl = els.tSize;
+  const tRaceEl = els.tRace;
+  const tAttrEl = els.tAttr;
+  const wElemEl = els.wElem;
+  const weaponEl = els.weapon;
+
+  const h = (tag, props = {}, children = []) => {
+    const el = document.createElement(tag);
+    Object.entries(props).forEach(([k, v]) => {
+      if (k === "class") el.className = v;
+      else if (k === "for") el.setAttribute("for", v);
+      else if (k === "text") el.textContent = v;
+      else el.setAttribute(k, v);
+    });
+    (Array.isArray(children) ? children : [children]).forEach(c => {
+      if (c) el.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+    });
+    return el;
+  };
+
+  function relockAllNumeric() {
+    document.querySelectorAll(".input-wrap").forEach(w => {
+      if (w.dataset.tempUnlocked === "1") return;
+      const el = w.querySelector("select, input");
+      if (!el) return;
+      try { bindLockGuard(w); } catch (e) {}
+      w.classList.add("locked");
+      if (typeof lockInput === "function") lockInput(el);
+      else el.disabled = true;
+    });
+  }
+
+  const createBreakdownItems = () => {
+    const ul = h("ul", { class: "factor-breakdown" });
+    const fragment = document.createDocumentFragment();
+
+    function fmt(n) {
+      return Number(n) % 1 === 0 ? n : Number(n).toFixed(2);
     }
-    if (f.key === 'main') {
-      const defLabel = (els.tDef.options[els.tDef.selectedIndex] && els.tDef.options[els.tDef.selectedIndex].text) || "Target";
-      li.textContent = `Attack Type: ${isPen ? "PEN" : "CRIT"} vs ${defLabel}`;
-      const ulSub = document.createElement('ul');
-      if (isPen) {
-        const raw = state.penVal;
-        const def = state.def || 0;
-        const basePen = raw - def;
-        const liRaw = document.createElement('li');
-        liRaw.textContent = `Raw PEN + Final PEN: ${raw}`;
-        ulSub.appendChild(liRaw);
-        const liDef = document.createElement('li');
-        liDef.textContent = `Target DEF: ${def}`;
-        ulSub.appendChild(liDef);
-        if (basePen >= 150) {
-          const effPercent = (basePen * 2) - 150;
-          const liSpec = document.createElement('li');
-          liSpec.textContent = `((${raw} - ${def}) × 2) - 150`;
-          ulSub.appendChild(liSpec);
-          const liRes = document.createElement('li');
-          liRes.textContent = `1.00 + (${effPercent} / 100) → ×${f.mult.toFixed(2)}`;
-          ulSub.appendChild(liRes);
+
+    list.forEach(f => {
+      let li;
+      if (f.show === false) {
+        li = h("li", { text: `${f.label}: ×1.00 (not selected)` });
+      } else if (f.key === "main") {
+        const defLabel = (tDefEl.options[tDefEl.selectedIndex]?.text) || "Target";
+        const ulSub = h("ul");
+        if (isPen) {
+          const raw = state.penVal, def = state.def || 0, basePen = raw - def;
+          ulSub.appendChild(h("li", { text: `Raw PEN + Final PEN: ${fmt(raw)}` }));
+          ulSub.appendChild(h("li", { text: `Target DEF: ${def}` }));
+          if (basePen >= 150) {
+            const effPercent = (basePen * 2) - 150;
+            ulSub.appendChild(h("li", { text: `1.00 + ((( ${fmt(raw)} - ${def} ) × 2 ) - 150 ) / 100` }));
+            ulSub.appendChild(h("li", { text: `1.00 + ( ${fmt(effPercent)} / 100 ) → ×${f.mult.toFixed(2)}` }));
+          } else {
+            ulSub.appendChild(h("li", { text: `1.00 + (( ${fmt(raw)} - ${def} ) / 100 ) → ×${f.mult.toFixed(2)}` }));
+          }
         } else {
-          const liRes = document.createElement('li');
-          liRes.textContent = `1.00 + ((${raw} - ${def}) / 100) → ×${f.mult.toFixed(2)}`;
-          ulSub.appendChild(liRes);
+          ulSub.appendChild(h("li", { text: `Crit DMG: ${fmt(f.val)}` }));
+          ulSub.appendChild(h("li", { text: `1.00 + ( ${fmt(f.val)} / 100 ) → ×${f.mult.toFixed(2)}` }));
         }
+        li = h("li", { text: `Attack Type: ${isPen ? "PEN" : "CRIT"} vs ${defLabel}` }, ulSub);
+      } else if (f.key === "dmg") {
+        li = h("li", { text: "Final P/M Damage Bonus" }, h("ul", {}, [
+          h("li", { text: `P/M BO: ${fmt(f.val)}` }),
+          h("li", { text: `Target Reduction: ${state.dmgred || 0}` }),
+          h("li", { text: `1.00 + (( ${fmt(f.val)} - ${state.dmgred || 0} ) / 100 ) → ×${f.mult.toFixed(2)}` })
+        ]));
+      } else if (f.key === "elem") {
+        const ulSub = h("ul", {}, [
+          h("li", { text: `Counter: ${elemCtr}` }),
+          h("li", { text: `${wElemEl.value} Enhance: ${fmt(f.val)}` }),
+          h("li", { text: `${elemCtr} + ${( f.val / 100 ).toFixed(2)} → ×${f.mult.toFixed(2)}` })
+        ]);
+        if (!tAttrEl.value) ulSub.appendChild(h("li", { text: "Tools assume target Neutral if you're not targeting any attribute." }));
+        li = h("li", { text: `Element: ${wElemEl.value || "Neutral"} vs ${tAttrEl.value || "Neutral"}` }, ulSub);
+      } else if (f.key === "size") {
+        li = h("li", { text: `Size: ${weaponEl.value} vs ${tSizeEl.value}` }, h("ul", {}, [
+          h("li", { text: `Modifier: ${sizeMod}` }),
+          h("li", { text: `${tSizeEl.value} Enhance: ${fmt(f.val)}` }),
+          h("li", { text: `${sizeMod} + ${( f.val / 100 ).toFixed(2)} → ×${f.mult.toFixed(2)}` })
+        ]));
+      } else if (f.key === "race") {
+        const raceLabel = (tRaceEl.options[tRaceEl.selectedIndex]?.text) || "Target Race";
+        li = h("li", { text: `Race: ${raceLabel}` }, h("ul", {}, [
+          h("li", { text: `DMG to ${raceLabel}: ${fmt(f.val)}` }),
+          h("li", { text: `1.00 + ( ${fmt(f.val)} / 100 ) → ×${f.mult.toFixed(2)}` })
+        ]));
+      } else if (f.key === "attr") {
+        const attrLabel = (tAttrEl.options[tAttrEl.selectedIndex]?.text) || "Target Attribute";
+        li = h("li", { text: `Attribute: ${attrLabel}` }, h("ul", {}, [
+          h("li", { text: `DMG to ${attrLabel} Attribute: ${fmt(f.val)}` }),
+          h("li", { text: `1.00 + ( ${fmt(f.val)} / 100 ) → ×${f.mult.toFixed(2)}` })
+        ]));
       } else {
-        const liRaw = document.createElement('li');
-        liRaw.textContent = `Crit DMG: ${f.val}`;
-        ulSub.appendChild(liRaw);
-        const liRes = document.createElement('li');
-        liRes.textContent = `1.00 + (${f.val} / 100) → ×${f.mult.toFixed(2)}`;
-        ulSub.appendChild(liRes);
+        li = h("li", { text: `${f.label}: ${fmt(f.val)} → ×${f.mult.toFixed(2)}` });
       }
-      li.appendChild(ulSub);
-      ul.appendChild(li);
-      return;
-    }
-    if (f.key === 'dmg') {
-      li.textContent = `Final P/M Damage Bonus`;
-      const ulSub = document.createElement('ul');
-      const liRaw = document.createElement('li');
-      liRaw.textContent = `P/M BO: ${f.val}`;
-      ulSub.appendChild(liRaw);
-      const liRed = document.createElement('li');
-      liRed.textContent = `Target Reduction: ${state.dmgred || 0}`;
-      ulSub.appendChild(liRed);
-      const liEff = document.createElement('li');
-      liEff.textContent = `1.00 + ((${f.val} - ${state.dmgred || 0}) / 100) → ×${f.mult.toFixed(2)}`;
-      ulSub.appendChild(liEff);
-      li.appendChild(ulSub);
-      ul.appendChild(li);
-      return;
-    }
-    if (f.key === 'elem') {
-      li.textContent = `Element: ${els.wElem.value || 'Neutral'} vs ${els.tAttr.value || 'Neutral'}`;
-      const ulSub = document.createElement('ul');
-      const li1 = document.createElement('li');
-      li1.textContent = `Counter: ${elemCtr.toFixed(2)}`;
-      ulSub.appendChild(li1);
-      const li2 = document.createElement('li');
-      li2.textContent = `${els.wElem.value} Enhance: ${f.val}`;
-      ulSub.appendChild(li2);
-      const li3 = document.createElement('li');
-      li3.textContent = `${elemCtr.toFixed(2)} + ${(f.val/100).toFixed(2)} → ×${f.mult.toFixed(2)}`;
-      ulSub.appendChild(li3);
-      if (!els.tAttr.value) {
-        const li4 = document.createElement('li');
-        li4.textContent = "Tools assume target Neutral if you're not targeting any attribute.";
-        ulSub.appendChild(li4);
-      }
-      li.appendChild(ulSub);
-      ul.appendChild(li);
-      return;
-    }
-    if (f.key === 'size') {
-      li.textContent = `Size: ${els.weapon.value} vs ${els.tSize.value}`;
-      const ulSub = document.createElement('ul');
-      const li1 = document.createElement('li');
-      li1.textContent = `Modifier: ${sizeMod.toFixed(2)}`;
-      ulSub.appendChild(li1);
-      const li2 = document.createElement('li');
-      li2.textContent = `${els.tSize.value} Enhance: ${f.val}`;
-      ulSub.appendChild(li2);
-      const li3 = document.createElement('li');
-      li3.textContent = `${sizeMod.toFixed(2)} + ${(f.val/100).toFixed(2)} → ×${f.mult.toFixed(2)}`;
-      ulSub.appendChild(li3);
-      li.appendChild(ulSub);
-      ul.appendChild(li);
-      return;
-    }
-    if (f.key === 'race') {
-      const raceLabel = (els.tRace.options[els.tRace.selectedIndex] && els.tRace.options[els.tRace.selectedIndex].text) || "Target Race";
-      li.textContent = `Race: ${raceLabel}`;
-      const ulSub = document.createElement('ul');
-      const liRaw = document.createElement('li');
-      liRaw.textContent = `DMG to ${raceLabel}: ${f.val}`;
-      ulSub.appendChild(liRaw);
-      const liRes = document.createElement('li');
-      liRes.textContent = `1.00 + (${f.val} / 100) → ×${f.mult.toFixed(2)}`;
-      ulSub.appendChild(liRes);
-      li.appendChild(ulSub);
-      ul.appendChild(li);
-      return;
-    }
-    if (f.key === 'attr') {
-      const attrLabel = (els.tAttr.options[els.tAttr.selectedIndex] && els.tAttr.options[els.tAttr.selectedIndex].text) || "Target Attribute";
-      li.textContent = `Attribute: ${attrLabel}`;
-      const ulSub = document.createElement('ul');
-      const liRaw = document.createElement('li');
-      liRaw.textContent = `DMG to ${attrLabel} Attribute: ${f.val}`;
-      ulSub.appendChild(liRaw);
-      const liRes = document.createElement('li');
-      liRes.textContent = `1.00 + (${f.val} / 100) → ×${f.mult.toFixed(2)}`;
-      ulSub.appendChild(liRes);
-      li.appendChild(ulSub);
-      ul.appendChild(li);
-      return;
-    }
-    li.textContent = `${f.label}: ${f.val} → ×${f.mult.toFixed(2)}`;
-    ul.appendChild(li);
-  });
-  container.appendChild(ul);
-  const p1 = document.createElement('p');
-  p1.textContent = "your final base multiplier:";
-  container.appendChild(p1);
-  const p2 = document.createElement('p');
-  let breakdown = "1.00 ";
-  breakdown += list.map(f => {
-    if (f.show === false) return `× 1.00 (${f.label.toLowerCase()} not selected)`;
-    return `× ${f.mult.toFixed(2)}`;
-  }).join(' ');
-  breakdown += ` = ×${state.mult.toFixed(2)}`;
-  p2.textContent = breakdown;
-  container.appendChild(p2);
-  const bq1 = document.createElement('blockquote');
-  bq1.className = "noted";
-  bq1.textContent = "Only base multipliers! Real output depends on class, skills, buffs, and more. More accurate? Just use job sims.";
-  container.appendChild(bq1);
+      fragment.appendChild(li);
+    });
+    ul.appendChild(fragment);
+    return ul;
+};
+
+  const container = h("div", { id: "multiplier-breakdown", class: "multiplier-breakdown" }, [
+    h("blockquote", { class: "noted", text: "By default, every factor starts at ×1.00. Numbers show how it changes with your stats." }),
+    createBreakdownItems(),
+    h("hr", {class: "separ"}),
+h("p", {}, [
+  "Your base multiplier to ",
+  h("i", {}, [
+    [tSizeEl.value, tRaceEl.value, tAttrEl.value]
+    .filter(function(v) { return v; })
+    .join(" + "),
+    " (",
+    tDefEl.options[tDefEl.selectedIndex] ?
+    tDefEl.options[tDefEl.selectedIndex].text :
+    "",
+    ")"
+  ]),
+  ":"
+]),
+    h("p", { text: "1.00 " + list.map(f => f.show === false ? `× 1.00 (${f.label.toLowerCase()} not selected)` : `× ${f.mult.toFixed(2)}`).join(" ") + " = ×" + state.mult.toFixed(2) }),
+    h("blockquote", { class: "noted", text: "Only base multipliers! Real output depends on class, skills, buffs, and more. More accurate? Just use job sims." })
+  ]);
+
   const DEF_SWAP_OPTIONS = [
     { key: "0def", label: "Dummy (0 DEF)" },
     { key: "130boss", label: "Avg. 130 BOSS" },
     { key: "140boss", label: "Avg. 140 BOSS" },
     { key: "150boss", label: "Avg. 150 BOSS" }
   ];
-  const swapWrapper = document.createElement("div");
-  swapWrapper.className = "breakdown-swap-wrapper";
-  const swapLabel = document.createElement("label");
-  swapLabel.setAttribute("for", "breakdown-swap");
-  swapLabel.textContent = "Swap Target DEF:";
-  const selectSwap = document.createElement("select");
-  selectSwap.id = "breakdown-swap";
-  selectSwap.className = "breakdown-swap";
+  const presetKeys = new Set(["0def", "130boss", "140boss", "150boss"]);
+  Object.keys(defTable).forEach(k => {
+    if (!presetKeys.has(k)) DEF_SWAP_OPTIONS.push({ key: k, label: k });
+  });
+
+  const selectSwap = h("select", { id: "breakdown-swap", class: "breakdown-swap" });
   DEF_SWAP_OPTIONS.forEach(optData => {
     const defData = getTargetDefData(optData.key);
     const defVal = Number(defData.def || 0);
     const dmgredVal = Number(defData.dmgred || 0);
-    const opt = document.createElement("option");
-    opt.value = optData.key;
-    opt.textContent = optData.label;
-    const atk = (state.atkType || "").toLowerCase();
-    const penV = Number((els.pen && els.pen.value) || 0);
-    const dmgV = Number((els.dmg && els.dmg.value) || 0);
-    let notEnough = false;
-    if (atk === "pen") {
-      if (penV <= defVal || dmgV <= dmgredVal) {
-        notEnough = true;
-      }
-    } else {
-      if (dmgV <= dmgredVal) {
-        notEnough = true;
-      }
-    }
+    const opt = h("option", { value: optData.key, text: optData.label });
+    const atkType = (state.atkType || "").toLowerCase();
+    const penVal = Number((els.pen?.value) || 0);
+    const dmgVal = Number((els.dmg?.value) || 0);
+    const notEnough = atkType === "pen" ? (penVal <= defVal || dmgVal <= dmgredVal) : (dmgVal <= dmgredVal);
     if (notEnough) {
       opt.disabled = true;
       opt.textContent += " (stats not enough)";
     }
     selectSwap.appendChild(opt);
   });
-selectSwap.value = els.tDef.value || "0def";
-swapWrapper.appendChild(swapLabel);
-swapWrapper.appendChild(selectSwap);
-container.appendChild(swapWrapper);
+  selectSwap.value = tDefEl.value || "0def";
 
-selectSwap.addEventListener("change", () => {
-  els.tDef.value = selectSwap.value;
+  container.appendChild(h("div", { class: "breakdown-swap-wrapper" }, [
+    h("label", { for: "breakdown-swap", text: "Swap Target:" }),
+    selectSwap
+  ]));
+
+  selectSwap.addEventListener("change", () => {
+    const prevKey = tDefEl.value;
+    const currKey = selectSwap.value;
+    const prevData = defTable[prevKey] || {};
+    const currData = defTable[currKey] || {};
+    const isPreset = k => presetKeys.has(k);
+    tDefEl.value = currKey;
+
+    const sameFactors = currData.sizeMob === prevData.sizeMob && currData.raceMob === prevData.raceMob && currData.attributeMob === prevData.attributeMob;
+
+    if ((isPreset(prevKey) && isPreset(currKey)) ||
+  (!isPreset(prevKey) && isPreset(currKey)) ||
+  (!isPreset(prevKey) && !isPreset(currKey) && prevKey.replace(/\d+$/, "") === currKey.replace(/\d+$/, "")) ||
+  (!isPreset(prevKey) && !isPreset(currKey) && sameFactors)) {
+  
+  // reset kalau dari spesifik -> preset
+  if (!isPreset(prevKey) && isPreset(currKey)) {
+    [tRaceEl, tAttrEl].forEach((el, idx) => {
+      if (el) {
+        el.value = "";
+        try {
+          el.dispatchEvent(new Event("input", { bubbles: true }));
+        } catch (e) {
+          const ev = document.createEvent("HTMLEvents");
+          ev.initEvent("input", true, false);
+          el.dispatchEvent(ev);
+        }
+        try {
+          el.dispatchEvent(new Event("change", { bubbles: true }));
+        } catch (e) {
+          const ev = document.createEvent("HTMLEvents");
+          ev.initEvent("change", true, false);
+          el.dispatchEvent(ev);
+        }
+      }
+      
+      const fieldId = idx === 0 ? "race" : "attr";
+      const inputEl = els[fieldId];
+      if (inputEl) {
+        inputEl.value = "";
+        try {
+          inputEl.dispatchEvent(new Event("input", { bubbles: true }));
+        } catch (e) {
+          const ev = document.createEvent("HTMLEvents");
+          ev.initEvent("input", true, false);
+          inputEl.dispatchEvent(ev);
+        }
+        try {
+          inputEl.dispatchEvent(new Event("change", { bubbles: true }));
+        } catch (e) {
+          const ev = document.createEvent("HTMLEvents");
+          ev.initEvent("change", true, false);
+          inputEl.dispatchEvent(ev);
+        }
+      }
+    });
+    if (typeof updateDynamicUI === "function") updateDynamicUI();
+  }
+  
+  relockAllNumeric();
+  resultEl.dataset.specificMode = "0";
   processCalculation();
-});
-
-if (!els.tDef.dataset.swapBound) {
-  els.tDef.addEventListener("change", () => {
-    selectSwap.value = els.tDef.value;
-  });
-  els.tDef.dataset.swapBound = '1';
+  return;
 }
-  const bq3 = document.createElement('blockquote');
-  bq3.className = "noted";
-  bq3.textContent = "DEF target’s not accurate yet, we’re still collecting boss data for better averages!";
-  container.appendChild(bq3);
-  const bq2 = document.createElement('blockquote');
-  bq2.className = "noted";
-  bq2.textContent = "In the table, an upward arrow means higher than your stat, a square means roughly equal (±6%), and a downward arrow means lower.";
-  container.appendChild(bq2);
-  els.hasil.innerHTML = "";
-  els.hasil.appendChild(container);
+
+    tSizeEl.value = currData.sizeMob || "";
+    tRaceEl.value = currData.raceMob || "";
+    tAttrEl.value = currData.attributeMob || "";
+    if (typeof updateDynamicUI === "function") updateDynamicUI();
+
+    const atkType = (state.atkType || "").toLowerCase();
+    const unlockIds = ["dmg"];
+    if (atkType === "pen") unlockIds.push("pen");
+    if (atkType === "crit") unlockIds.push("crit");
+    if (tSizeEl.value) unlockIds.push("sizeEnh");
+    if (tRaceEl.value) unlockIds.push("race");
+    if (tAttrEl.value) unlockIds.push("attr");
+    if (wElemEl.value) unlockIds.push("elemEnh");
+
+    const inputs = [];
+    unlockIds.forEach(id => {
+      const el = els[id];
+      if (!el) return;
+      const wrap = el.closest(".input-wrap");
+      if (wrap) {
+        try { unbindLockGuard(wrap); } catch (e) {}
+        wrap.classList.remove("locked");
+        wrap.dataset.tempUnlocked = "1";
+      }
+      if (typeof unlockInput === "function") unlockInput(el);
+      else el.disabled = false;
+      inputs.push({ id, el, wrap });
+    });
+
+    function check() {
+      let allValid = true;
+      inputs.forEach(({ id, el }) => {
+        const skip = (id === "sizeEnh" && !tSizeEl.value) ||
+                     (id === "race" && !tRaceEl.value) ||
+                     (id === "attr" && !tAttrEl.value) ||
+                     (id === "elemEnh" && !wElemEl.value);
+        if (skip) return;
+        const numVal = Number(el.value);
+        if (!(el.value && !isNaN(numVal) && numVal >= 1)) allValid = false;
+      });
+      if (!allValid) return;
+
+      if (typeof validateRequired === "function") {
+        try {
+          if (!validateRequired()) return;
+        } catch (e) { return; }
+      }
+
+      inputs.forEach(({ el, wrap }) => {
+        if (wrap) {
+          wrap.removeAttribute("data-temp-unlocked");
+          wrap.classList.add("locked");
+          try { bindLockGuard(wrap); } catch (e) {}
+        }
+        if (typeof lockInput === "function") lockInput(el);
+        else el.disabled = true;
+        el.removeEventListener("blur", check);
+      });
+
+      resultEl.dataset.specificMode = "0";
+      processCalculation();
+    }
+
+    inputs.forEach(({ el }) => {
+      el.removeEventListener("blur", check);
+      el.addEventListener("blur", check);
+    });
+
+    const fieldMappings = [
+      { condition: currData.sizeMob !== prevData.sizeMob, id: "sizeEnh" },
+      { condition: currData.raceMob !== prevData.raceMob, id: "race" },
+      { condition: currData.attributeMob !== prevData.attributeMob, id: "attr" }
+    ];
+    let focusTarget = null;
+    fieldMappings.forEach(({ condition, id }) => {
+      if (!condition) return;
+      const el = els[id];
+      if (el) {
+        el.value = "";
+        try { el.dispatchEvent(new Event("input", { bubbles: true })); } catch (e) {}
+        try { el.dispatchEvent(new Event("change", { bubbles: true })); } catch (e) {}
+        if (!focusTarget) focusTarget = el;
+      }
+    });
+
+    const firstEmpty = inputs.find(({ el }) => !el.value);
+    const target = focusTarget || (firstEmpty ? firstEmpty.el : (inputs[0] && inputs[0].el));
+    if (target) {
+      if (typeof scrollAndFocus === "function") scrollAndFocus(target);
+      else { try { target.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) {} target.focus(); }
+    }
+
+    showSnack("Please re-enter your stats.");
+  });
+
+  if (!tDefEl.dataset.swapBound) {
+    tDefEl.addEventListener("change", () => { selectSwap.value = tDefEl.value; });
+    tDefEl.dataset.swapBound = "1";
+  }
+
+  const atkType = (state.atkType || "").toLowerCase();
+  if (els.pen && els.crit) {
+    if (atkType === "pen") {
+      if (typeof unlockInput === "function") unlockInput(els.pen); else els.pen.disabled = false;
+      if (typeof lockInput === "function") lockInput(els.crit); else els.crit.disabled = true;
+    } else {
+      if (typeof lockInput === "function") lockInput(els.pen); else els.pen.disabled = true;
+      if (typeof unlockInput === "function") unlockInput(els.crit); else els.crit.disabled = false;
+    }
+  }
+
+  container.appendChild(h("blockquote", { class: "noted", text: "Avg 130, Necro, Ogre, Ktul defs less accurate than others!" }));
+  container.appendChild(h("blockquote", { class: "noted", text: "In the table, an upward arrow means higher than your stat, a square means roughly equal (±6%), and a downward arrow means lower." }));
+
+  resultEl.innerHTML = "";
+  resultEl.appendChild(container);
 }
 function processCalculation() {
   if (!validateRequired()) return;
@@ -1628,7 +1889,7 @@ function showLockedSnack(e) {
   if (e && e.cancelable) {
     try { e.preventDefault(); } catch(_) {}
   }
-  showSnack("Locked!");
+  showSnack("Your Stats Locked!");
 }
 
 function bindLockGuard(wrapEl) {
@@ -1689,27 +1950,100 @@ function unlockInputs() {
 
 
 function fillDropdowns() {
-  const atkSel = els.atkType;
-  atkSel.innerHTML = '<option value="">Select Attack Type</option>' +
-    '<option value="pen">P/M PEN</option><option value="crit">Critical</option>';
-  const wSel = els.weapon;
-  wSel.innerHTML = '<option value="">Select Weapon</option>' +
-    Object.keys(weaponSizeModifier).map(w => `<option value="${w}">${w}</option>`).join('');
-  const weSel = els.wElem;
-  weSel.innerHTML = '<option value="">Select Attribute</option>' +
-    Object.keys(elementCounter).map(a => `<option value="${a}">${a}</option>`).join('');
-  const tSizeSel = els.tSize;
-  tSizeSel.innerHTML = '<option value="">Select Target Size</option>' +
-    '<option value="Small">Small</option><option value="Medium">Medium</option><option value="Large">Large</option>';
-  const tRaceSel = els.tRace;
-  tRaceSel.innerHTML = '<option value="">Select Target Race (none)</option>' +
+  // attack type
+  els.atkType.innerHTML =
+    '<option value="">Select Attack Type</option>' +
+    '<option value="pen">P/M PEN</option>' +
+    '<option value="crit">Critical</option>';
+  
+  // weapon
+  els.weapon.innerHTML =
+    '<option value="">Select Weapon</option>' +
+    Object.keys(weaponSizeModifier)
+    .map(w => `<option value="${w}">${w}</option>`)
+    .join('');
+  
+  // weapon element
+  els.wElem.innerHTML =
+    '<option value="">Select Attribute</option>' +
+    Object.keys(elementCounter)
+    .map(a => `<option value="${a}">${a}</option>`)
+    .join('');
+  
+  // target size
+  els.tSize.innerHTML =
+    '<option value="">Select Target Size</option>' +
+    '<option value="Small">Small</option>' +
+    '<option value="Medium">Medium</option>' +
+    '<option value="Large">Large</option>';
+  els.tSize.disabled = false; // default aktif
+  
+  // target race
+  els.tRace.innerHTML =
+    '<option value="">Select Target Race (none)</option>' +
     raceTypes.map(r => `<option value="${r}">${r}</option>`).join('');
-  const tDefSel = els.tDef;
-  tDefSel.innerHTML = '<option value="">Select target DEF</option><option value="0def">Dummy (0 DEF)</option><option value="130boss">Average 130 BOSS</option><option value="140boss">Average 140 BOSS</option><option value="150boss">Average 150 BOSS</option>';
-  const tAttrSel = els.tAttr;
-  tAttrSel.innerHTML = '<option value="">Select Target Attribute (none)</option>' +
-    Object.keys(elementCounter).map(a => `<option value="${a}">${a}</option>`).join('');
+  els.tRace.disabled = false;
+  
+  // target DEF
+  els.tDef.innerHTML = '<option value="">Select target monster</option>' +
+    '<option value="0def">Dummy (0 DEF)</option>' +
+    '<option value="130boss">Average 130 BOSS</option>' +
+    '<option value="140boss">Average 140 BOSS</option>' +
+    '<option value="150boss">Average 150 BOSS</option>';
+  
+  // tambah semua boss dari defTable
+  Object.keys(defTable).forEach(k => {
+    if (['0def', '130boss', '140boss', '150boss'].includes(k)) return;
+    const o = document.createElement('option');
+    o.value = k;
+    o.textContent = k;
+    els.tDef.appendChild(o);
+  });
+  
+  // target attribute
+  els.tAttr.innerHTML =
+    '<option value="">Select Target Attribute (none)</option>' +
+    Object.keys(elementCounter)
+    .map(a => `<option value="${a}">${a}</option>`)
+    .join('');
+  els.tAttr.disabled = false; // default aktif
+  
+  // onchange: auto sync + lock/unlock
+  els.tDef.onchange = function() {
+    const key = els.tDef.value;
+    const data = defTable[key];
+    
+    if (data && key.includes("Lv.")) {
+      // boss spesifik → auto isi + lock
+      if (data.sizeMob) {
+        els.tSize.value = data.sizeMob;
+        els.tSize.disabled = true;
+      }
+      if (data.raceMob) {
+        els.tRace.value = data.raceMob;
+        els.tRace.disabled = true;
+      }
+      if (data.attributeMob) {
+        els.tAttr.value = data.attributeMob;
+        els.tAttr.disabled = true;
+      }
+    } else {
+      // balik ke preset/dummy → reset ke kondisi awal
+      els.tSize.value = "";
+      els.tRace.value = "";
+      els.tAttr.value = "";
+      
+      els.tSize.disabled = false;
+      els.tRace.disabled = false;
+      els.tAttr.disabled = false;
+    }
+    
+    if (typeof updateDynamicUI === 'function') updateDynamicUI();
+  };
 }
+
+
+
 function bindEvents() {
   if (bindEvents.bound) return;
   bindEvents.bound = true;
