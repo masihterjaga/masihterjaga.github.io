@@ -98,7 +98,7 @@ td.delta{color:#4CAF50;font-weight:500}
 }
 
 #multiplier-breakdown{
-  background:#f9f9fb;border:1px solid #ddd;border-radius:10px;padding:14px;
+  background:#f9f9fb;border:1px solid #ddd;border-radius:10px;padding:0 14px 14px 14px;
   box-shadow:0 2px 5px rgba(0,0,0,.05);color:#222;font-family:Inter,system-ui,sans-serif
 }
 #multiplier-breakdown>p:first-of-type{font-size:.95rem;font-weight:600;color:#333;margin-bottom:6px}
@@ -119,6 +119,7 @@ td.delta{color:#4CAF50;font-weight:500}
   margin-top:12px;padding:8px 10px;border-left:3px solid #e9edf3;background:#f1f3f6;
   color:#444;font-size:.88rem;border-radius:6px
 }
+
 hr.separ {
   margin: 10px auto 8px;
   border: none;
@@ -217,7 +218,7 @@ font-size: 11px;
 display: flex;
 justify-content: space-between;
 }
-#version button, #version a {
+#version button, #version a, .toggle-precision {
 font-family: monospace;
 font-weight: bolder;
 font-size: 11px;
@@ -363,163 +364,79 @@ to { opacity: 1; transform: translateY(0); }
 </script-->
 <script>
   (function() {
-
-    try {
-      if (!('scrollBehavior' in document.documentElement.style)) {
-        var _winScrollTo = window.scrollTo;
-        if (_winScrollTo) {
-          window.scrollTo = function(a, b) {
-            if (a && typeof a === 'object') {
-              _winScrollTo.call(window, a.left || 0, a.top || 0);
-            } else {
-              _winScrollTo.call(window, a, b);
-            }
-          };
+    // utility safeGet
+    if (typeof window.safeGet !== 'function') {
+      window.safeGet = function(obj, path) {
+        if (!path) return undefined;
+        try {
+          return path.split('.').reduce((acc, key) =>
+            (acc && acc[key] !== undefined) ? acc[key] : undefined, obj);
+        } catch {
+          return undefined;
         }
-        if (typeof Element !== 'undefined' && Element.prototype && Element.prototype.scrollIntoView) {
-          var _elScrollIntoView = Element.prototype.scrollIntoView;
-          Element.prototype.scrollIntoView = function(arg) {
-            try { _elScrollIntoView.call(this); } catch (e) {}
-          };
+      };
+    }
+    
+    // double-tap click guard (iOS Safari) – scope only to #altsim
+    document.addEventListener("DOMContentLoaded", () => {
+      const container = document.getElementById("altsim");
+      if (!container) return;
+      
+      let lastTouchTime = 0;
+      container.addEventListener("touchstart", () => {
+        lastTouchTime = Date.now();
+      }, true);
+      
+      container.addEventListener("click", (e) => {
+        if (Date.now() - lastTouchTime < 300) {
+          const id = e.target?.id;
+          const cls = e.target?.className?.toString();
+          const tag = e.target?.tagName?.toLowerCase();
+          
+          const isSummaryOrInside = (function(n) {
+            while (n) {
+              if (n.tagName && n.tagName.toLowerCase() === "summary") return true;
+              n = n.parentNode;
+            }
+            return false;
+          })(e.target);
+          
+          const allowedTags = ["input", "select", "option", "button", "a", "summary"];
+          const isAllowed =
+            id === "closeLog" ||
+            (cls && cls.indexOf("sticky") !== -1) ||
+            allowedTags.includes(tag) ||
+            isSummaryOrInside;
+          
+          if (!isAllowed) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+          }
         }
-      }
-    } catch (e) {}
-
-    try {
-      var supportsPreventScroll = true;
-      try {
-        var _testEl = document.createElement('div');
-        _testEl.focus({ preventScroll: true });
-      } catch (err) {
-        supportsPreventScroll = false;
-      }
-      if (!supportsPreventScroll && typeof Element !== 'undefined' && Element.prototype && Element.prototype.focus) {
-        var nativeFocus = Element.prototype.focus;
-        Element.prototype.focus = function(options) {
-          if (options && options.preventScroll) {
-            var x = window.scrollX || window.pageXOffset || 0;
-            var y = window.scrollY || window.pageYOffset || 0;
-            nativeFocus.call(this);
-            try { window.scrollTo(x, y); } catch (e) {}
-          } else {
-            nativeFocus.call(this);
+      }, true);
+    });
+    
+    // snackbar reposition (safe-area inset fix)
+    (function() {
+      const reposition = () => {
+        const sb = document.querySelector('.snackbar.show');
+        if (sb) {
+          if (!sb.hasAttribute('data-compat-bottom')) {
+            const cur = sb.style.bottom;
+            if (cur) sb.setAttribute('data-compat-bottom', cur);
           }
-        };
-      }
-    } catch (e) {}
-
-    try {
-      if (window.NodeList && !NodeList.prototype.forEach) {
-        NodeList.prototype.forEach = Array.prototype.forEach;
-      }
-    } catch (e) {}
-
-    try {
-      if (!document.documentElement.dataset) {
-        Object.defineProperty(Element.prototype, 'dataset', {
-          get: function() {
-            var attrs = this.attributes;
-            var map = {};
-            for (var i = 0; i < attrs.length; i++) {
-              var name = attrs[i].name;
-              if (name.indexOf('data-') === 0) {
-                var prop = name.substr(5).replace(/-([a-z])/g, function(m, p) { return p.toUpperCase(); });
-                map[prop] = attrs[i].value;
-              }
-            }
-            return map;
-          }
-        });
-      }
-    } catch (e) {}
-
-    try {
-      if (typeof window.safeGet !== 'function') {
-        window.safeGet = function(obj, path) {
-          if (!path) return undefined;
-          try {
-            return path.split('.').reduce(function(acc, key) {
-              return (acc && acc[key] !== undefined) ? acc[key] : undefined;
-            }, obj);
-          } catch (e) {
-            return undefined;
-          }
-        };
-      }
-    } catch (e) {}
-
-    try {
-      (function() {
-        var lastTouchTime = 0;
-        document.addEventListener('touchstart', function() {
-          lastTouchTime = Date.now();
-        }, true);
-        document.addEventListener("click", function(e) {
-          if (Date.now() - lastTouchTime < 300) {
-            const id = e.target && e.target.id;
-            const cls = e.target && e.target.className && e.target.className.toString();
-            const tag = e.target && e.target.tagName && e.target.tagName.toLowerCase();
-
-            const isSummaryOrInside = (function(n){
-  while(n){ if(n.tagName && n.tagName.toLowerCase()==='summary') return true; n = n.parentNode; }
-  return false;
-})(e.target);
-const allowedTags = ["input", "select", "option", "button", "a", "summary"];
-
-const isAllowed =
-  id === "closeLog" ||
-  (cls && cls.indexOf("sticky") !== -1) ||
-  allowedTags.includes(tag) ||
-  isSummaryOrInside;
-
-            if (!isAllowed) {
-              e.stopImmediatePropagation();
-              e.preventDefault();
-            }
-          }
-        }, true);
-      })();
-    } catch (e) {}
-
-    try {
-      (function() {
-        var reposition = function() {
-          try {
-            var sb = document.querySelector('.snackbar.show');
-            if (sb) {
-              if (!sb.hasAttribute('data-compat-bottom')) {
-                var cur = sb.style.bottom;
-                if (cur) sb.setAttribute('data-compat-bottom', cur);
-              }
-              if (sb.getAttribute('data-compat-bottom')) {
-                sb.style.bottom = sb.getAttribute('data-compat-bottom');
-              } else {
-                sb.style.bottom = '20px';
-              }
-            }
-          } catch (e) {}
-        };
-        window.addEventListener('resize', reposition, false);
-      })();
-    } catch (e) {}
+          sb.style.bottom = sb.getAttribute('data-compat-bottom') || '20px';
+        }
+      };
+      window.addEventListener('resize', reposition, false);
+    })();
   })();
-(function(){
-  try {
-    if (!Object.values) {
-      Object.values = function(o){ return Object.keys(o).map(function(k){ return o[k]; }); };
-    }
-  } catch(e){}
-  try {
-    if (!Number.isFinite) {
-      Number.isFinite = function(v){ return typeof v === 'number' && isFinite(v); };
-    }
-  } catch(e){}
-})();</script>
+</script>
 <!-- end compat-shim -->
 
 </head>
  <body>
-<div class="container">
+<div class="container" id="altsim">
 <div id="version">
   <p><a href="https://discord.gg/9j2WnTAnMu" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 512 512"><path fill="#5865F2" d="M105 0h302c57.928.155 104.845 47.072 105 104.996V407c-.155 57.926-47.072 104.844-104.996 104.998L105 512C47.074 511.844.156 464.926.002 407.003L0 105C.156 47.072 47.074.155 104.997 0H105z"/><g data-name=""><g data-name="Discord Logos"><path fill="#fff" fill-rule="nonzero" d="M368.896 153.381a269.506 269.506 0 00-67.118-20.637 186.88 186.88 0 00-8.57 17.475 250.337 250.337 0 00-37.247-2.8c-12.447 0-24.955.946-37.25 2.776-2.511-5.927-5.427-11.804-8.592-17.454a271.73 271.73 0 00-67.133 20.681c-42.479 62.841-53.991 124.112-48.235 184.513a270.622 270.622 0 0082.308 41.312c6.637-8.959 12.582-18.497 17.63-28.423a173.808 173.808 0 01-27.772-13.253c2.328-1.688 4.605-3.427 6.805-5.117 25.726 12.083 53.836 18.385 82.277 18.385 28.442 0 56.551-6.302 82.279-18.387 2.226 1.817 4.503 3.557 6.805 5.117a175.002 175.002 0 01-27.823 13.289 197.847 197.847 0 0017.631 28.4 269.513 269.513 0 0082.363-41.305l-.007.007c6.754-70.045-11.538-130.753-48.351-184.579zM201.968 300.789c-16.04 0-29.292-14.557-29.292-32.465s12.791-32.592 29.241-32.592 29.599 14.684 29.318 32.592c-.282 17.908-12.919 32.465-29.267 32.465zm108.062 0c-16.066 0-29.267-14.557-29.267-32.465s12.791-32.592 29.267-32.592c16.475 0 29.522 14.684 29.241 32.592-.281 17.908-12.894 32.465-29.241 32.465z" data-name="Discord Logo - Large - White"/></g></g></svg>Ragnarok X University</a></p>
   <p><i>v1.0.9</i> [<button id="openLog" type="button">Changelog</button>]</p>
@@ -674,14 +591,14 @@ const isAllowed =
     <div class="form-group">
       <label for="race" id="raceLabel">DMG to Race %</label>
       <div class="input-wrap">
-        <input id="race" type="number" min="1" disabled />
+        <input id="race" type="number" min="20" disabled />
       </div>
     </div>
 
     <div class="form-group">
       <label for="attr" id="attrLabel">DMG to Attribute %</label>
       <div class="input-wrap">
-        <input id="attr" type="number" min="1" disabled />
+        <input id="attr" type="number" min="20" disabled />
       </div>
     </div>
   </div>
@@ -860,6 +777,7 @@ const defTable = {
   "Maya Lv.140": { def: 98.97, dmgred: 136.40, sizeMob: "Large", raceMob: "Insect", attributeMob: "Earth" },
   "Orc Hero Lv.140": { def: 82.47, dmgred: 136.40, sizeMob: "Large", raceMob: "Demi-Human", attributeMob: "Earth" },
   "Pharaoh Lv.140": { def: 98.97, dmgred: 136.40, sizeMob: "Large", raceMob: "Demi-Human", attributeMob: "Shadow" },
+  "Orc Lord Lv.140": { def: 82.47, dmgred: 136.40, sizeMob: "Large", raceMob: "Demi-Human", attributeMob: "Earth" },
   "Doppelganger Lv.140": { def: 172.98, dmgred: 204.60, sizeMob: "Medium", raceMob: "Demon", attributeMob: "Shadow" },
   "Amon Ra Lv.140": { def: 106.98, dmgred: 204.60, sizeMob: "Large", raceMob: "Demi-Human", attributeMob: "Earth" },
   "Morroc Lv.140": { def: 131.97, dmgred: 136.40, sizeMob: "Large", raceMob: "Demon", attributeMob: "Shadow" },
@@ -942,7 +860,6 @@ const defTable = {
   "Ktullanux Lv.150": { def: 299.07, dmgred: 575.77, sizeMob: "Large", raceMob: "Dragon", attributeMob: "Water" },
   "Shelter Lv.150": { def: 293.16, dmgred: 317.00, sizeMob: "Medium", raceMob: "Angel", attributeMob: "Holy" }
 };
-
 const raceTypes = [
   "Angel","Demon","Formless","Insect","Fish",
   "Demi-Human","Undead","Dragon","Plant","Brute"
@@ -1009,36 +926,42 @@ function showSnack(text) {
 }
 function normalizeInput(el, pastedValue) {
   if (!el) return;
+  
   let v = (pastedValue ?? el.value).replace(',', '.').trim();
+  
   if (/^\d+\.$/.test(v)) {
     v = v.slice(0, -1);
   }
+  
   if (!/^\d+(\.\d+)?$/.test(v)) {
     showSnack("Input valid number!");
     el.value = '';
     return;
   }
+  
   if (/^0\d+/.test(v)) {
     showSnack("No leading zeros!");
     el.value = String(Number(v));
     return;
   }
-  if (v === '' || Number(v) < 1) {
-    showSnack("Min value is 1!");
+  
+
+  const minVal = Number(el.getAttribute("min")) || 0;
+  
+  if (v === '' || Number(v) < minVal) {
+    showSnack(`Min value is ${minVal}!`);
     el.value = '';
     return;
   }
+  
   el.value = v;
 }
-
-
 function getWeaponSizeMod(weapon, size) {
   const map = weaponSizeModifier[weapon];
   if (!map) return 1.0;
   const val = map[size];
   return Number.isFinite(val) ? Number(val) : 1.0;
 }
-
 function getElemCounter(welem, tElem) {
   const map = elementCounter[welem] || elementCounter['Neutral'];
   const base = tElem ? ((map[tElem] !== undefined && map[tElem] !== null) ? map[tElem] : map['Neutral']) : ((map['Neutral'] !== undefined && map['Neutral'] !== null) ? map['Neutral'] : 1.0);
@@ -1065,26 +988,30 @@ function calcMultiplier({
 }) {
   const { def, dmgred } = getTargetDefData(tDefKey);
   const atkF = calcAttackFactor(atkType, penVal, critVal, def);
-  const effDmgVal = (Number(dmgVal) || 0) - (Number(dmgred) || 0);
-  const sizeMod = getWeaponSizeMod(weapon, tSize);
-  const elemCtr = getElemCounter(wElem, tAttr);
+
+  const effDmgVal = Number(dmgVal) - dmgred;
+  const sizeMod   = getWeaponSizeMod(weapon, tSize);
+  const elemCtr   = getElemCounter(wElem, tAttr);
+
   const mult = (1 + atkF) *
     (1 + (effDmgVal / 100)) *
-    (sizeMod + (Number(sizeEnhVal) || 0) / 100) *
-    (elemCtr + (Number(elemEnhVal) || 0) / 100) *
-    (1 + (tAttr ? (Number(attrVal) || 0) / 100 : 0)) *
-    (1 + (tRace ? (Number(raceVal) || 0) / 100 : 0));
+    (sizeMod + (Number(sizeEnhVal) / 100)) *
+    (elemCtr + (Number(elemEnhVal) / 100)) *
+    (1 + (tAttr ? (Number(attrVal) / 100) : 0)) *
+    (1 + (tRace ? (Number(raceVal) / 100) : 0));
+
   return { mult, def, dmgred, effDmgVal, atkF };
 }
 function computeMultiplier() {
-  const atkType = els.atkType.value;
-  const penVal = Number(els.pen.value) || 0;
-  const critVal = Number(els.crit.value) || 0;
-  const dmgVal = Number(els.dmg.value) || 0;
-  const sizeEnhVal = Number(els.sizeEnh.value) || 0;
-  const elemEnhVal = Number(els.elemEnh.value) || 0;
-  const raceVal = Number(els.race.value) || 0;
-  const attrVal = Number(els.attr.value) || 0;
+  const atkType     = els.atkType.value;
+  const penVal      = Number(els.pen.value) || 0;
+  const critVal     = Number(els.crit.value) || 0;
+  const dmgVal      = Number(els.dmg.value) || 0;
+  const sizeEnhVal  = Number(els.sizeEnh.value) || 0;
+  const elemEnhVal  = Number(els.elemEnh.value) || 0;
+  const raceVal     = Number(els.race.value) || 0;
+  const attrVal     = Number(els.attr.value) || 0;
+
   const result = calcMultiplier({
     atkType,
     penVal,
@@ -1101,6 +1028,7 @@ function computeMultiplier() {
     tRace: els.tRace.value,
     tDefKey: els.tDef.value
   });
+
   return {
     atkType, penVal, critVal, dmgVal,
     sizeEnhVal, elemEnhVal, raceVal, attrVal,
@@ -1115,39 +1043,32 @@ const TABLE_CONFIG = {
   jitter: 0.3,
   randomMode: 'clamp',
   centerScale: 0.5,
-  raceAttrCap: 380,
-  weightMode: 'sqrt', // 'linear' | 'sqrt'
-  bias: { main: 1.2, dmg: 1, elem: 0.9, size: 0.9, race: 0.8, attr: 0.8 },
+  raceAttrCap: 480,
+  bias: { main: .7, dmg: .6, elem: .6, size: .5, race: 1, attr: 1 },
   cats: [
-    { label: '0-8%', min: 1.00, max: 1.08 },
+    { label: '0-8%',    min: 1.00, max: 1.08 },
     { label: '10-20%', min: 1.10, max: 1.20 },
     { label: '20-30%', min: 1.20, max: 1.30 },
-    { label: '50-100%', min: 1.50, max: 2.00 }
+    { label: '50-100%',min: 1.50, max: 2.00 }
   ]
 };
-
 function calculateWeights({ includeRace, includeAttr, baseMain, baseDmg, baseElem, baseSize, baseRace, baseAttr }) {
   const B = TABLE_CONFIG.bias;
   const s1 = v => Math.max(Number(v) || 0, 0);
-  
-  const f = (x) => {
-    if (TABLE_CONFIG.weightMode === 'sqrt') return Math.sqrt(x);
-    return x;
-  };
-  
+
   const raws = [
-    f(s1(baseMain)) * B.main,
-    f(s1(baseDmg)) * B.dmg,
-    f(s1(baseElem)) * B.elem,
-    f(s1(baseSize)) * B.size
+    s1(baseMain) * B.main,
+    s1(baseDmg) * B.dmg,
+    s1(baseElem) * B.elem,
+    s1(baseSize) * B.size
   ];
-  
+
   const maxRaw = Math.max(...raws, 1);
   const norms = raws.map(v => v / maxRaw);
   const coreSum = norms.reduce((a, b) => a + b, 0) || 1;
   const coreShare = (includeRace || includeAttr) ? 0.8 : 1.0;
   const addShare = 1 - coreShare;
-  
+
   let w = {
     main: norms[0] / coreSum * coreShare,
     dmg: norms[1] / coreSum * coreShare,
@@ -1156,10 +1077,10 @@ function calculateWeights({ includeRace, includeAttr, baseMain, baseDmg, baseEle
     race: 0,
     attr: 0
   };
-  
-  const raceAvail = includeRace && baseRace < TABLE_CONFIG.raceAttrCap;
-  const attrAvail = includeAttr && baseAttr < TABLE_CONFIG.raceAttrCap;
-  
+
+  const raceAvail = includeRace && baseRace > 0 && baseRace < TABLE_CONFIG.raceAttrCap;
+  const attrAvail = includeAttr && baseAttr > 0 && baseAttr < TABLE_CONFIG.raceAttrCap;
+
   if (raceAvail && attrAvail) {
     const rSum = s1(baseRace) + s1(baseAttr);
     if (rSum > 0) {
@@ -1179,20 +1100,22 @@ function calculateWeights({ includeRace, includeAttr, baseMain, baseDmg, baseEle
       w[keys[i]] += (v / coreSum) * addShare;
     });
   }
-  
+
   const total = Object.values(w).reduce((a, b) => a + b, 0) || 1;
   Object.keys(w).forEach(k => { w[k] /= total; });
-  
+
   return w;
 }
+
 function generateRecommendations(state) {
   const base = state.mult;
   const recRoot = els.rec;
   recRoot.innerHTML = '';
-  const includeRace = !!els.tRace.value;
-  const includeAttr = !!els.tAttr.value;
+  const includeRace = !!els.tRace.value && (Number(state.raceVal) || 0) > 0;
+  const includeAttr = !!els.tAttr.value && (Number(state.attrVal) || 0) > 0;
   const isPen = state.atkType === 'pen';
   const s1 = (v)=>Math.max(Number(v)||0,0);
+
   const randAround = (val, j = TABLE_CONFIG.jitter) => {
     const v = Number(val) || 0;
     const mode = TABLE_CONFIG.randomMode;
@@ -1212,14 +1135,20 @@ function generateRecommendations(state) {
     const delta = (Math.random() * 2 - 1) * j;
     return Math.max(0, v * (1 + delta));
   };
+
   const renderFactorCell = (val, baseVal)=>{
     const rounded = Math.round(val), baseRounded = Math.round(baseVal);
-    let cls = 'neutral'; if (rounded >= baseRounded+6) cls='up'; else if (rounded <= baseRounded-6) cls='down';
-    const span = document.createElement('span'); span.className=cls; span.textContent=rounded;
-    const td = document.createElement('td'); td.appendChild(span); return td;
+    let cls = 'neutral'; 
+    if (rounded >= baseRounded+6) cls='up'; 
+    else if (rounded <= baseRounded-6) cls='down';
+    const span = document.createElement('span'); 
+    span.className=cls; 
+    span.textContent=rounded;
+    const td = document.createElement('td'); 
+    td.appendChild(span); 
+    return td;
   };
-  const sizeMod = getWeaponSizeMod(els.weapon.value, els.tSize.value);
-  const elemCtr = getElemCounter(els.wElem.value, els.tAttr.value);
+
   const basePen  = state.penVal||0;
   const baseCrit = state.critVal||0;
   const baseMain = isPen ? basePen : baseCrit;
@@ -1228,25 +1157,38 @@ function generateRecommendations(state) {
   const baseElem = state.elemEnhVal||0;
   const baseAttr = includeAttr ? (state.attrVal||0) : 0;
   const baseRace = includeRace ? (state.raceVal||0) : 0;
+
   const W = calculateWeights({ includeRace, includeAttr, baseMain, baseDmg, baseElem, baseSize, baseRace, baseAttr });
+
   const CS = TABLE_CONFIG.centerScale;
   const center = (base, w)=> s1(base) * (1 + w*CS);
+
   const cMain = center(baseMain, W.main);
   const cDmg  = center(baseDmg,  W.dmg);
   const cElem = center(baseElem, W.elem);
   const cSize = center(baseSize, W.size);
   const cAttr = includeAttr ? Math.min(center(baseAttr, W.attr), TABLE_CONFIG.raceAttrCap) : 0;
   const cRace = includeRace ? Math.min(center(baseRace, W.race), TABLE_CONFIG.raceAttrCap) : 0;
+
   for (const cat of TABLE_CONFIG.cats) {
-    const tbl = document.createElement('table'); tbl.className='recommend-table';
-    const cap = document.createElement('caption'); cap.textContent='Increases '+cat.label; tbl.appendChild(cap);
+    const tbl = document.createElement('table'); 
+    tbl.className='recommend-table';
+    const cap = document.createElement('caption'); 
+    cap.textContent='Increases '+cat.label; 
+    tbl.appendChild(cap);
+
     const trHead = document.createElement('tr');
     const headers = [isPen?'PEN':'CRIT','P/M BO','Element','Size'];
     if (includeRace) headers.push('Race');
     if (includeAttr) headers.push('Attribute');
     headers.push('Multiplier','\u2206');
-    headers.forEach(h=>{ const th=document.createElement('th'); th.textContent=h; trHead.appendChild(th); });
+    headers.forEach(h=>{ 
+      const th=document.createElement('th'); 
+      th.textContent=h; 
+      trHead.appendChild(th); 
+    });
     tbl.appendChild(trHead);
+
     const tbody = document.createElement('tbody');
     const seen = new Set(), seenDelta = new Set();
     const seenMain = new Set(), seenDmg = new Set(), seenElem = new Set(),
@@ -1254,38 +1196,50 @@ function generateRecommendations(state) {
     const rows = [];
     const MAX_ATTEMPTS = 600;
     let attempts = 0, jitter = TABLE_CONFIG.jitter;
+
     while (rows.length < 5 && attempts < MAX_ATTEMPTS) {
       attempts++;
       let rPen = basePen, rCrit = baseCrit;
-      if (isPen) { rPen = randAround(cMain, jitter); } else { rCrit = randAround(cMain, jitter); }
+      if (isPen) { rPen = randAround(cMain, jitter); } 
+      else { rCrit = randAround(cMain, jitter); }
+
       const rDmg  = randAround(cDmg,  jitter);
       const rElem = randAround(cElem, jitter);
       const rSize = randAround(cSize, jitter);
+
       let rAttr = 0, rRace = 0;
+
       if (includeAttr && includeRace) {
         const cap = TABLE_CONFIG.raceAttrCap;
         const tol = 30;
         const userTotal = (baseRace + baseAttr) || 0;
         const maxTotal = (userTotal >= cap) ? (userTotal + tol) : cap;
         const total = Math.min(randAround(userTotal, jitter), maxTotal);
+
         const baseRatio = userTotal ? (baseRace / userTotal) : 0.5;
         const noise = (Math.random() * 0.2) - 0.1;
         const ratio = Math.min(Math.max(baseRatio + noise, 0.3), 0.7);
+
         let rRaceTmp = total * ratio;
         let rAttrTmp = total * (1 - ratio);
+
         const sum = rRaceTmp + rAttrTmp;
         if (sum > maxTotal) {
           const scale = maxTotal / sum;
           rRaceTmp *= scale;
           rAttrTmp *= scale;
         }
+
         rRace = rRaceTmp;
         rAttr = rAttrTmp;
+
       } else if (includeRace) {
         rRace = Math.min(randAround(cRace, jitter), TABLE_CONFIG.raceAttrCap);
+
       } else if (includeAttr) {
         rAttr = Math.min(randAround(cAttr, jitter), TABLE_CONFIG.raceAttrCap);
       }
+
       const { mult: newMult } = calcMultiplier({
         atkType: isPen ? 'pen' : 'crit',
         penVal: rPen,
@@ -1302,15 +1256,18 @@ function generateRecommendations(state) {
         tRace: els.tRace.value,
         tDefKey: els.tDef.value
       });
+
       if (newMult <= base) continue;
       const ratio = newMult / Math.max(base, 1e-9);
       if (ratio < cat.min || ratio > cat.max) continue;
+
       const mainVal = Math.round(isPen ? rPen : rCrit);
       const dmgVal  = Math.round(rDmg);
       const elemVal = Math.round(rElem);
       const sizeVal = Math.round(rSize);
       const raceVal = includeRace ? Math.round(rRace) : null;
       const attrVal = includeAttr ? Math.round(rAttr) : null;
+
       const key = [mainVal,dmgVal,elemVal,sizeVal,raceVal||'-',attrVal||'-'].join('|');
       if (seen.has(key)) continue;
       if (seenMain.has(mainVal)) continue;
@@ -1319,20 +1276,26 @@ function generateRecommendations(state) {
       if (seenSize.has(sizeVal)) continue;
       if (includeAttr && seenAttr.has(attrVal)) continue;
       if (includeRace && seenRace.has(raceVal)) continue;
+
       const deltaPct = ((newMult - base)/base)*100;
       const deltaKey = Number(deltaPct.toFixed(1));
       if (seenDelta.has(deltaKey)) continue;
+
       seen.add(key); seenDelta.add(deltaKey);
       seenMain.add(mainVal); seenDmg.add(dmgVal); seenElem.add(elemVal); seenSize.add(sizeVal);
       if (includeAttr) seenAttr.add(attrVal);
       if (includeRace) seenRace.add(raceVal);
+
       rows.push({ main: mainVal, dmg: dmgVal, elem: elemVal, size: sizeVal,
         attr: attrVal, race: raceVal, newMult, deltaPct });
+
       if (rows.length < 5 && attempts % 200 === 0) {
         jitter = Math.min(jitter + 0.1, 0.9);
       }
     }
+
     rows.sort((a,b)=> b.deltaPct-a.deltaPct || b.newMult-a.newMult || b.main-a.main);
+
     if (rows.length) {
       for (const row of rows) {
         const tr = document.createElement('tr');
@@ -1347,13 +1310,21 @@ function generateRecommendations(state) {
         tbody.appendChild(tr);
       }
     } else {
-      const tr = document.createElement('tr'); const td = document.createElement('td');
-      td.colSpan = headers.length; td.textContent = 'No combination found'; tr.appendChild(td); tbody.appendChild(tr);
+      const tr = document.createElement('tr'); 
+      const td = document.createElement('td');
+      td.colSpan = headers.length; td.textContent = 'No combination found'; 
+      tr.appendChild(td); 
+      tbody.appendChild(tr);
     }
+
     tbl.appendChild(tbody);
-    const wrap = document.createElement('div'); wrap.className='table-wrapper'; wrap.appendChild(tbl); recRoot.appendChild(wrap);
+    const wrap = document.createElement('div'); 
+    wrap.className='table-wrapper'; 
+    wrap.appendChild(tbl); 
+    recRoot.appendChild(wrap);
   }
-  showSnack('Output and Recommendations updated');
+
+  showSnack('Recommendations updated');
 }
 let resultShown = false;
 function onDropdownChange(e) {
@@ -1515,13 +1486,17 @@ function renderMultiplierBreakdown(state, list, elemCtr, sizeMod, isPen) {
     });
   }
 
+  // fmt dengan toggle full precision
+  function fmt(n) {
+    const num = Number(n);
+    const showFull = resultEl && resultEl.dataset && resultEl.dataset.showFullPrecision === "1";
+    if (showFull) return num;
+    return Math.trunc(num * 100) / 100;
+  }
+
   const createBreakdownItems = () => {
     const ul = h("ul", { class: "factor-breakdown" });
     const fragment = document.createDocumentFragment();
-
-    function fmt(n) {
-      return Number(n) % 1 === 0 ? n : Number(n).toFixed(2);
-    }
 
     list.forEach(f => {
       let li;
@@ -1533,79 +1508,103 @@ function renderMultiplierBreakdown(state, list, elemCtr, sizeMod, isPen) {
         if (isPen) {
           const raw = state.penVal, def = state.def || 0, basePen = raw - def;
           ulSub.appendChild(h("li", { text: `Raw PEN + Final PEN: ${fmt(raw)}` }));
-          ulSub.appendChild(h("li", { text: `Target DEF: ${def}` }));
+          ulSub.appendChild(h("li", { text: `Target DEF: ${fmt(def)}` }));
           if (basePen >= 150) {
             const effPercent = (basePen * 2) - 150;
-            ulSub.appendChild(h("li", { text: `1.00 + ((( ${fmt(raw)} - ${def} ) × 2 ) - 150 ) / 100` }));
-            ulSub.appendChild(h("li", { text: `1.00 + ( ${fmt(effPercent)} / 100 ) → ×${f.mult.toFixed(2)}` }));
+            ulSub.appendChild(h("li", { text: `1.00 + ((( ${fmt(raw)} - ${fmt(def)} ) × 2 ) - 150 ) / 100` }));
+            ulSub.appendChild(h("li", { text: `1.00 + ( ${fmt(effPercent)} / 100 ) → ×${fmt(f.mult)}` }));
           } else {
-            ulSub.appendChild(h("li", { text: `1.00 + (( ${fmt(raw)} - ${def} ) / 100 ) → ×${f.mult.toFixed(2)}` }));
+            ulSub.appendChild(h("li", { text: `1.00 + (( ${fmt(raw)} - ${fmt(def)} ) / 100 ) → ×${fmt(f.mult)}` }));
           }
         } else {
           ulSub.appendChild(h("li", { text: `Crit DMG: ${fmt(f.val)}` }));
-          ulSub.appendChild(h("li", { text: `1.00 + ( ${fmt(f.val)} / 100 ) → ×${f.mult.toFixed(2)}` }));
+          ulSub.appendChild(h("li", { text: `1.00 + ( ${fmt(f.val)} / 100 ) → ×${fmt(f.mult)}` }));
         }
         li = h("li", { text: `Attack Type: ${isPen ? "PEN" : "CRIT"} vs ${defLabel}` }, ulSub);
       } else if (f.key === "dmg") {
         li = h("li", { text: "Final P/M Damage Bonus" }, h("ul", {}, [
           h("li", { text: `P/M BO: ${fmt(f.val)}` }),
-          h("li", { text: `Target Reduction: ${state.dmgred || 0}` }),
-          h("li", { text: `1.00 + (( ${fmt(f.val)} - ${state.dmgred || 0} ) / 100 ) → ×${f.mult.toFixed(2)}` })
+          h("li", { text: `Target Reduction: ${fmt(state.dmgred || 0)}` }),
+          h("li", { text: `1.00 + (( ${fmt(f.val)} - ${fmt(state.dmgred || 0)} ) / 100 ) → ×${fmt(f.mult)}` })
         ]));
       } else if (f.key === "elem") {
         const ulSub = h("ul", {}, [
-          h("li", { text: `Counter: ${elemCtr}` }),
+          h("li", { text: `Counter: ${fmt(elemCtr)}` }),
           h("li", { text: `${wElemEl.value} Enhance: ${fmt(f.val)}` }),
-          h("li", { text: `${elemCtr} + ${( f.val / 100 ).toFixed(2)} → ×${f.mult.toFixed(2)}` })
+          h("li", { text: `${fmt(elemCtr)} + ${(fmt(f.val / 100))} → ×${fmt(f.mult)}` })
         ]);
         if (!tAttrEl.value) ulSub.appendChild(h("li", { text: "Tools assume target Neutral if you're not targeting any attribute." }));
         li = h("li", { text: `Element: ${wElemEl.value || "Neutral"} vs ${tAttrEl.value || "Neutral"}` }, ulSub);
       } else if (f.key === "size") {
         li = h("li", { text: `Size: ${weaponEl.value} vs ${tSizeEl.value}` }, h("ul", {}, [
-          h("li", { text: `Modifier: ${sizeMod}` }),
+          h("li", { text: `Modifier: ${fmt(sizeMod)}` }),
           h("li", { text: `${tSizeEl.value} Enhance: ${fmt(f.val)}` }),
-          h("li", { text: `${sizeMod} + ${( f.val / 100 ).toFixed(2)} → ×${f.mult.toFixed(2)}` })
+          h("li", { text: `${fmt(sizeMod)} + ${(fmt(f.val / 100))} → ×${fmt(f.mult)}` })
         ]));
       } else if (f.key === "race") {
         const raceLabel = (tRaceEl.options[tRaceEl.selectedIndex]?.text) || "Target Race";
         li = h("li", { text: `Race: ${raceLabel}` }, h("ul", {}, [
           h("li", { text: `DMG to ${raceLabel}: ${fmt(f.val)}` }),
-          h("li", { text: `1.00 + ( ${fmt(f.val)} / 100 ) → ×${f.mult.toFixed(2)}` })
+          h("li", { text: `1.00 + ( ${fmt(f.val)} / 100 ) → ×${fmt(f.mult)}` })
         ]));
       } else if (f.key === "attr") {
         const attrLabel = (tAttrEl.options[tAttrEl.selectedIndex]?.text) || "Target Attribute";
         li = h("li", { text: `Attribute: ${attrLabel}` }, h("ul", {}, [
           h("li", { text: `DMG to ${attrLabel} Attribute: ${fmt(f.val)}` }),
-          h("li", { text: `1.00 + ( ${fmt(f.val)} / 100 ) → ×${f.mult.toFixed(2)}` })
+          h("li", { text: `1.00 + ( ${fmt(f.val)} / 100 ) → ×${fmt(f.mult)}` })
         ]));
       } else {
-        li = h("li", { text: `${f.label}: ${fmt(f.val)} → ×${f.mult.toFixed(2)}` });
+        li = h("li", { text: `${f.label}: ${fmt(f.val)} → ×${fmt(f.mult)}` });
       }
       fragment.appendChild(li);
     });
+
     ul.appendChild(fragment);
     return ul;
-};
+  };
+
+  // tombol toggle ganti nama jadi precisionBtn
+  const showFull = resultEl && resultEl.dataset && resultEl.dataset.showFullPrecision === "1";
+  const precisionBtn = h("button", {
+    type: "button",
+    class: "toggle-precision",
+    text: showFull ? "Beautify!" : "Want to see?"
+  });
+  precisionBtn.addEventListener("click", ev => {
+    ev.preventDefault();
+    if (!resultEl || !resultEl.dataset) return;
+    resultEl.dataset.showFullPrecision = resultEl.dataset.showFullPrecision === "1" ? "0" : "1";
+    processCalculation(); // re-render
+  });
 
   const container = h("div", { id: "multiplier-breakdown", class: "multiplier-breakdown" }, [
+    h("blockquote", { class: "noted" }, [
+  "Values shown to two decimal places for readability. The final result is computed with full precision(",precisionBtn,"), so it may differ slightly if you recompute using the displayed (rounded) numbers."
+]),
     h("blockquote", { class: "noted", text: "By default, every factor starts at ×1.00. Numbers show how it changes with your stats." }),
     createBreakdownItems(),
-    h("hr", {class: "separ"}),
-h("p", {}, [
-  "Your multiplier to ",
-  h("i", {}, [
-    [tSizeEl.value, tRaceEl.value, tAttrEl.value]
-    .filter(function(v) { return v; })
-    .join(" + "),
-    " (",
-    tDefEl.options[tDefEl.selectedIndex] ?
-    tDefEl.options[tDefEl.selectedIndex].text :
-    "",
-    ")"
-  ]),
-  ":"
-]),
-    h("p", { text: "1.00 " + list.map(f => f.show === false ? `× 1.00 (${f.label.toLowerCase()} not selected)` : `× ${f.mult.toFixed(2)}`).join(" ") + " = ×" + state.mult.toFixed(2) }),
+    h("hr", { class: "separ" }),
+    h("p", {}, [
+      "Your multiplier to ",
+      h("i", {}, [
+        [tSizeEl.value, tRaceEl.value, tAttrEl.value]
+          .filter(function(v) { return v; })
+          .join(" + "),
+        " (",
+        tDefEl.options[tDefEl.selectedIndex] ?
+          tDefEl.options[tDefEl.selectedIndex].text :
+          "",
+        ")"
+      ]),
+      ":"
+    ]),
+    h("p", {
+      text: "1.00 " + list.map(f =>
+        f.show === false ?
+          `× 1.00 (${f.label.toLowerCase()} not selected)` :
+          `× ${fmt(f.mult)}`
+      ).join(" ") + " = ×" + fmt(state.mult)
+    }),
     h("blockquote", { class: "noted", text: "Only base multipliers! Real output depends on class, skills, buffs, and more. More accurate? Just use job sims." })
   ]);
 
@@ -1651,62 +1650,38 @@ h("p", {}, [
     const isPreset = k => presetKeys.has(k);
     tDefEl.value = currKey;
 
-    const sameFactors = currData.sizeMob === prevData.sizeMob && currData.raceMob === prevData.raceMob && currData.attributeMob === prevData.attributeMob;
+    const sameFactors = currData.sizeMob === prevData.sizeMob &&
+                        currData.raceMob === prevData.raceMob &&
+                        currData.attributeMob === prevData.attributeMob;
 
     if ((isPreset(prevKey) && isPreset(currKey)) ||
-  (!isPreset(prevKey) && isPreset(currKey)) ||
-  (!isPreset(prevKey) && !isPreset(currKey) && prevKey.replace(/\d+$/, "") === currKey.replace(/\d+$/, "")) ||
-  (!isPreset(prevKey) && !isPreset(currKey) && sameFactors)) {
-  
-  // reset kalau dari spesifik -> preset
-  if (!isPreset(prevKey) && isPreset(currKey)) {
-    [tRaceEl, tAttrEl].forEach((el, idx) => {
-      if (el) {
-        el.value = "";
-        try {
-          el.dispatchEvent(new Event("input", { bubbles: true }));
-        } catch (e) {
-          const ev = document.createEvent("HTMLEvents");
-          ev.initEvent("input", true, false);
-          el.dispatchEvent(ev);
-        }
-        try {
-          el.dispatchEvent(new Event("change", { bubbles: true }));
-        } catch (e) {
-          const ev = document.createEvent("HTMLEvents");
-          ev.initEvent("change", true, false);
-          el.dispatchEvent(ev);
-        }
+        (!isPreset(prevKey) && isPreset(currKey)) ||
+        (!isPreset(prevKey) && !isPreset(currKey) && prevKey.replace(/\d+$/, "") === currKey.replace(/\d+$/, "")) ||
+        (!isPreset(prevKey) && !isPreset(currKey) && sameFactors)) {
+
+      if (!isPreset(prevKey) && isPreset(currKey)) {
+        [tRaceEl, tAttrEl].forEach((el, idx) => {
+          if (el) {
+            el.value = "";
+            try { el.dispatchEvent(new Event("input", { bubbles: true })); } catch (e) {}
+            try { el.dispatchEvent(new Event("change", { bubbles: true })); } catch (e) {}
+          }
+          const fieldId = idx === 0 ? "race" : "attr";
+          const inputEl = els[fieldId];
+          if (inputEl) {
+            inputEl.value = "";
+            try { inputEl.dispatchEvent(new Event("input", { bubbles: true })); } catch (e) {}
+            try { inputEl.dispatchEvent(new Event("change", { bubbles: true })); } catch (e) {}
+          }
+        });
+        if (typeof updateDynamicUI === "function") updateDynamicUI();
       }
-      
-      const fieldId = idx === 0 ? "race" : "attr";
-      const inputEl = els[fieldId];
-      if (inputEl) {
-        inputEl.value = "";
-        try {
-          inputEl.dispatchEvent(new Event("input", { bubbles: true }));
-        } catch (e) {
-          const ev = document.createEvent("HTMLEvents");
-          ev.initEvent("input", true, false);
-          inputEl.dispatchEvent(ev);
-        }
-        try {
-          inputEl.dispatchEvent(new Event("change", { bubbles: true }));
-        } catch (e) {
-          const ev = document.createEvent("HTMLEvents");
-          ev.initEvent("change", true, false);
-          inputEl.dispatchEvent(ev);
-        }
-      }
-    });
-    if (typeof updateDynamicUI === "function") updateDynamicUI();
-  }
-  
-  relockAllNumeric();
-  resultEl.dataset.specificMode = "0";
-  processCalculation();
-  return;
-}
+
+      relockAllNumeric();
+      resultEl.dataset.specificMode = "0";
+      processCalculation();
+      return;
+    }
 
     tSizeEl.value = currData.sizeMob || "";
     tRaceEl.value = currData.raceMob || "";
@@ -1751,9 +1726,7 @@ h("p", {}, [
       if (!allValid) return;
 
       if (typeof validateRequired === "function") {
-        try {
-          if (!validateRequired()) return;
-        } catch (e) { return; }
+        try { if (!validateRequired()) return; } catch (e) { return; }
       }
 
       inputs.forEach(({ el, wrap }) => {
@@ -1833,13 +1806,13 @@ function processCalculation() {
   const atkF = calcAttackFactor(isPen ? 'pen' : 'crit', state.penVal, state.critVal, state.def);
   const sizeMod = getWeaponSizeMod(els.weapon.value, els.tSize.value);
   const elemCtr = getElemCounter(els.wElem.value, els.tAttr.value);
-  const includeRace = !!els.tRace.value;
-  const includeAttr = !!els.tAttr.value;
+  const includeRace = !!els.tRace.value && (Number(state.raceVal) || 0) > 0;
+const includeAttr = !!els.tAttr.value && (Number(state.attrVal) || 0) > 0;
   const list = [
     { key: 'main', label: (isPen ? 'Type (PEN)' : 'Type (CRIT)'), val: isPen ? state.penVal : state.critVal, mult: 1 + atkF },
     { key: 'dmg', label: 'Final P/M DMG BNS', val: state.dmgVal, mult: 1 + (state.effDmgVal || 0) / 100 },
-    { key: 'elem', label: 'Element', val: state.elemEnhVal, mult: elemCtr + state.elemEnhVal / 100, extra: `counter ${elemCtr.toFixed(2)}` },
-    { key: 'size', label: 'Size', val: state.sizeEnhVal, mult: sizeMod + state.sizeEnhVal / 100, extra: `mod ${sizeMod.toFixed(2)}` },
+    { key: 'elem', label: 'Element', val: state.elemEnhVal, mult: elemCtr + state.elemEnhVal / 100, extra: `counter ${elemCtr}` },
+    { key: 'size', label: 'Size', val: state.sizeEnhVal, mult: sizeMod + state.sizeEnhVal / 100, extra: `mod ${sizeMod}` },
     { key: 'race', label: 'Race', val: state.raceVal, mult: 1 + state.raceVal / 100, show: includeRace },
     { key: 'attr', label: 'Attribute', val: state.attrVal, mult: 1 + state.attrVal / 100, show: includeAttr }
   ];
@@ -1877,9 +1850,7 @@ const SUPPORTS_PASSIVE = (() => {
   } catch (_) {}
   return supported;
 })();
-
 const SUPPORTS_POINTER = ('PointerEvent' in window);
-
 function showLockedSnack(e) {
   const t = e && e.currentTarget;
   const now = Date.now();
@@ -1892,7 +1863,6 @@ function showLockedSnack(e) {
   }
   showSnack("Your Stats Locked!");
 }
-
 function bindLockGuard(wrapEl) {
   if (wrapEl.hasAttribute('data-lock-bound')) return;
   const handler = showLockedSnack;
@@ -1911,7 +1881,6 @@ function bindLockGuard(wrapEl) {
   wrapEl._lockListeners = listeners;
   wrapEl.setAttribute('data-lock-bound', '1');
 }
-
 function unbindLockGuard(wrapEl) {
   if (!wrapEl.hasAttribute('data-lock-bound')) return;
   const listeners = wrapEl._lockListeners;
@@ -1930,7 +1899,6 @@ function unbindLockGuard(wrapEl) {
   wrapEl.removeAttribute('data-lock-bound');
   delete wrapEl._lastLockTs;
 }
-
 function lockInputs() {
   document.querySelectorAll('.input-wrap').forEach(w => {
     const el = w.querySelector('select, input');
@@ -1939,7 +1907,6 @@ function lockInputs() {
     el.disabled = true;
   });
 }
-
 function unlockInputs() {
   document.querySelectorAll('.input-wrap').forEach(w => {
     const el = w.querySelector('select, input');
@@ -1948,8 +1915,6 @@ function unlockInputs() {
     unbindLockGuard(w);
   });
 }
-
-
 function fillDropdowns() {
   // attack type
   els.atkType.innerHTML =
@@ -2042,9 +2007,6 @@ function fillDropdowns() {
     if (typeof updateDynamicUI === 'function') updateDynamicUI();
   };
 }
-
-
-
 function bindEvents() {
   if (bindEvents.bound) return;
   bindEvents.bound = true;
@@ -2074,8 +2036,6 @@ function bindEvents() {
   });
 });
 }
-
-// sticky button mobile
 function safeBottom(idx = 0) {
   return `calc(${20 + idx * 56}px + env(safe-area-inset-bottom))`;
 }
@@ -2165,8 +2125,6 @@ if (!collapsed) {
 
 
 }
-
-
 document.addEventListener("DOMContentLoaded", () => {
   if (!els || !els.log) return;
   const content = els.log.querySelector(".changelog");
