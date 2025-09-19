@@ -5571,6 +5571,27 @@ document.querySelectorAll("details").forEach(details => {
     }
   });
 });
+
+ // adjust snackbar position 
+const snackbarAdjusted = document.querySelector(".snackbar");
+const inputAdjusted = document.querySelector("input[type=number]");
+if (window.innerWidth <= 480) {
+  if (window.visualViewport) {
+    function updatePosition() {
+      const keyboardHeight = window.innerHeight - window.visualViewport.height;
+      snackbarAdjusted.style.bottom = 20 + keyboardHeight + "px";
+    }
+    window.visualViewport.addEventListener("resize", updatePosition);
+    window.visualViewport.addEventListener("scroll", updatePosition);
+  } else {
+    inputAdjusted.addEventListener("focus", () => {
+      snackbarAdjusted.style.bottom = "300px"; 
+    });
+    inputAdjusted.addEventListener("blur", () => {
+      snackbarAdjusted.style.bottom = "16px";
+    });
+  }
+} 
 </script>
  </body>
 </html>
