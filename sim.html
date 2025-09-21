@@ -1296,41 +1296,6 @@ hr.separ{
   </div>
 <script>
 // ========== ROX DATA CONSTANTS ==========
-const ELEMENT_COUNTER_TABLE = {
-  Neutral:{Neutral:1,Fire:1,Water:1,Earth:1,Wind:1,Poison:1,Holy:1,Shadow:1,Ghost:0.70,Undead:1},
-  Fire:{Neutral:1,Fire:0.25,Water:1,Earth:1.25,Wind:1,Poison:1,Holy:0.75,Shadow:1,Ghost:1,Undead:1.125},
-  Water:{Neutral:1,Fire:1.25,Water:0.25,Earth:1,Wind:0.90,Poison:1,Holy:0.75,Shadow:1,Ghost:1,Undead:1},
-  Earth:{Neutral:1,Fire:0.90,Water:1,Earth:0.25,Wind:1.25,Poison:1,Holy:0.75,Shadow:1,Ghost:1,Undead:1},
-  Wind:{Neutral:1,Fire:1,Water:1.375,Earth:0.90,Wind:0.25,Poison:1,Holy:0.70,Shadow:1,Ghost:1,Undead:1},
-  Poison:{Neutral:1,Fire:1.125,Water:1,Earth:1.125,Wind:1.125,Poison:0,Holy:0.75,Shadow:0.50,Ghost:1,Undead:-0.25},
-  Holy:{Neutral:1,Fire:1,Water:1,Earth:1,Wind:1,Poison:1,Holy:0,Shadow:1.375,Ghost:1,Undead:1.375},
-  Shadow:{Neutral:1.125,Fire:1,Water:1,Earth:1,Wind:1,Poison:0.50,Holy:1.375,Shadow:0,Ghost:1,Undead:-0.25},
-  Ghost:{Neutral:0.90,Fire:1,Water:1,Earth:1,Wind:1,Poison:1,Holy:0.75,Shadow:0.75,Ghost:1.375,Undead:1},
-  Undead:{Neutral:1,Fire:1,Water:1,Earth:1,Wind:1,Poison:0.50,Holy:1.375,Shadow:0,Ghost:1.25,Undead:0}
-};
-const WEAPON_SIZE_MODIFIER_TABLE = {
-  "Empty Handed":{Large:0.5,Medium:0.5,Small:0.5},
-  "One-Handed Sword":{Large:0.75,Medium:1,Small:0.75},
-  "Two-Handed Sword":{Large:1,Medium:0.75,Small:0.75},
-  "Two-Handed Spear":{Large:1,Medium:0.75,Small:0.75},
-  "Dagger":{Large:0.75,Medium:0.75,Small:1},
-  "Katar":{Large:0.75,Medium:1,Small:0.75},
-  "Light Knuckle":{Large:0.75,Medium:0.75,Small:1},
-  "Heavy Knuckle":{Large:1,Medium:0.75,Small:0.75},
-  "GS":{Large:1,Medium:1,Small:1},
-  "Ninja Sword":{Large:1,Medium:0.75,Small:0.75},
-  "Huuma Shuriken":{Large:1,Medium:1,Small:1},
-  "Tome":{Large:0.75,Medium:1,Small:1},
-  "Book":{Large:1,Medium:1,Small:1},
-  "Two-Handed Rod":{Large:1,Medium:1,Small:1},
-  "One-Handed Rod":{Large:1,Medium:1,Small:1},
-  "Mace":{Large:1,Medium:0.75,Small:0.75},
-  "One-Handed Axe":{Large:0.75,Medium:0.75,Small:0.75},
-  "Two-Handed Axe":{Large:0.5,Medium:0.75,Small:0.75},
-  "Bow":{Large:0.75,Medium:1,Small:1},
-  "Instrument":{Large:0.75,Medium:1,Small:0.75},
-  "Whip":{Large:0.75,Medium:1,Small:0.75}
-};
 // def stats from Nila 
 const DEFENSE_TABLE = {
   "0def": { def: 0, dmgred: 0 },
@@ -1426,7 +1391,41 @@ const DEFENSE_TABLE = {
   "Ktullanux Lv.150": { def: 299.07, dmgred: 575.77, sizeMob: "Large", raceMob: "Dragon", attributeMob: "Water" },
   "Shelter Lv.150": { def: 293.16, dmgred: 317.00, sizeMob: "Medium", raceMob: "Angel", attributeMob: "Holy" }
 };
-const RACE_TYPES = ["Angel","Demon","Formless","Insect","Fish","Demi-Human","Undead","Dragon","Plant","Brute"];
+const ELEMENT_COUNTER_TABLE = {
+  Neutral:{Neutral:1,Fire:1,Water:1,Earth:1,Wind:1,Poison:1,Holy:1,Shadow:1,Ghost:0.70,Undead:1},
+  Fire:{Neutral:1,Fire:0.25,Water:1,Earth:1.25,Wind:1,Poison:1,Holy:0.75,Shadow:1,Ghost:1,Undead:1.125},
+  Water:{Neutral:1,Fire:1.25,Water:0.25,Earth:1,Wind:0.90,Poison:1,Holy:0.75,Shadow:1,Ghost:1,Undead:1},
+  Earth:{Neutral:1,Fire:0.90,Water:1,Earth:0.25,Wind:1.25,Poison:1,Holy:0.75,Shadow:1,Ghost:1,Undead:1},
+  Wind:{Neutral:1,Fire:1,Water:1.375,Earth:0.90,Wind:0.25,Poison:1,Holy:0.70,Shadow:1,Ghost:1,Undead:1},
+  Poison:{Neutral:1,Fire:1.125,Water:1,Earth:1.125,Wind:1.125,Poison:0,Holy:0.75,Shadow:0.50,Ghost:1,Undead:-0.25},
+  Holy:{Neutral:1,Fire:1,Water:1,Earth:1,Wind:1,Poison:1,Holy:0,Shadow:1.375,Ghost:1,Undead:1.375},
+  Shadow:{Neutral:1.125,Fire:1,Water:1,Earth:1,Wind:1,Poison:0.50,Holy:1.375,Shadow:0,Ghost:1,Undead:-0.25},
+  Ghost:{Neutral:0.90,Fire:1,Water:1,Earth:1,Wind:1,Poison:1,Holy:0.75,Shadow:0.75,Ghost:1.375,Undead:1},
+  Undead:{Neutral:1,Fire:1,Water:1,Earth:1,Wind:1,Poison:0.50,Holy:1.375,Shadow:0,Ghost:1.25,Undead:0}
+};
+const WEAPON_SIZE_MODIFIER_TABLE = {
+  "Empty Handed":{Large:0.5,Medium:0.5,Small:0.5},
+  "One-Handed Sword":{Large:0.75,Medium:1,Small:0.75},
+  "Two-Handed Sword":{Large:1,Medium:0.75,Small:0.75},
+  "Two-Handed Spear":{Large:1,Medium:0.75,Small:0.75},
+  "Dagger":{Large:0.75,Medium:0.75,Small:1},
+  "Katar":{Large:0.75,Medium:1,Small:0.75},
+  "Light Knuckle":{Large:0.75,Medium:0.75,Small:1},
+  "Heavy Knuckle":{Large:1,Medium:0.75,Small:0.75},
+  "GS":{Large:1,Medium:1,Small:1},
+  "Ninja Sword":{Large:1,Medium:0.75,Small:0.75},
+  "Huuma Shuriken":{Large:1,Medium:1,Small:1},
+  "Tome":{Large:0.75,Medium:1,Small:1},
+  "Book":{Large:1,Medium:1,Small:1},
+  "Two-Handed Rod":{Large:1,Medium:1,Small:1},
+  "One-Handed Rod":{Large:1,Medium:1,Small:1},
+  "Mace":{Large:1,Medium:0.75,Small:0.75},
+  "One-Handed Axe":{Large:0.75,Medium:0.75,Small:0.75},
+  "Two-Handed Axe":{Large:0.5,Medium:0.75,Small:0.75},
+  "Bow":{Large:0.75,Medium:1,Small:1},
+  "Instrument":{Large:0.75,Medium:1,Small:0.75},
+  "Whip":{Large:0.75,Medium:1,Small:0.75}
+};
 const BLUE_SET = {
   3: {
     30: 5,
@@ -1480,6 +1479,7 @@ const WHITE_SET = {
   "Tier 3" : 48,
   "Tier 4" : 54
 }
+const RACE_TYPES = ["Angel","Demon","Formless","Insect","Fish","Demi-Human","Undead","Dragon","Plant","Brute"];
 
 // ========== DOM ELEMENTS CACHE ==========
 const DOM_ELEMENTS = {
@@ -1532,8 +1532,6 @@ const DOM_ELEMENTS = {
   openLog: document.getElementById("openLog"),
   closeLog: document.getElementById("closeLog")
 };
-
-// ========== UTILITY FOR INPUT DATA ==========
 const isEmpty = (v) => v === null || v === undefined || v === '';
 const clearNumericInput = (el) => { if (el) el.value = ''; };
 const safeNumber = (v) => Math.max(Number(v) || 0, 0);
@@ -1541,7 +1539,8 @@ const formatNumber = (n, fullPrecision = false) => {
   const num = Number(n);
   return fullPrecision ? num : Math.trunc(num * 100) / 100;
 };
-// ========== CORE CALCULATION HELPER ==========
+
+// ========== CALCULATION HELPER ==========
 function getWeaponSizeModifier(weapon, size) {
   const modMap = WEAPON_SIZE_MODIFIER_TABLE[weapon];
   if (!modMap) return 1.0;
@@ -1549,18 +1548,16 @@ function getWeaponSizeModifier(weapon, size) {
   return Number.isFinite(val) ? Number(val) : 1.0;
 }
 function getElementCounter(weaponElem, targetElem) {
-  // fallback to neutral attr or 1.00 if still undefined/null
   const elemMap = ELEMENT_COUNTER_TABLE[weaponElem] || ELEMENT_COUNTER_TABLE['Neutral'];
   const base = targetElem ? 
-    ((elemMap[targetElem] !== undefined && elemMap[targetElem] !== null) ? elemMap[targetElem] : elemMap['Neutral']) : 
-    ((elemMap['Neutral'] !== undefined && elemMap['Neutral'] !== null) ? elemMap['Neutral'] : 1.0);
+    (elemMap[targetElem] ?? elemMap['Neutral'] ?? 1.0) : 
+    (elemMap['Neutral'] ?? 1.0);
   return Number.isFinite(base) ? Number(base) : 1.0;
 }
 function getTargetDefenseData(key) {
   return DEFENSE_TABLE[key] || DEFENSE_TABLE["0def"];
 }
 function calculateAttackFactor(type, pen, crit, def = 0) {
-  // pen / crit design
   if (type === 'pen') {
     const rawPen = (Number(pen) || 0) - (Number(def) || 0);
     if (rawPen <= 0) return 0;
@@ -1573,7 +1570,7 @@ function calculateAttackFactor(type, pen, crit, def = 0) {
   return 0;
 }
 
-// ====================== CORE CALCULATION ======================
+// ======== CALCULATION ========
 // SSOT FORMULA
 function calculateMultiplier({
   atkType, penVal, critVal, dmgVal,
@@ -1596,52 +1593,73 @@ function calculateMultiplier({
     (1 + (tAttr ? (Number(attrVal) / 100) : 0)) *
     (1 + (tRace ? (Number(raceVal) / 100) : 0));
 
-  // extras single object (single source of truth)
+  // Extract extras with single conversion
   const blueGroup3Val = Number(extras.blueGroup3Val || extras.blue3 || 0);
   const blueGroup8Val = Number(extras.blueGroup8Val || extras.blue8 || 0);
   const vesperVal = Number(extras.vesperVal || extras.vesper || 0);
   const whiteVal = Number(extras.whiteVal || extras.white || 0);
   const dmgStackVal = Number(extras.dmgStackVal || extras.dmgStack || 0);
 
-  const extraBonuses = [];
+  // Pre-calculate groups for efficiency
+  const groups = {
+    extra1: { sum: 0, items: [] },
+    extra2: { sum: 0, items: [] }
+  };
 
-  if (Number(vesperVal) > 0) extraBonuses.push({ key: 'Vesper', type: 'extra1', value: Number(vesperVal) / 100 });
-  if (Number(blueGroup3Val) > 0) extraBonuses.push({ key: 'BlueGroup3', type: 'extra1', value: Number(blueGroup3Val) / 100 });
-  if (Number(whiteVal) > 0) extraBonuses.push({ key: 'White', type: 'extra1', value: Number(whiteVal) / 100 });
-  if (Number(dmgStackVal) > 0) extraBonuses.push({ key: 'DmgStack', type: 'extra1', value: Number(dmgStackVal) / 100 });
+  // Build extra bonuses more efficiently
+  if (vesperVal > 0) {
+    groups.extra1.sum += vesperVal / 100;
+    groups.extra1.items.push({ key: 'Vesper', type: 'extra1', value: vesperVal / 100 });
+  }
+  if (blueGroup3Val > 0) {
+    groups.extra1.sum += blueGroup3Val / 100;
+    groups.extra1.items.push({ key: 'BlueGroup3', type: 'extra1', value: blueGroup3Val / 100 });
+  }
+  if (whiteVal > 0) {
+    groups.extra1.sum += whiteVal / 100;
+    groups.extra1.items.push({ key: 'White', type: 'extra1', value: whiteVal / 100 });
+  }
+  if (dmgStackVal > 0) {
+    groups.extra1.sum += dmgStackVal / 100;
+    groups.extra1.items.push({ key: 'DmgStack', type: 'extra1', value: dmgStackVal / 100 });
+  }
 
-  // Reaper independent in group1 when active
+  // Reaper check (optimized try-catch)
   try {
     if (typeof isTestReaperActive !== 'undefined' && isTestReaperActive) {
-      const reaperVal = ((wElem === tAttr) || (wElem === "Neutral" && !tAttr)) ? (42 / 100) : (14 / 100);
-      extraBonuses.push({ key: 'Reaper', type: 'extra1', value: reaperVal });
+      const reaperVal = ((wElem === tAttr) || (wElem === "Neutral" && !tAttr)) ? 0.42 : 0.14;
+      groups.extra1.sum += reaperVal;
+      groups.extra1.items.push({ key: 'Reaper', type: 'extra1', value: reaperVal });
     }
   } catch(e) {}
 
-  if (Number(blueGroup8Val) > 0) extraBonuses.push({ key: 'BlueGroup8', type: 'extra2', value: Number(blueGroup8Val) / 100 });
+  if (blueGroup8Val > 0) {
+    groups.extra2.sum += blueGroup8Val / 100;
+    groups.extra2.items.push({ key: 'BlueGroup8', type: 'extra2', value: blueGroup8Val / 100 });
+  }
 
-  // Spear independent in group2 when active
+  // Spear check (optimized try-catch)
   try {
     if (typeof isTestSpearActive !== 'undefined' && isTestSpearActive) {
-      extraBonuses.push({ key: 'Spear', type: 'extra2', value: (42 / 100) });
+      groups.extra2.sum += 0.42;
+      groups.extra2.items.push({ key: 'Spear', type: 'extra2', value: 0.42 });
     }
   } catch(e) {}
 
-  const groups = {};
-  extraBonuses.forEach(b => {
-    if (!groups[b.type]) groups[b.type] = { sum: 0, items: [] };
-    groups[b.type].sum += b.value;
-    groups[b.type].items.push(b);
-  });
-
-  let extraMult = 1;
+  // Calculate final multipliers
   const extraGroups = [];
-  Object.keys(groups).forEach(type => {
-    const g = groups[type];
-    const factor = 1 + g.sum;
-    extraGroups.push({ type, sum: g.sum, factor, items: g.items });
+  let extraMult = 1;
+
+  if (groups.extra1.sum > 0) {
+    const factor = 1 + groups.extra1.sum;
+    extraGroups.push({ type: 'extra1', sum: groups.extra1.sum, factor, items: groups.extra1.items });
     extraMult *= factor;
-  });
+  }
+  if (groups.extra2.sum > 0) {
+    const factor = 1 + groups.extra2.sum;
+    extraGroups.push({ type: 'extra2', sum: groups.extra2.sum, factor, items: groups.extra2.items });
+    extraMult *= factor;
+  }
 
   const totalMult = baseMult * extraMult;
 
@@ -1654,23 +1672,35 @@ function calculateMultiplier({
     }
   };
 }
-// State management
 let isResultShown = false;
 function getCurrentCalculationState() {
-  const atkType = DOM_ELEMENTS.atkType.value;
-  const penVal = Number(DOM_ELEMENTS.pen.value) || 0;
-  const critVal = Number(DOM_ELEMENTS.crit.value) || 0;
-  const dmgVal = Number(DOM_ELEMENTS.dmg.value) || 0;
-  const sizeEnhVal = Number(DOM_ELEMENTS.sizeEnh.value) || 0;
-  const elemEnhVal = Number(DOM_ELEMENTS.elemEnh.value) || 0;
-  const raceVal = Number(DOM_ELEMENTS.race.value) || 0;
-  const attrVal = Number(DOM_ELEMENTS.attr.value) || 0;
+  // Cache DOM values once
+  const domValues = {
+    atkType: DOM_ELEMENTS.atkType.value,
+    pen: Number(DOM_ELEMENTS.pen.value) || 0,
+    crit: Number(DOM_ELEMENTS.crit.value) || 0,
+    dmg: Number(DOM_ELEMENTS.dmg.value) || 0,
+    sizeEnh: Number(DOM_ELEMENTS.sizeEnh.value) || 0,
+    elemEnh: Number(DOM_ELEMENTS.elemEnh.value) || 0,
+    race: Number(DOM_ELEMENTS.race.value) || 0,
+    attr: Number(DOM_ELEMENTS.attr.value) || 0,
+    weapon: DOM_ELEMENTS.weapon.value,
+    tSize: DOM_ELEMENTS.tSize.value,
+    wElem: DOM_ELEMENTS.wElem.value,
+    tAttr: DOM_ELEMENTS.tAttr.value,
+    tRace: DOM_ELEMENTS.tRace.value,
+    tDef: DOM_ELEMENTS.tDef.value,
+    vesperSet: Number(DOM_ELEMENTS.vesperSet.value) || 0,
+    whiteSet: Number(DOM_ELEMENTS.whiteSet.value) || 0,
+    dmgStack: Number(DOM_ELEMENTS.dmgStack.value) || 0
+  };
 
   // Detect BlueSet group (*3 or *8) by label text
   const blueSelect = DOM_ELEMENTS.blueSet;
-  const selectedBlueOption = blueSelect && blueSelect.options && blueSelect.options[blueSelect.selectedIndex];
+  const selectedBlueOption = blueSelect?.options?.[blueSelect.selectedIndex];
   let blueGroup3Val = 0;
   let blueGroup8Val = 0;
+  
   if (selectedBlueOption) {
     const optionText = selectedBlueOption.textContent || "";
     const blueValue = Number(blueSelect.value) || 0;
@@ -1682,45 +1712,56 @@ function getCurrentCalculationState() {
     }
   }
 
-  // Extra sets and manual stack
-  const vesperVal = Number(DOM_ELEMENTS.vesperSet.value) || 0;
-  const whiteVal = Number(DOM_ELEMENTS.whiteSet.value) || 0;
-  const dmgStackVal = Number(DOM_ELEMENTS.dmgStack.value) || 0;
-
-  
   // Build extras object (single parameter)
   const extras = {
-    blueGroup3Val: blueGroup3Val,
-    blueGroup8Val: blueGroup8Val,
-    vesperVal: vesperVal,
-    whiteVal: whiteVal,
-    dmgStackVal: dmgStackVal
+    blueGroup3Val,
+    blueGroup8Val,
+    vesperVal: domValues.vesperSet,
+    whiteVal: domValues.whiteSet,
+    dmgStackVal: domValues.dmgStack
   };
 
-const result = calculateMultiplier({
-    atkType, penVal, critVal, dmgVal, sizeEnhVal, elemEnhVal,
-    raceVal, attrVal,
-    weapon: DOM_ELEMENTS.weapon.value,
-    tSize: DOM_ELEMENTS.tSize.value,
-    wElem: DOM_ELEMENTS.wElem.value,
-    tAttr: DOM_ELEMENTS.tAttr.value,
-    tRace: DOM_ELEMENTS.tRace.value,
-    tDefKey: DOM_ELEMENTS.tDef.value,
+  const result = calculateMultiplier({
+    atkType: domValues.atkType,
+    penVal: domValues.pen,
+    critVal: domValues.crit,
+    dmgVal: domValues.dmg,
+    sizeEnhVal: domValues.sizeEnh,
+    elemEnhVal: domValues.elemEnh,
+    raceVal: domValues.race,
+    attrVal: domValues.attr,
+    weapon: domValues.weapon,
+    tSize: domValues.tSize,
+    wElem: domValues.wElem,
+    tAttr: domValues.tAttr,
+    tRace: domValues.tRace,
+    tDefKey: domValues.tDef,
     extras
   });
 
   return {
-    atkType, penVal, critVal, dmgVal, sizeEnhVal, elemEnhVal,
-    raceVal, attrVal, blueGroup3Val, blueGroup8Val,
-    vesperVal, whiteVal, dmgStackVal,
-    mult: result.mult, def: result.def, dmgred: result.dmgred,
-    effDmgVal: result.effDmgVal, atkF: result.atkF
-  ,
+    atkType: domValues.atkType,
+    penVal: domValues.pen,
+    critVal: domValues.crit,
+    dmgVal: domValues.dmg,
+    sizeEnhVal: domValues.sizeEnh,
+    elemEnhVal: domValues.elemEnh,
+    raceVal: domValues.race,
+    attrVal: domValues.attr,
+    blueGroup3Val,
+    blueGroup8Val,
+    vesperVal: domValues.vesperSet,
+    whiteVal: domValues.whiteSet,
+    dmgStackVal: domValues.dmgStack,
+    mult: result.mult,
+    def: result.def,
+    dmgred: result.dmgred,
+    effDmgVal: result.effDmgVal,
+    atkF: result.atkF,
     parts: result.parts || {},
-    extraGroups: (result.parts && Array.isArray(result.parts.extraGroups)) ? result.parts.extraGroups : []
+    extraGroups: result.parts?.extraGroups || []
   };
 }
-// Debounce utility
 let processMainCalculationTimeout = null;
 function processMainCalculation() {
   // Clear existing timeout
@@ -1754,27 +1795,22 @@ function executeMainCalculation() {
                        calculationState.vesperVal > 0 || calculationState.whiteVal > 0 || 
                        calculationState.dmgStackVal > 0);
 
-  // Breakdown list for UI display (must match render logic)
+  // Compute extra group authoritative factors (prefer calculation result)
+  let extra1Factor = 1;
+  let extra2Factor = 1;
   
-  // compute extra group authoritative factors (prefer calculation result)
-  var extra1Factor = 1;
-  var extra2Factor = 1;
-  try {
-    if (calculationState.parts && Array.isArray(calculationState.parts.extraGroups)) {
-      var eg1 = calculationState.parts.extraGroups.find(function(g){ return g.type === 'extra1'; });
-      var eg2 = calculationState.parts.extraGroups.find(function(g){ return g.type === 'extra2'; });
-      extra1Factor = eg1 ? eg1.factor : (1 + (calculationState.blueGroup3Val / 100) + (calculationState.vesperVal / 100) + (calculationState.whiteVal / 100) + (calculationState.dmgStackVal / 100));
-      extra2Factor = eg2 ? eg2.factor : (1 + (calculationState.blueGroup8Val / 100));
-    } else {
-      extra1Factor = 1 + (calculationState.blueGroup3Val / 100) + (calculationState.vesperVal / 100) + (calculationState.whiteVal / 100) + (calculationState.dmgStackVal / 100);
-      extra2Factor = 1 + (calculationState.blueGroup8Val / 100);
-    }
-  } catch (e) {
+  if (calculationState.parts?.extraGroups) {
+    const eg1 = calculationState.parts.extraGroups.find(g => g.type === 'extra1');
+    const eg2 = calculationState.parts.extraGroups.find(g => g.type === 'extra2');
+    extra1Factor = eg1?.factor ?? (1 + (calculationState.blueGroup3Val / 100) + (calculationState.vesperVal / 100) + (calculationState.whiteVal / 100) + (calculationState.dmgStackVal / 100));
+    extra2Factor = eg2?.factor ?? (1 + (calculationState.blueGroup8Val / 100));
+  } else {
     extra1Factor = 1 + (calculationState.blueGroup3Val / 100) + (calculationState.vesperVal / 100) + (calculationState.whiteVal / 100) + (calculationState.dmgStackVal / 100);
     extra2Factor = 1 + (calculationState.blueGroup8Val / 100);
   }
 
   const includeExtraTwo = (calculationState.blueGroup8Val > 0 || (typeof isTestSpearActive !== 'undefined' && isTestSpearActive));
+  
   const factorList = [
     {
       key: 'main',
@@ -1835,23 +1871,18 @@ function executeMainCalculation() {
   renderMultiplierBreakdown(calculationState, factorList, elementCounter, sizeModifier, isPenMode);
   generateRecommendationTable(calculationState);
 
-  // Enable test buttons after successful calculation
+  // Enable test buttons after successful calculation - batch DOM updates
   try {
-    if (DOM_ELEMENTS.testReaper) DOM_ELEMENTS.testReaper.disabled = false;
-    if (DOM_ELEMENTS.testSpear) DOM_ELEMENTS.testSpear.disabled = false;
+    const buttons = [DOM_ELEMENTS.testReaper, DOM_ELEMENTS.testSpear, DOM_ELEMENTS.resetRek, DOM_ELEMENTS.resetAll];
+    buttons.forEach(btn => { if (btn) btn.disabled = false; });
+    DOM_ELEMENTS.submit.disabled = true;
   } catch (e) { console.warn('enable test buttons', e); }
 
   isResultShown = true;
-  DOM_ELEMENTS.submit.disabled = true;
-  DOM_ELEMENTS.resetRek.disabled = false;
-  DOM_ELEMENTS.resetAll.disabled = false;
-  DOM_ELEMENTS.testSpear.disabled = false;
-  DOM_ELEMENTS.testReaper.disabled = false;
   lockAllInputs();
 }
 
-// === results dom manipulation (breakdown n rec) ===
-// Optimized utility functions
+// ======== BREAKDOWN ========
 const createEl = (tag, props = {}, children = []) => {
   const el = document.createElement(tag);
   
@@ -1878,8 +1909,6 @@ const createEl = (tag, props = {}, children = []) => {
   el.appendChild(fragment);
   return el;
 };
-
-// Cached DOM elements for performance
 const getDOMCache = () => ({
   targetDefense: DOM_ELEMENTS.tDef,
   targetSize: DOM_ELEMENTS.tSize,
@@ -1893,7 +1922,6 @@ const getDOMCache = () => ({
   penetration: DOM_ELEMENTS.pen,
   critical: DOM_ELEMENTS.crit
 });
-
 function renderMultiplierBreakdown(calculationState, damageFactorList, elementalCounter, weaponSizeModifier, isPenetrationMode) {
   const resultContainer = DOM_ELEMENTS.hasil;
   const showFullPrecision = resultContainer?.dataset?.showFullPrecision === "1";
@@ -2554,16 +2582,13 @@ function renderMultiplierBreakdown(calculationState, damageFactorList, elemental
       }
     }
   };
-
-  // Main execution
   const { container, swapSelect } = buildBreakdown();
   setupEventBindings(swapSelect);
-
-  // Clear and append to result container
   resultContainer.innerHTML = "";
   resultContainer.appendChild(container);
 }
 
+// ======== TABLE ========
 const RECOMMENDATION_CONFIG = {
   randomMode: 'clamp', 
   maxAttempts: 200,
@@ -2659,7 +2684,6 @@ function calculateRecommendationWeights({ includeRace, includeAttr, baseMain, ba
   Object.keys(finalWeights).forEach(weightKey => { finalWeights[weightKey] /= totalWeightSum; });
   return finalWeights;
 }
-
 function applySmallValueAdjustment(inputValue, baseRace, baseAttr) {
   const combinedRaceAttrTotal = baseRace + baseAttr;
   if (combinedRaceAttrTotal > 0 && combinedRaceAttrTotal < RECOMMENDATION_CONFIG.smallThreshold) {
@@ -3030,194 +3054,245 @@ function regenerateRecommendations() {
   generateRecommendationTable(calculationState);
 }
 
-
 // ======== FLASH ======
 const debounceMap = new Map();
-function smoothDebounce(fn, delay, key) {
+const smoothDebounce = (fn, delay, key) => {
   const existing = debounceMap.get(key);
-  if (existing) {
-    clearTimeout(existing);
-  }
+  if (existing) clearTimeout(existing);
   
-  const timeoutId = setTimeout(() => {
+  debounceMap.set(key, setTimeout(() => {
     debounceMap.delete(key);
     fn();
-  }, delay);
-  
-  debounceMap.set(key, timeoutId);
+  }, delay));
+};
+const flashState = {
+  isTestReaperActive: false,
+  isTestSpearActive: false,
+  isFlashActive: false
+};
+for (const key in flashState) {
+  Object.defineProperty(window, key, {
+    get() {
+      return flashState[key];
+    },
+    set(val) {
+      flashState[key] = val;
+    }
+  });
 }
-let isTestReaperActive = false;
-let isTestSpearActive = false;
+const LIGHTNING_STYLES = {
+  flash: `
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: radial-gradient(ellipse 140% 200% at center,
+      rgba(88, 101, 242, 0.45) 0%, rgba(135, 150, 255, 0.3) 25%,
+      rgba(88, 101, 242, 0.2) 45%, rgba(79, 84, 92, 0.12) 70%, 
+      rgba(54, 57, 63, 0.06) 85%, transparent 100%);
+    opacity: 0; transform: scale3d(0.8, 0.8, 1); pointer-events: none; z-index: 999;
+    mix-blend-mode: overlay; display: flex; align-items: center; justify-content: center;
+    will-change: opacity, transform; backface-visibility: hidden;
+    animation: pulseFlashAnim 1.4s cubic-bezier(0.23, 1, 0.32, 1) forwards, 
+               lightningFlicker 1.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  `,
+  
+  lightning: `
+    font-size: 3.5rem; color: #f0f0ff; opacity: 0; 
+    transform: scale3d(0.7, 0.7, 1) rotate(0deg);
+    text-shadow: 
+      0 0 8px rgba(255, 255, 255, 1),
+      0 0 16px rgba(135, 150, 255, 0.9),
+      0 0 24px rgba(88, 101, 242, 0.7),
+      0 0 32px rgba(88, 101, 242, 0.5),
+      0 0 40px rgba(88, 101, 242, 0.3);
+    filter: drop-shadow(0 0 6px rgba(200, 200, 255, 0.8)) 
+            drop-shadow(0 0 12px rgba(88, 101, 242, 0.6));
+    will-change: opacity, transform; backface-visibility: hidden;
+    animation: lightningAnim 1.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  `
+};
+const injectLightningKeyframes = (() => {
+  let injected = false;
+  return () => {
+    if (injected) return;
+    injected = true;
+    
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes pulseFlashAnim {
+        0% { opacity: 0; transform: scale3d(0.8, 0.8, 1); }
+        8% { opacity: 0.2; transform: scale3d(0.95, 0.95, 1); }
+        12% { opacity: 0.8; transform: scale3d(1.08, 1.08, 1); }
+        18% { opacity: 0.3; transform: scale3d(1.05, 1.05, 1); }
+        22% { opacity: 0.9; transform: scale3d(1.12, 1.12, 1); }
+        35% { opacity: 0.6; transform: scale3d(1.08, 1.08, 1); }
+        42% { opacity: 0.85; transform: scale3d(1.1, 1.1, 1); }
+        58% { opacity: 0.4; transform: scale3d(1.03, 1.03, 1); }
+        75% { opacity: 0.2; transform: scale3d(1.01, 1.01, 1); }
+        100% { opacity: 0; transform: scale3d(0.95, 0.95, 1); }
+      }
+      
+      @keyframes lightningFlicker {
+        0%, 6%, 14%, 20%, 28%, 34%, 40%, 56%, 74%, 90% {
+          opacity: 0; transform: scale3d(0.7, 0.7, 1) rotate(-2deg);
+        }
+        8%, 16%, 22%, 30%, 36%, 42%, 58%, 76% {
+          opacity: 1; transform: scale3d(1.2, 1.2, 1) rotate(1deg);
+        }
+        10%, 18%, 24%, 32%, 38%, 44%, 60%, 78% {
+          opacity: 0.7; transform: scale3d(1.1, 1.1, 1) rotate(-1deg);
+        }
+        12%, 26%, 46%, 62%, 80% {
+          opacity: 0.9; transform: scale3d(1.15, 1.15, 1) rotate(0.5deg);
+        }
+        50% {
+          opacity: 1; transform: scale3d(1.25, 1.25, 1) rotate(-0.5deg);
+        }
+        100% { opacity: 0; transform: scale3d(0.8, 0.8, 1) rotate(0deg); }
+      }
+      
+      @keyframes lightningAnim {
+        0% { 
+          opacity: 0; 
+          transform: scale3d(0.7, 0.7, 1) rotate(0deg);
+        }
+        15% { 
+          opacity: 0.9; 
+          transform: scale3d(1.1, 1.1, 1) rotate(-1deg);
+        }
+        25% { 
+          opacity: 0.6; 
+          transform: scale3d(1.05, 1.05, 1) rotate(1deg);
+        }
+        35% { 
+          opacity: 1; 
+          transform: scale3d(1.2, 1.2, 1) rotate(-0.5deg);
+        }
+        50% { 
+          opacity: 0.8; 
+          transform: scale3d(1.15, 1.15, 1) rotate(0.5deg);
+        }
+        65% { 
+          opacity: 0.4; 
+          transform: scale3d(1.08, 1.08, 1) rotate(-0.3deg);
+        }
+        80% { 
+          opacity: 0.2; 
+          transform: scale3d(1.02, 1.02, 1) rotate(0.2deg);
+        }
+        100% { 
+          opacity: 0; 
+          transform: scale3d(0.9, 0.9, 1) rotate(0deg);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  };
+})();
 function simulateFlash(event) {
-  try {
-    const btn = event?.currentTarget;
-    if (!btn) return;
-    
-    // Prevent multiple rapid clicks
-    if (btn.disabled) return;
-    
-    // Temporarily disable button for smooth UX
-    btn.disabled = true;
-    setTimeout(() => btn.disabled = false, 200);
-    
-    if (btn === DOM_ELEMENTS.testReaper) {
-      isTestReaperActive = !isTestReaperActive;
-      btn.classList.toggle('activated', isTestReaperActive);
-      
-      // Debounced pulse flash when activated
-      if (isTestReaperActive) {
-        smoothDebounce(() => {
-          if (typeof triggerPulseFlash === 'function') {
-            triggerPulseFlash();
-          }
-        }, 100, 'reaper-flash');
+  const btn = event?.currentTarget;
+  if (!btn || btn.disabled) return;
+  btn.disabled = true;
+  setTimeout(() => btn.disabled = false, 200);
+  const isReaper = btn === DOM_ELEMENTS.testReaper;
+  const stateKey = isReaper ? 'isTestReaperActive' : 'isTestSpearActive';
+  const prefix = isReaper ? 'reaper' : 'spear';
+  flashState[stateKey] = !flashState[stateKey];
+  btn.classList.toggle('activated', flashState[stateKey]);
+  
+  if (flashState[stateKey]) {
+    smoothDebounce(() => {
+      if (typeof triggerPulseFlash === 'function') {
+        triggerPulseFlash();
       }
-      
-      // Debounced calculation
-      smoothDebounce(() => {
-        if (typeof processMainCalculation === 'function') {
-          processMainCalculation();
-        }
-      }, 150, 'reaper-calc');
-      
-      if (typeof showSnackbar === 'function') {
-        showSnackbar(isTestReaperActive ? 'Reaper Flash Active' : 'Reaper Off');
-      }
+    }, 100, `${prefix}-flash`);
+  }
+  
+  smoothDebounce(() => {
+    if (typeof processMainCalculation === 'function') {
+      processMainCalculation();
     }
-    
-    if (btn === DOM_ELEMENTS.testSpear) {
-      isTestSpearActive = !isTestSpearActive;
-      btn.classList.toggle('activated', isTestSpearActive);
-      
-      // Debounced pulse flash when activated
-      if (isTestSpearActive) {
-        smoothDebounce(() => {
-          if (typeof triggerPulseFlash === 'function') {
-            triggerPulseFlash();
-          }
-        }, 100, 'spear-flash');
-      }
-      
-      // Debounced calculation
-      smoothDebounce(() => {
-        if (typeof processMainCalculation === 'function') {
-          processMainCalculation();
-        }
-      }, 150, 'spear-calc');
-      
-      if (typeof showSnackbar === 'function') {
-        showSnackbar(isTestSpearActive ? 'Spear Flash Active' : 'Spear Off');
-      }
-    }
-  } catch (e) {
-    console.warn('simulateFlash error', e);
+  }, 150, `${prefix}-calc`);
+  
+  if (typeof showSnackbar === 'function') {
+    showSnackbar(flashState[stateKey] ?
+      `${isReaper ? 'Reaper' : 'Spear'} Flash Active` :
+      `${isReaper ? 'Reaper' : 'Spear'} Off`);
   }
 }
-let isFlashActive = false;
 function triggerPulseFlash() {
-  // Early exit for non-mobile or if already active
-  if (window.innerWidth >= 480 || isFlashActive) {
+  if (window.innerWidth >= 480 || flashState.isFlashActive) {
     if (window.innerWidth >= 480) {
       console.log('Flash effect hanya untuk mobile (<480px)');
     }
     return;
   }
   
-  isFlashActive = true;
+  flashState.isFlashActive = true;
+  injectLightningKeyframes();
   
-  // Use requestAnimationFrame for smooth rendering
   requestAnimationFrame(() => {
     const flash = document.createElement('div');
-    
-    // Optimized CSS with better GPU acceleration
-    flash.style.cssText = `
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: radial-gradient(ellipse 120% 150% at center,
-        rgba(88, 101, 242, 0.4) 0%, rgba(88, 101, 242, 0.25) 35%,
-        rgba(79, 84, 92, 0.15) 65%, rgba(54, 57, 63, 0.08) 85%, transparent 100%);
-      opacity: 0; transform: scale3d(0.8, 0.8, 1); pointer-events: none; z-index: 999;
-      mix-blend-mode: overlay; display: flex; align-items: center; justify-content: center;
-      will-change: opacity, transform; backface-visibility: hidden;
-      animation: pulseFlashAnim 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards, 
-                 lightningFlicker 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    `;
-    
     const lightning = document.createElement('div');
+    
+    // Apply optimized styles
+    flash.style.cssText = LIGHTNING_STYLES.flash;
+    lightning.style.cssText = LIGHTNING_STYLES.lightning;
     lightning.innerHTML = '&#x26A1;';
-    lightning.style.cssText = `
-      font-size: 3.2rem; color: #dcddde; opacity: 0; transform: scale3d(0.8, 0.8, 1);
-      text-shadow: 0 0 6px rgba(220, 221, 222, 0.9), 
-                   0 0 18px rgba(88, 101, 242, 0.7), 
-                   0 0 30px rgba(88, 101, 242, 0.3);
-      filter: drop-shadow(0 0 4px rgba(185, 187, 190, 0.5));
-      will-change: opacity, transform; backface-visibility: hidden;
-      animation: lightningAnim 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-    `;
     
     flash.appendChild(lightning);
     
-    // Safe DOM insertion with error handling
     try {
       document.body.appendChild(flash);
     } catch (e) {
       console.warn('Flash DOM insertion failed', e);
-      isFlashActive = false;
+      flashState.isFlashActive = false;
       return;
     }
     
-    // Optimized cleanup with multiple fallbacks
+    // Unified cleanup function
     const cleanup = () => {
       if (flash.parentNode) {
         try {
-          flash.parentNode.removeChild(flash);
+          flash.remove();
         } catch (e) {
-          // Fallback for cross-browser compatibility
-          flash.remove?.() || flash.parentNode?.removeChild(flash);
+          flash.parentNode?.removeChild(flash);
         }
       }
-      isFlashActive = false;
+      flashState.isFlashActive = false;
     };
     
-    // Primary cleanup timer
-    const cleanupTimer = setTimeout(cleanup, 1300);
+    // Multiple cleanup strategies for cross-browser compatibility
+    const cleanupTimer = setTimeout(cleanup, 1500);
     
-    // Fallback cleanup on animation end (cross-browser support)
-    const handleAnimationEnd = () => {
-      clearTimeout(cleanupTimer);
-      cleanup();
-      flash.removeEventListener('animationend', handleAnimationEnd);
-      flash.removeEventListener('webkitAnimationEnd', handleAnimationEnd);
-    };
-    
-    // Cross-browser animation event listeners
-    flash.addEventListener('animationend', handleAnimationEnd, { passive: true });
-    flash.addEventListener('webkitAnimationEnd', handleAnimationEnd, { passive: true });
-    
-    // Emergency cleanup for iOS Safari
-    setTimeout(() => {
-      if (isFlashActive) {
+    const handleAnimationEnd = (e) => {
+      if (e.target === flash) {
+        clearTimeout(cleanupTimer);
         cleanup();
+        flash.removeEventListener('animationend', handleAnimationEnd);
+        flash.removeEventListener('webkitAnimationEnd', handleAnimationEnd);
       }
+    };
+    
+    flash.addEventListener('animationend', handleAnimationEnd, { passive: true, once: true });
+    flash.addEventListener('webkitAnimationEnd', handleAnimationEnd, { passive: true, once: true });
+    
+    // Emergency cleanup
+    setTimeout(() => {
+      if (flashState.isFlashActive) cleanup();
     }, 2000);
   });
 }
 
 // ========== DROPDOWN ==========
 function setOptions(select, options, placeholder, customLabels = {}) {
-  // Generate HTML for options
-  const optionElements = [];
-  
-  if (placeholder) {
-    optionElements.push(`<option value="">${placeholder}</option>`);
-  }
+  const optionElements = placeholder ? [`<option value="">${placeholder}</option>`] : [];
   
   options.forEach(opt => {
     const value = typeof opt === "string" ? opt : opt.value;
     const label = customLabels[value] || (typeof opt === "string" ? opt : opt.label);
-    const disabled = opt.disabled ? 'disabled' : '';
+    const disabled = opt.disabled ? ' disabled' : '';
     
-    optionElements.push(`<option value="${value}" ${disabled}>${label}</option>`);
+    optionElements.push(`<option value="${value}"${disabled}>${label}</option>`);
   });
   
   select.innerHTML = optionElements.join("");
@@ -3241,30 +3316,14 @@ function populateDropdownOptions() {
   bindThreeSetListeners();
 }
 function populateTargetDropdowns() {
-  const targetDropdowns = [
-    {
-      element: DOM_ELEMENTS.tSize,
-      options: [
-        { value: "Small", label: "Small" },
-        { value: "Medium", label: "Medium" },
-        { value: "Large", label: "Large" }
-      ],
-      placeholder: "Select Target Size"
-    },
-    {
-      element: DOM_ELEMENTS.tRace,
-      options: RACE_TYPES,
-      placeholder: "skip race"
-    },
-    {
-      element: DOM_ELEMENTS.tAttr,
-      options: Object.keys(ELEMENT_COUNTER_TABLE),
-      placeholder: "skip attribute"
-    }
+  const targetConfigs = [
+    { element: DOM_ELEMENTS.tSize, options: ["Small", "Medium", "Large"], placeholder: "Select Target Size" },
+    { element: DOM_ELEMENTS.tRace, options: RACE_TYPES, placeholder: "skip race" },
+    { element: DOM_ELEMENTS.tAttr, options: Object.keys(ELEMENT_COUNTER_TABLE), placeholder: "skip attribute" }
   ];
   
-  // Populate target dropdowns and enable them
-  targetDropdowns.forEach(({ element, options, placeholder }) => {
+  // Populate and enable target dropdowns
+  targetConfigs.forEach(({ element, options, placeholder }) => {
     setOptions(element, options, placeholder);
     element.disabled = false;
   });
@@ -3278,59 +3337,44 @@ function populateTargetDropdowns() {
   });
 }
 function populateSetDropdowns() {
-  // Vesper Set dropdown
+  // Build dropdown options efficiently
   const vesperOptions = [
     { value: "", label: "skip vesper set" },
-    ...Object.entries(VESPER_SET).map(([tier, val]) => ({
-      value: val,
-      label: `Tier ${tier}`
-    }))
+    ...Object.entries(VESPER_SET).map(([tier, val]) => ({ value: val, label: `Tier ${tier}` }))
   ];
-  setOptions(DOM_ELEMENTS.vesperSet, vesperOptions);
   
-  // White Set dropdown
   const whiteOptions = [
     { value: "", label: "skip white set" },
-    ...Object.entries(WHITE_SET).map(([tier, val]) => ({
-      value: val,
-      label: tier
-    }))
+    ...Object.entries(WHITE_SET).map(([tier, val]) => ({ value: val, label: tier }))
   ];
-  setOptions(DOM_ELEMENTS.whiteSet, whiteOptions);
   
-  // Blue Set dropdown with nested mapping
   const blueOptions = [
     { value: "", label: "skip blue set" },
     ...Object.entries(BLUE_SET).flatMap(([multiplier, levels]) =>
-      Object.entries(levels).map(([lvl, val]) => ({
-        value: val,
-        label: `Level ${lvl}*${multiplier}`
-      }))
+      Object.entries(levels).map(([lvl, val]) => ({ value: val, label: `Level ${lvl}*${multiplier}` }))
     )
   ];
+  
+  setOptions(DOM_ELEMENTS.vesperSet, vesperOptions);
+  setOptions(DOM_ELEMENTS.whiteSet, whiteOptions);
   setOptions(DOM_ELEMENTS.blueSet, blueOptions);
 }
 function bindTargetDefenseListener() {
-  // Prevent duplicate listeners
   if (DOM_ELEMENTS.tDef.dataset.boundDefense) return;
   
   DOM_ELEMENTS.tDef.addEventListener('change', function() {
     const selectedKey = this.value;
     const defenseData = DEFENSE_TABLE[selectedKey];
-    const targetElements = {
-      size: DOM_ELEMENTS.tSize,
-      race: DOM_ELEMENTS.tRace,
-      attr: DOM_ELEMENTS.tAttr
-    };
+    const targetElements = [DOM_ELEMENTS.tSize, DOM_ELEMENTS.tRace, DOM_ELEMENTS.tAttr];
     
-    // Auto-populate and disable fields if defense data contains mob info
-    if (defenseData && selectedKey.includes("Lv.")) {
-      updateTargetField(targetElements.size, defenseData.sizeMob);
-      updateTargetField(targetElements.race, defenseData.raceMob);
-      updateTargetField(targetElements.attr, defenseData.attributeMob);
+    if (defenseData?.sizeMob && selectedKey.includes("Lv.")) {
+      // Auto-populate and disable fields if defense data contains mob info
+      updateTargetField(DOM_ELEMENTS.tSize, defenseData.sizeMob);
+      updateTargetField(DOM_ELEMENTS.tRace, defenseData.raceMob);
+      updateTargetField(DOM_ELEMENTS.tAttr, defenseData.attributeMob);
     } else {
       // Reset and enable all target fields
-      Object.values(targetElements).forEach(element => {
+      targetElements.forEach(element => {
         element.value = "";
         element.disabled = false;
       });
@@ -3341,10 +3385,8 @@ function bindTargetDefenseListener() {
   
   DOM_ELEMENTS.tDef.dataset.boundDefense = "1";
 }
-
 // ======== EQ SET ========
 function updateTargetField(element, value) {
-  // Update field with value and disable if value exists
   if (value) {
     element.value = value;
     element.disabled = true;
@@ -3354,46 +3396,32 @@ let selectionOrder = [];
 function recordSelection(selectEl) {
   const wasCycleComplete = isCycleComplete();
   
-  // Remove from order if deselected
   if (!selectEl?.value) {
     removeFromSelectionOrder(selectEl);
     return;
   }
   
-  // Reset cycle if previously complete, otherwise add to order
   if (wasCycleComplete) {
-    selectionOrder.length = 0;
-    selectionOrder.push(selectEl);
+    selectionOrder = [selectEl];
   } else if (!selectionOrder.includes(selectEl)) {
     selectionOrder.push(selectEl);
   }
 }
 function removeFromSelectionOrder(selectEl) {
-  // Remove element from selection order array
   const index = selectionOrder.indexOf(selectEl);
   if (index !== -1) {
     selectionOrder.splice(index, 1);
   }
 }
 function isCycleComplete() {
-  // Check if selection cycle is complete (3 sets or blue *8 multiplier)
   const blueText = DOM_ELEMENTS.blueSet?.selectedOptions[0]?.textContent ?? "";
-  const blueIs8x = blueText.includes("*8");
-  
-  return selectionOrder.length >= 3 || (DOM_ELEMENTS.blueSet?.value && blueIs8x);
+  return selectionOrder.length >= 3 || (DOM_ELEMENTS.blueSet?.value && blueText.includes("*8"));
 }
 function resetSelectionOrder() {
-  // Reset selection order based on current dropdown values
-  selectionOrder.length = 0;
-  
-  const setElements = [DOM_ELEMENTS.blueSet, DOM_ELEMENTS.vesperSet, DOM_ELEMENTS.whiteSet]
-    .filter(Boolean)
-    .filter(el => el.value);
-  
-  selectionOrder.push(...setElements);
+  selectionOrder = [DOM_ELEMENTS.blueSet, DOM_ELEMENTS.vesperSet, DOM_ELEMENTS.whiteSet]
+    .filter(el => el?.value);
 }
 function setOnlySkip(selectEl) {
-  // Disable all options except placeholder
   if (!selectEl) return;
   
   Array.from(selectEl.options).forEach(opt => {
@@ -3402,7 +3430,6 @@ function setOnlySkip(selectEl) {
   selectEl.value = "";
 }
 function enableAllOptions(selectEl) {
-  // Enable all options in select element
   if (!selectEl) return;
   
   Array.from(selectEl.options).forEach(opt => {
@@ -3410,7 +3437,6 @@ function enableAllOptions(selectEl) {
   });
 }
 function syncThreeSets() {
-  // Synchronize three-set dropdowns based on selection rules
   const setElements = {
     blue: DOM_ELEMENTS.blueSet,
     vesper: DOM_ELEMENTS.vesperSet,
@@ -3441,7 +3467,6 @@ function syncThreeSets() {
   applyTwoSetLimit(setElements);
 }
 function disableBlue8xOptions(blueElement) {
-  // Disable Blue *8 multiplier options and reset if currently selected
   Array.from(blueElement.options).forEach(opt => {
     if (opt.value && opt.textContent.includes("*8")) {
       opt.disabled = true;
@@ -3455,7 +3480,6 @@ function disableBlue8xOptions(blueElement) {
   }
 }
 function applyTwoSetLimit(setElements) {
-  // Apply two-set selection limit by disabling unselected sets
   const allSets = Object.values(setElements).filter(Boolean);
   const unselectedSets = allSets.filter(el => !selectionOrder.includes(el));
   
@@ -3464,16 +3488,13 @@ function applyTwoSetLimit(setElements) {
   }
 }
 function bindThreeSetListeners() {
-  // Bind change event listeners to three-set dropdowns
   const setElements = [DOM_ELEMENTS.blueSet, DOM_ELEMENTS.vesperSet, DOM_ELEMENTS.whiteSet]
     .filter(Boolean);
 
   setElements.forEach(element => {
-    // Skip if already bound to prevent duplicate listeners
     if (element.dataset.boundThree) return;
     
     element.addEventListener("change", () => {
-      
       recordSelection(element);
       syncThreeSets();
     });
@@ -3481,7 +3502,6 @@ function bindThreeSetListeners() {
     element.dataset.boundThree = "1";
   });
   
-  // Initialize selection order and sync state
   resetSelectionOrder();
   syncThreeSets();
 }
@@ -3489,6 +3509,7 @@ function bindThreeSetListeners() {
 // ======== Dynamic UI ========
 function handleDropdownChange(event) {
   if (isResultShown) return;
+  
   const elementId = event?.target?.id;
   if (!elementId) return;
   
@@ -3499,10 +3520,10 @@ function handleDropdownChange(event) {
   }
   if (elementId === 'targetRaceSelect') clearNumericInput(DOM_ELEMENTS.race);
   if (elementId === 'targetElementSelect') clearNumericInput(DOM_ELEMENTS.attr);
+  
   updateDynamicFieldLabels();
 }
 function updateAttackTypeUI() {
-  // show hide field by atktype
   const atkType = DOM_ELEMENTS.atkType.value;
   const penGroup = document.querySelector('.form-group.pen-group');
   const critGroup = document.querySelector('.form-group.crit-group');
@@ -3513,12 +3534,12 @@ function updateAttackTypeUI() {
   }
   
   if (atkType === 'pen') {
-    if (penGroup) penGroup.classList.remove('hidden');
+    penGroup?.classList.remove('hidden');
     DOM_ELEMENTS.pen.disabled = false;
     DOM_ELEMENTS.crit.disabled = true;
     DOM_ELEMENTS.crit.value = '';
   } else if (atkType === 'crit') {
-    if (critGroup) critGroup.classList.remove('hidden');
+    critGroup?.classList.remove('hidden');
     DOM_ELEMENTS.crit.disabled = false;
     DOM_ELEMENTS.pen.disabled = true;
     DOM_ELEMENTS.pen.value = '';
@@ -3530,40 +3551,42 @@ function updateAttackTypeUI() {
   }
 }
 function updateDynamicFieldLabels() {
-  // Plebian Vesper Set
-const vesperLabels = {
-  "48": "BRO?!",
-  "56": "REALY?!",
-  "64": "Wake UP!",
-  "72": "STOP Dreaming!",
-  "80": "F2P DETECTED!"
-};
-const vesperValue = DOM_ELEMENTS.vesperSet.value;
-if (!vesperLabels[vesperValue]) {
-  DOM_ELEMENTS.vesperSetLabel.textContent = 'Vesper SET'
-
-} else {
-    DOM_ELEMENTS.vesperSetLabel.textContent = vesperLabels[vesperValue];
-}
-
-  // White SET
-const whiteLabels = {
-  "36": "Why?",
-  "42": "Still dreming yaa",
-  "48": "PFTTT!!",
-  "54": "Have a Nice Day!"
-};
-const whiteValue = DOM_ELEMENTS.whiteSet.value;
-if (!whiteLabels[whiteValue]) {
-  DOM_ELEMENTS.whiteSetLabel.textContent = 'White SET (110*3)';
-} else {
-  DOM_ELEMENTS.whiteSetLabel.textContent = whiteLabels[whiteValue];
-}
-  // Race field
-  if (DOM_ELEMENTS.tRace.value) {
+  // Pre-defined label mappings for efficiency
+  const vesperLabels = {
+    "48": "BRO?!",
+    "56": "REALY?!",
+    "64": "Wake UP!",
+    "72": "STOP Dreaming!",
+    "80": "F2P DETECTED!"
+  };
+  
+  const whiteLabels = {
+    "36": "Why?",
+    "42": "Still dreming yaa",
+    "48": "PFTTT!!",
+    "54": "Have a Nice Day!"
+  };
+  
+  // Cache DOM values
+  const vesperValue = DOM_ELEMENTS.vesperSet.value;
+  const whiteValue = DOM_ELEMENTS.whiteSet.value;
+  const raceValue = DOM_ELEMENTS.tRace.value;
+  const attrValue = DOM_ELEMENTS.tAttr.value;
+  const atkTypeValue = DOM_ELEMENTS.atkType.value;
+  const wElemValue = DOM_ELEMENTS.wElem.value;
+  const tSizeValue = DOM_ELEMENTS.tSize.value;
+  
+  // Update Vesper SET label
+  DOM_ELEMENTS.vesperSetLabel.textContent = vesperLabels[vesperValue] || 'Vesper SET';
+  
+  // Update White SET label
+  DOM_ELEMENTS.whiteSetLabel.textContent = whiteLabels[whiteValue] || 'White SET (110*3)';
+  
+  // Update Race field
+  if (raceValue) {
     DOM_ELEMENTS.race.disabled = false;
-    DOM_ELEMENTS.raceLabel.textContent = DOM_ELEMENTS.tRace.value;
-    DOM_ELEMENTS.race.placeholder = 'dmg to ' + DOM_ELEMENTS.tRace.value.toLowerCase() + ' % (izlude weapon)';
+    DOM_ELEMENTS.raceLabel.textContent = raceValue;
+    DOM_ELEMENTS.race.placeholder = `dmg to ${raceValue.toLowerCase()} % (izlude weapon)`;
   } else {
     DOM_ELEMENTS.race.disabled = true;
     DOM_ELEMENTS.raceLabel.textContent = 'Race';
@@ -3571,11 +3594,11 @@ if (!whiteLabels[whiteValue]) {
     DOM_ELEMENTS.race.value = '';
   }
 
-  // Attribute field
-  if (DOM_ELEMENTS.tAttr.value) {
+  // Update Attribute field
+  if (attrValue) {
     DOM_ELEMENTS.attr.disabled = false;
-    DOM_ELEMENTS.attrLabel.textContent = DOM_ELEMENTS.tAttr.value;
-    DOM_ELEMENTS.attr.placeholder = 'dmg to ' + DOM_ELEMENTS.tAttr.value.toLowerCase() + ' attr % (weapon alberta)';
+    DOM_ELEMENTS.attrLabel.textContent = attrValue;
+    DOM_ELEMENTS.attr.placeholder = `dmg to ${attrValue.toLowerCase()} attr % (weapon alberta)`;
   } else {
     DOM_ELEMENTS.attr.disabled = true;
     DOM_ELEMENTS.attrLabel.textContent = '';
@@ -3583,24 +3606,24 @@ if (!whiteLabels[whiteValue]) {
     DOM_ELEMENTS.attr.value = '';
   }
 
-  // PMBO 
-  if (DOM_ELEMENTS.atkType.value != '') {
+  // Update PMBO fields
+  if (atkTypeValue) {
     DOM_ELEMENTS.dmg.disabled = false;
     DOM_ELEMENTS.dmgStack.disabled = false;
     DOM_ELEMENTS.dmg.placeholder = 'final p/m damage bonus %';
-    DOM_ELEMENTS.dmgStack.placeholder = 'final damage bonus/stack %'
+    DOM_ELEMENTS.dmgStack.placeholder = 'final damage bonus/stack %';
   } else {
     DOM_ELEMENTS.dmg.disabled = true;
     DOM_ELEMENTS.dmgStack.disabled = true;  
     DOM_ELEMENTS.dmg.placeholder = 'select attack type first';
-    DOM_ELEMENTS.dmgStack.placeholder = 'select attack type first'
+    DOM_ELEMENTS.dmgStack.placeholder = 'select attack type first';
   }
 
-  // Element field
-  if (DOM_ELEMENTS.wElem.value) {
+  // Update Element field
+  if (wElemValue) {
     DOM_ELEMENTS.elemEnh.disabled = false;
-    DOM_ELEMENTS.elemEnhLabel.textContent = DOM_ELEMENTS.wElem.value + ' Enhance %';
-    DOM_ELEMENTS.elemEnh.placeholder = DOM_ELEMENTS.wElem.value.toLowerCase() + ' enhance %';
+    DOM_ELEMENTS.elemEnhLabel.textContent = `${wElemValue} Enhance %`;
+    DOM_ELEMENTS.elemEnh.placeholder = `${wElemValue.toLowerCase()} enhance %`;
   } else {
     DOM_ELEMENTS.elemEnh.disabled = true;
     DOM_ELEMENTS.elemEnhLabel.textContent = 'Element Enhance %';
@@ -3608,11 +3631,11 @@ if (!whiteLabels[whiteValue]) {
     DOM_ELEMENTS.elemEnh.value = '';
   }
 
-  // Size enhance field
-  if (DOM_ELEMENTS.tSize.value) {
+  // Update Size enhance field
+  if (tSizeValue) {
     DOM_ELEMENTS.sizeEnh.disabled = false;
-    DOM_ELEMENTS.sizeLabel.textContent = 'DMG to ' + DOM_ELEMENTS.tSize.value + ' %';
-    DOM_ELEMENTS.sizeEnh.placeholder = 'dmg to ' + DOM_ELEMENTS.tSize.value.toLowerCase() + ' %';
+    DOM_ELEMENTS.sizeLabel.textContent = `DMG to ${tSizeValue} %`;
+    DOM_ELEMENTS.sizeEnh.placeholder = `dmg to ${tSizeValue.toLowerCase()} %`;
   } else {
     DOM_ELEMENTS.sizeEnh.disabled = true;
     DOM_ELEMENTS.sizeLabel.textContent = 'DMG to Size %';
@@ -4388,8 +4411,9 @@ function validateRequiredFields() {
 
   return true;
 }
+
 function validateStatsVsTarget(state, focusedElement = null) {
-  // Execute validation but always return true as per original requirement
+  // Execute validation and get the actual result
   const result = ValidationSSoT.validateStatsWithClasses(state, focusedElement);
   
   // Additional realtime threshold check on stats change
@@ -4397,9 +4421,15 @@ function validateStatsVsTarget(state, focusedElement = null) {
     ValidationSSoT.checkStatsAfterThresholdChange();
   }
   
+  // FIXED: Return the actual validation result, not always true
+  // If validation failed, scroll and focus the invalid element
+  if (!result.isValid && result.element) {
+    scrollAndFocusElement(result.element);
+    return false;
+  }
+  
   return result.isValid;
 }
-
 // ========== SAFE STATS SYSTEM ==========
 const PASSIVE_SUPPORT = (() => {
   let supported = false;
@@ -4407,70 +4437,66 @@ const PASSIVE_SUPPORT = (() => {
     const opts = Object.defineProperty({}, 'passive', {
       get() { supported = true; return false; }
     });
-    const testHandler = () => {};
-    window.addEventListener('test-passive', testHandler, opts);
-    window.removeEventListener('test-passive', testHandler, opts);
+    window.addEventListener('test-passive', () => {}, opts);
+    window.removeEventListener('test-passive', () => {}, opts);
   } catch (_) {}
   return supported;
 })();
-const POINTER_SUPPORT = ('PointerEvent' in window && 'onpointerdown' in window);
+const POINTER_SUPPORT = 'PointerEvent' in window;
 function showLockedInputMessage(event) {
   const target = event?.currentTarget;
+  if (!target) return;
+  
   const now = Date.now();
   
-  // Prevent spam clicks with debounce
-  if (target) {
-    if (target._lastLockTimestamp && (now - target._lastLockTimestamp) < 500) return;
-    target._lastLockTimestamp = now;
+  // Debounce spam clicks
+  if (target._lastLockTimestamp && (now - target._lastLockTimestamp) < 500) return;
+  target._lastLockTimestamp = now;
+  
+  // Only prevent if wrapper is locked
+  if (!target.classList?.contains('locked')) return;
+  
+  if (event?.cancelable) {
+    event.preventDefault();
+    event.stopPropagation();
   }
   
-  // Only prevent if wrapper is actually locked
-  if (target?.classList?.contains('locked')) {
-    if (event?.cancelable) {
-      try {
-        event.preventDefault();
-        event.stopPropagation();
-      } catch (_) {}
-    }
-    
-    // Global snackbar debounce to prevent spam
-    if (!window._lastSnackbarTime || (now - window._lastSnackbarTime) > 5000) {
-      window._lastSnackbarTime = now;
+  // Global snackbar debounce
+  if (!window._lastSnackbarTime || (now - window._lastSnackbarTime) > 3000) {
+    window._lastSnackbarTime = now;
+    if (typeof showSnackbar === 'function') {
       showSnackbar("Your Stats Locked!");
     }
   }
 }
 function bindInputLockGuard(wrapElement) {
-  if (wrapElement.hasAttribute('data-lock-bound')) return;
+  if (!wrapElement?.nodeType || wrapElement.hasAttribute?.('data-lock-bound')) return;
   
-  const handler = showLockedInputMessage;
   const listeners = [];
+  const opts = PASSIVE_SUPPORT ? { passive: false } : false;
   
   if (POINTER_SUPPORT) {
-    const opts = { capture: false, passive: false };
-    wrapElement.addEventListener('pointerdown', handler, opts);
-    listeners.push(['pointerdown', handler, opts]);
+    wrapElement.addEventListener('pointerdown', showLockedInputMessage, opts);
+    listeners.push(['pointerdown', showLockedInputMessage, opts]);
   } else {
-    const touchOpts = PASSIVE_SUPPORT ? { capture: false, passive: false } : false;
-    wrapElement.addEventListener('touchstart', handler, touchOpts);
-    listeners.push(['touchstart', handler, touchOpts]);
-    wrapElement.addEventListener('click', handler, false);
-    listeners.push(['click', handler, false]);
+    wrapElement.addEventListener('touchstart', showLockedInputMessage, opts);
+    wrapElement.addEventListener('click', showLockedInputMessage, false);
+    listeners.push(['touchstart', showLockedInputMessage, opts], ['click', showLockedInputMessage, false]);
   }
   
   wrapElement._lockListeners = listeners;
   wrapElement.setAttribute('data-lock-bound', '1');
 }
 function unbindInputLockGuard(wrapElement) {
-  if (!wrapElement.hasAttribute('data-lock-bound')) return;
+  if (!wrapElement?.nodeType || !wrapElement.hasAttribute?.('data-lock-bound')) return;
   
   const listeners = wrapElement._lockListeners;
   if (Array.isArray(listeners)) {
-    for (const [type, handler, opts] of listeners) {
+    listeners.forEach(([type, handler, opts]) => {
       try {
         wrapElement.removeEventListener(type, handler, opts);
       } catch (_) {}
-    }
+    });
   }
   
   delete wrapElement._lockListeners;
@@ -4478,29 +4504,39 @@ function unbindInputLockGuard(wrapElement) {
   wrapElement.removeAttribute('data-lock-bound');
 }
 function lockAllInputs() {
-  // Auto-detect and lock all form elements in .input-wrap containers
-  document.querySelectorAll('.input-wrap').forEach(wrapper => {
+  const wrappers = document.querySelectorAll('.input-wrap');
+  if (!wrappers.length) return;
+  
+  wrappers.forEach(wrapper => {
+    if (!wrapper?.nodeType) return;
+    
     const elements = wrapper.querySelectorAll('input, select, textarea');
-    if (elements.length === 0) return;
+    if (!elements.length) return;
     
-    // Lock all form elements in this wrapper
-    elements.forEach(el => el.disabled = true);
+    // Lock elements and add visual state
+    elements.forEach(el => {
+      if (el?.nodeType) el.disabled = true;
+    });
     
-    // Add visual feedback and bind guard
     wrapper.classList.add('locked');
     bindInputLockGuard(wrapper);
   });
 }
 function unlockAllInputs() {
-  // Auto-detect and unlock all form elements in .input-wrap containers
-  document.querySelectorAll('.input-wrap').forEach(wrapper => {
+  const wrappers = document.querySelectorAll('.input-wrap');
+  if (!wrappers.length) return;
+  
+  wrappers.forEach(wrapper => {
+    if (!wrapper?.nodeType) return;
+    
     const elements = wrapper.querySelectorAll('input, select, textarea');
-    if (elements.length === 0) return;
+    if (!elements.length) return;
     
-    // Unlock all form elements in this wrapper
-    elements.forEach(el => el.disabled = false);
+    // Unlock elements and remove visual state
+    elements.forEach(el => {
+      if (el?.nodeType) el.disabled = false;
+    });
     
-    // Remove visual feedback and unbind guard
     wrapper.classList.remove('locked');
     unbindInputLockGuard(wrapper);
   });
@@ -4511,41 +4547,45 @@ let snackbarTimer = null;
 function showSnackbar(text) {
   const sb = DOM_ELEMENTS.snackbar;
   if (!sb) return;
+  
   sb.textContent = text;
-  if (snackbarTimer) clearTimeout(snackbarTimer);
+  clearTimeout(snackbarTimer);
   sb.classList.remove('show');
-  void sb.offsetWidth;
+  sb.offsetHeight; // Force reflow
   sb.classList.add('show');
-  snackbarTimer = setTimeout(() => {
-    sb.classList.remove('show');
-  }, 3000);
+  
+  snackbarTimer = setTimeout(() => sb.classList.remove('show'), 3000);
 }
-const snackbarAdjusted = document.querySelector(".snackbar");
-const inputAdjusted = document.querySelector("input[type=number]");
 if (window.innerWidth <= 480) {
-  if (window.visualViewport) {
-    function updatePosition() {
-      const keyboardHeight = window.innerHeight - window.visualViewport.height;
-      snackbarAdjusted.style.bottom = 80 + keyboardHeight + "px";
+  const snackbar = document.querySelector('.snackbar');
+  const input = document.querySelector('input[type=number]');
+  
+  if (snackbar) {
+    
+    const updatePosition = () => {
+      const keyboardHeight = window.innerHeight - (window.visualViewport?.height || window.innerHeight);
+      snackbar.style.bottom = `${80 + keyboardHeight}px`;
+    };
+    
+    if (window.visualViewport) {
+      ['resize', 'scroll'].forEach(event =>
+        window.visualViewport.addEventListener(event, updatePosition)
+      );
+    } else if (input) {
+      input.addEventListener('focusin', () => snackbar.style.bottom = '300px');
+      input.addEventListener('focusout', () => snackbar.style.bottom = '16px');
     }
-    window.visualViewport.addEventListener("resize", updatePosition);
-    window.visualViewport.addEventListener("scroll", updatePosition);
-  } else {
-    inputAdjusted.addEventListener("focus", () => {
-      snackbarAdjusted.style.bottom = "300px";
-    });
-    inputAdjusted.addEventListener("blur", () => {
-      snackbarAdjusted.style.bottom = "16px";
-    });
   }
-}
+}  
 function scrollAndFocusElement(el, msg) {
-  if (msg) showSnackbar(msg);
-  const top = el.getBoundingClientRect().top + window.scrollY - 80;
-  window.scrollTo({ top, behavior: 'smooth' });
-  if (!el.disabled) el.focus({ preventScroll: true });
-  return false;
-}
+    msg && showSnackbar(msg);
+    
+    const top = el.getBoundingClientRect().top + window.pageYOffset - 80;
+    window.scrollTo({ top, behavior: 'smooth' });
+    
+    !el.disabled && el.focus({ preventScroll: true });
+    return false;
+  }
 const TOOLTIP_CONFIG = {
   // Hardcode selector
   "#dmgStackTips" : "<strong>Final DMG Bonus</strong> and <strong>F. P/M DMG BONUS</strong> are two <strong>different</strong> things! Look for it in your <strong>detailed stats</strong> where it shows as <strong>Final Damage Stack</strong> or <strong>Final Damage Bonus</strong>. Make sure you don't have any buffs active. Can't find it? Just set 0.",
@@ -4557,106 +4597,133 @@ const TOOLTIP_CONFIG = {
 function createTooltip(triggerElement, content) {
   if (!triggerElement || !content) return;
   
-  // Create tooltip element
   const tooltipElement = document.createElement("div");
   tooltipElement.className = "tooltip-wrap";
   tooltipElement.innerHTML = content;
   document.body.appendChild(tooltipElement);
   
+  // Set modern styling for smooth animations
+  Object.assign(tooltipElement.style, {
+    opacity: '0',
+    transform: 'translate(-50%, -100%) scale(0.95)',
+    transition: 'opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+    transformOrigin: 'center bottom',
+    pointerEvents: 'none',
+    position: 'absolute',
+    zIndex: '9999'
+  });
+  
   let isTooltipVisible = false;
+  let showTimer = null;
+  let hideTimer = null;
   
-  // Toggle tooltip visibility
-  function toggleTooltip(event) {
-    event.stopPropagation();
-    event.preventDefault();
+  const showTooltip = () => {
+    clearTimeout(hideTimer);
+    if (isTooltipVisible) return;
     
-    if (isTooltipVisible) {
-      hideTooltip();
-    } else {
-      showTooltip();
-    }
-  }
-  
-  function showTooltip() {
     positionTooltip();
-    tooltipElement.classList.add('visible');
     isTooltipVisible = true;
-  }
+    
+    requestAnimationFrame(() => {
+      tooltipElement.style.opacity = '1';
+      tooltipElement.style.transform = tooltipElement.style.transform.replace('scale(0.95)', 'scale(1)');
+      tooltipElement.style.pointerEvents = 'auto';
+    });
+  };
   
-  function hideTooltip() {
-    tooltipElement.classList.remove('visible');
+  const hideTooltip = () => {
+    clearTimeout(showTimer);
+    if (!isTooltipVisible) return;
+    
+    tooltipElement.style.opacity = '0';
+    tooltipElement.style.transform = tooltipElement.style.transform.replace('scale(1)', 'scale(0.95)');
+    tooltipElement.style.pointerEvents = 'none';
     isTooltipVisible = false;
-  }
+  };
   
-  function positionTooltip() {
+  const toggleTooltip = (event) => {
+    event?.stopPropagation();
+    event?.preventDefault();
+    isTooltipVisible ? hideTooltip() : showTooltip();
+  };
+  
+  const positionTooltip = () => {
     const triggerRect = triggerElement.getBoundingClientRect();
     const scrollX = window.pageXOffset;
     const scrollY = window.pageYOffset;
     
-    // Get tooltip dimensions
+    // Measure tooltip dimensions efficiently
     tooltipElement.style.visibility = 'hidden';
     tooltipElement.style.display = 'block';
-    const tooltipWidth = tooltipElement.offsetWidth;
-    const tooltipHeight = tooltipElement.offsetHeight;
+    const { offsetWidth: tooltipWidth, offsetHeight: tooltipHeight } = tooltipElement;
     tooltipElement.style.visibility = '';
     tooltipElement.style.display = '';
     
-    // Calculate center position relative to trigger
-    let leftPosition = triggerRect.left + scrollX + (triggerRect.width / 2);
+    // Smart positioning with viewport awareness
+    const centerX = triggerRect.left + scrollX + (triggerRect.width / 2);
     let topPosition = triggerRect.top + scrollY - tooltipHeight - 12;
     
-    // Keep tooltip in viewport
-    const viewportPadding = 16;
-    const maxLeft = window.innerWidth - tooltipWidth - viewportPadding;
-    leftPosition = Math.max(viewportPadding, Math.min(leftPosition - (tooltipWidth / 2), maxLeft));
+    const padding = 16;
+    const maxLeft = window.innerWidth - tooltipWidth - padding;
+    let leftPosition = Math.max(padding, Math.min(centerX - (tooltipWidth / 2), maxLeft));
     
-    // Flip to bottom if no space at top
-    if (topPosition < viewportPadding) {
+    // Flip tooltip if no space above
+    let transformOrigin = 'center bottom';
+    if (topPosition < padding + scrollY) {
       topPosition = triggerRect.bottom + scrollY + 12;
+      transformOrigin = 'center top';
     }
     
-    // Use transform for smoother positioning
+    // Apply smooth transform-based positioning
     tooltipElement.style.left = '0px';
     tooltipElement.style.top = '0px';
-    tooltipElement.style.transform = `translate(${leftPosition}px, ${topPosition}px)`;
-  }
+    tooltipElement.style.transformOrigin = transformOrigin;
+    
+    const currentScale = isTooltipVisible ? 'scale(1)' : 'scale(0.95)';
+    tooltipElement.style.transform = `translate(${leftPosition}px, ${topPosition}px) ${currentScale}`;
+  };
   
-  // Event handlers for tooltip interaction
-  triggerElement.addEventListener("click", toggleTooltip);
-  triggerElement.addEventListener("touchend", function(event) {
-    event.preventDefault();
-    toggleTooltip(event);
-  });
+  // Optimized event handling
+  const handleOutsideInteraction = (event) => {
+    if (isTooltipVisible &&
+      !triggerElement.contains(event.target) &&
+      !tooltipElement.contains(event.target)) {
+      hideTooltip();
+    }
+  };
   
-  triggerElement.addEventListener("keydown", function(event) {
-    if (event.key === "Enter" || event.key === " ") {
+  const handleKeydown = (event) => {
+    if (event.key === "Escape" && isTooltipVisible) {
+      hideTooltip();
+    } else if ((event.key === "Enter" || event.key === " ") &&
+      event.target === triggerElement) {
       event.preventDefault();
       toggleTooltip(event);
-    } else if (event.key === "Escape" && isTooltipVisible) {
-      hideTooltip();
     }
-  });
+  };
   
-  document.addEventListener("click", function(event) {
-    if (isTooltipVisible && !triggerElement.contains(event.target) && !tooltipElement.contains(event.target)) {
-      hideTooltip();
-    }
-  });
+  // Modern touch-friendly event listeners
+  triggerElement.addEventListener("click", toggleTooltip);
+  triggerElement.addEventListener("touchend", (event) => {
+    event.preventDefault();
+    toggleTooltip(event);
+  }, { passive: false });
   
-  // Handle touch events for mobile
-  document.addEventListener("touchend", function(event) {
-    if (isTooltipVisible && !triggerElement.contains(event.target) && !tooltipElement.contains(event.target)) {
-      hideTooltip();
-    }
-  });
+  // Global listeners with passive optimization
+  document.addEventListener("click", handleOutsideInteraction);
+  document.addEventListener("touchend", handleOutsideInteraction, { passive: true });
+  document.addEventListener("keydown", handleKeydown);
   
-  document.addEventListener("keydown", function(event) {
-    if (event.key === "Escape" && isTooltipVisible) hideTooltip();
-  });
+  // Throttled repositioning for better performance
+  let repositionTimer = null;
+  const throttledReposition = () => {
+    if (!isTooltipVisible) return;
+    clearTimeout(repositionTimer);
+    repositionTimer = setTimeout(positionTooltip, 16); // ~60fps
+  };
   
-  // Reposition on viewport changes
-  window.addEventListener('resize', () => isTooltipVisible && positionTooltip());
-  window.addEventListener('scroll', () => isTooltipVisible && positionTooltip());
+  window.addEventListener('resize', throttledReposition, { passive: true });
+  window.addEventListener('scroll', throttledReposition, { passive: true });
 }
 function setupTooltips(config) {
   Object.entries(config).forEach(([key, content]) => {
@@ -4664,25 +4731,16 @@ function setupTooltips(config) {
     
     try {
       if (typeof key === 'string') {
-        // Handle selector string like "#dmg-help", ".tooltip-trigger"
         elements = document.querySelectorAll(key);
-      } else {
-        // Handle DOM element directly from cache
-        // Convert element reference to actual element
-        const element = (typeof key === 'object' && key instanceof Element) ? key : null;
-        if (element) {
-          elements = [element];
-        }
+      } else if (key instanceof Element) {
+        elements = [key];
       }
       
-      // Apply tooltip to all matched elements
       elements.forEach(element => {
-        if (element && element instanceof Element) {
-          createTooltip(element, content);
-        }
+        element instanceof Element && createTooltip(element, content);
       });
     } catch (error) {
-      console.warn('Error setting up tooltip for key:', key, error);
+      console.warn('Tooltip setup error for:', key, error);
     }
   });
 }
@@ -4691,83 +4749,120 @@ function setupTooltips(config) {
 function bindAllEventListeners() {
   if (bindAllEventListeners.bound) return;
   bindAllEventListeners.bound = true;
-
+  
   populateDropdownOptions();
   
-DOM_ELEMENTS.submit.addEventListener('click', () => {
-  processMainCalculation();
-
-});
-
-DOM_ELEMENTS.resetRek.addEventListener('click', () => {
-  regenerateRecommendations();
-  if (typeof showSnackbar === 'function') {
-    showSnackbar("Table Refreshed!");
-  }
-});
-
-DOM_ELEMENTS.resetAll.addEventListener('click', () => {
-  unlockAllInputs();
-  resetAllData()});
-
-  // Test button listeners (guarded to avoid double binding)
-  try {
-    if (DOM_ELEMENTS.testReaper && !DOM_ELEMENTS.testReaper.dataset.simBound) {
-      DOM_ELEMENTS.testReaper.addEventListener('click', simulateFlash);
-      DOM_ELEMENTS.testReaper.dataset.simBound = '1';
-    }
-    if (DOM_ELEMENTS.testSpear && !DOM_ELEMENTS.testSpear.dataset.simBound) {
-      DOM_ELEMENTS.testSpear.addEventListener('click', simulateFlash);
-      DOM_ELEMENTS.testSpear.dataset.simBound = '1';
-    }
-  } catch (e) { console.warn('attach test listeners', e); }
-
-
-  // Dropdown change listeners
-  [
-    'penCritSelect', 'weaponSelect', 'weaponElementSelect',
-    'targetSizeSelect', 'targetRaceSelect', 'targetElementSelect','vesperSet','whiteSet'
-  ].forEach(elementId => {
-    const element = document.getElementById(elementId);
-    if (element) element.addEventListener('change', handleDropdownChange);
+  // Main action buttons with null safety
+  const buttonBindings = [
+    [DOM_ELEMENTS.submit, processMainCalculation],
+    [DOM_ELEMENTS.resetRek, () => {
+      regenerateRecommendations();
+      typeof showSnackbar === 'function' && showSnackbar("Table Refreshed!");
+    }],
+    [DOM_ELEMENTS.resetAll, resetAllData]
+  ];
+  
+  buttonBindings.forEach(([element, handler]) => {
+    element?.addEventListener('click', handler);
   });
   
-  // Numeric input validation
-  ["pen", "crit", "dmg", "elemEnh", "sizeEnh", "race", "attr", "dmgStack"].forEach(fieldKey => {
+  // Test simulation buttons (with double-binding protection)
+  const testButtons = [
+    ['testReaper', simulateFlash],
+    ['testSpear', simulateFlash]
+  ];
+  
+  testButtons.forEach(([key, handler]) => {
+    const element = DOM_ELEMENTS[key];
+    if (element && !element.dataset.simBound) {
+      element.addEventListener('click', handler);
+      element.dataset.simBound = '1';
+    }
+  });
+  
+  // Dropdown change listeners (optimized selector)
+  const dropdownIds = [
+    'penCritSelect', 'weaponSelect', 'weaponElementSelect',
+    'targetSizeSelect', 'targetRaceSelect', 'targetElementSelect',
+    'vesperSet', 'whiteSet'
+  ];
+  
+  dropdownIds.forEach(id => {
+    const element = document.getElementById(id);
+    element?.addEventListener('change', handleDropdownChange);
+  });
+  
+  // Numeric input validation with event delegation optimization
+  const numericFields = [
+    'pen', 'crit', 'dmg', 'elemEnh', 'sizeEnh',
+    'race', 'attr', 'dmgStack'
+  ];
+  
+  numericFields.forEach(fieldKey => {
     const element = DOM_ELEMENTS[fieldKey];
     if (!element) return;
-    element.addEventListener("blur", () => normalizeNumericInput(element));
-    element.addEventListener("paste", event => {
+    
+    // Blur validation
+    element.addEventListener('blur', () => normalizeNumericInput(element));
+    
+    // Paste handling with modern clipboard API fallback
+    element.addEventListener('paste', event => {
       event.preventDefault();
-      let pastedText = (event.clipboardData || window.clipboardData).getData("text");
-      normalizeNumericInput(element, pastedText);
+      
+      const clipboardData = event.clipboardData || window.clipboardData;
+      const pastedText = clipboardData?.getData('text') || '';
+      
+      if (pastedText) {
+        normalizeNumericInput(element, pastedText);
+      }
     });
   });
 }
 
 // ======== ACCORDION =========
-document.querySelectorAll("details").forEach(function(details) {
-  const summary = details.querySelector("summary");
-  const content = details.querySelector(".body");
+document.querySelectorAll('details').forEach(details => {
+  const summary = details.querySelector('summary');
+  const content = details.querySelector('.body');
   
-  summary.addEventListener("click", function(e) {
+  if (!summary || !content) return;
+  
+  // Set initial state
+  content.style.transition = 'max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+  content.style.overflow = 'hidden';
+  
+  summary.addEventListener('click', e => {
     e.preventDefault();
-    if (details.hasAttribute("open")) {
-      content.style.maxHeight = content.scrollHeight + "px";
-      requestAnimationFrame(function() {
-        content.style.maxHeight = "0px";
+    
+    const isOpen = details.hasAttribute('open');
+    
+    if (isOpen) {
+      // Closing
+      content.style.maxHeight = content.scrollHeight + 'px';
+      requestAnimationFrame(() => {
+        content.style.maxHeight = '0px';
       });
-      const closeHandler = function() {
-        details.removeAttribute("open");
-        content.removeEventListener("transitionend", closeHandler);
+      
+      const handleClose = () => {
+        details.removeAttribute('open');
+        content.removeEventListener('transitionend', handleClose);
       };
-      content.addEventListener("transitionend", closeHandler);
+      
+      content.addEventListener('transitionend', handleClose, { once: true });
     } else {
-      details.setAttribute("open", "");
-      content.style.maxHeight = "0px";
-      requestAnimationFrame(function() {
-        content.style.maxHeight = content.scrollHeight + "px";
+      // Opening
+      details.setAttribute('open', '');
+      content.style.maxHeight = '0px';
+      
+      requestAnimationFrame(() => {
+        content.style.maxHeight = content.scrollHeight + 'px';
       });
+      
+      const handleOpen = () => {
+        content.style.maxHeight = 'none';
+        content.removeEventListener('transitionend', handleOpen);
+      };
+      
+      content.addEventListener('transitionend', handleOpen, { once: true });
     }
   });
 });
@@ -5171,33 +5266,27 @@ class AppInitializer {
     this.eventHandlers = new Map();
     this.stickyHandler = null;
     
-    // Optimized throttle for viewport changes
-    this.viewportChangeHandler = this.rafThrottle(() => {
-      if (this.stickyHandler) {
-        this.stickyHandler.updateStickyState();
-      }
-    });
+    // Single optimized throttle instance
+    this.viewportChangeHandler = this.createThrottledHandler();
     
     this.init();
   }
 
-  // RAF-based throttle for better performance
-  rafThrottle(func) {
+  // Unified RAF throttle with better memory management
+  createThrottledHandler() {
     let rafId = null;
-    let lastArgs = null;
     
-    const throttled = (...args) => {
-      lastArgs = args;
-      if (rafId === null) {
-        rafId = requestAnimationFrame(() => {
-          func.apply(this, lastArgs);
-          rafId = null;
-        });
-      }
+    const handler = () => {
+      this.stickyHandler?.updateStickyState();
+      rafId = null;
+    };
+    
+    const throttled = () => {
+      rafId ??= requestAnimationFrame(handler);
     };
     
     throttled.cancel = () => {
-      if (rafId !== null) {
+      if (rafId) {
         cancelAnimationFrame(rafId);
         rafId = null;
       }
@@ -5206,185 +5295,254 @@ class AppInitializer {
     return throttled;
   }
 
-  // Legacy throttle for backward compatibility
+  // Legacy throttle (unchanged for compatibility)
   throttle(func, delay) {
-    let timeoutId;
-    let lastExecTime = 0;
+    let timeoutId, lastExecTime = 0;
     
     return (...args) => {
-      const currentTime = Date.now();
+      const now = Date.now();
+      const remaining = delay - (now - lastExecTime);
       
-      if (currentTime - lastExecTime > delay) {
+      if (remaining <= 0) {
         func.apply(this, args);
-        lastExecTime = currentTime;
+        lastExecTime = now;
       } else {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
           func.apply(this, args);
           lastExecTime = Date.now();
-        }, delay - (currentTime - lastExecTime));
+        }, remaining);
       }
     };
   }
 
-  // Safe DOM element getter
+  // Optimized element getter with caching
   getElement(selector) {
-    try {
-      return typeof selector === 'string' ? document.getElementById(selector) : selector;
-    } catch {
-      return null;
+    if (!selector) return null;
+    if (typeof selector !== 'string') return selector;
+    
+    // Simple caching for frequently accessed elements
+    if (!this._elementCache) this._elementCache = new Map();
+    
+    if (!this._elementCache.has(selector)) {
+      try {
+        this._elementCache.set(selector, document.getElementById(selector));
+      } catch {
+        this._elementCache.set(selector, null);
+      }
     }
+    
+    return this._elementCache.get(selector);
   }
 
-  // Centralized event listener management
+  // Streamlined event listener management
   addEventListenerSafe(element, event, handler, options = {}) {
     if (!element) return false;
     
-    const key = `${element.id || 'anonymous'}-${event}`;
+    const key = `${element.id || Math.random()}-${event}`;
     if (this.eventHandlers.has(key)) return false;
     
-    const safeOptions = { once: false, passive: true, ...options };
-    element.addEventListener(event, handler, safeOptions);
-    this.eventHandlers.set(key, { element, event, handler, options: safeOptions });
+    const opts = { passive: true, ...options };
+    element.addEventListener(event, handler, opts);
+    this.eventHandlers.set(key, { element, event, handler, options: opts });
     
     return true;
   }
 
-  // Initialize sticky handler
+  // Lazy sticky handler initialization
   initStickyHandler() {
-    if (!this.stickyHandler) {
-      this.stickyHandler = new StickyHandler();
-      this.stickyHandler.initMutationObserver();
-      
-      // Expose globally for backward compatibility
-      window.stickyHandler = this.stickyHandler;
-    }
+    if (this.stickyHandler) return;
+    
+    this.stickyHandler = new StickyHandler();
+    this.stickyHandler.initMutationObserver();
+    window.stickyHandler = this.stickyHandler;
   }
 
-  // Initialize mutation observer for non-sticky related changes
+  // Optimized mutation observer with single callback
   initMutationObserver() {
     if (typeof MutationObserver === 'undefined') return;
     
     const observer = new MutationObserver((mutations) => {
-      const hasBreakdownSwap = mutations.some(mutation => 
-        Array.from(mutation.addedNodes).some(node => 
-          node.nodeType === 1 && (node.id === 'breakdown-swap' || 
-          node.querySelector?.('#breakdown-swap'))
+      // Use some() for early exit
+      if (mutations.some(m => 
+        Array.from(m.addedNodes).some(n => 
+          n.nodeType === 1 && (n.id === 'breakdown-swap' || n.querySelector?.('#breakdown-swap'))
         )
-      );
-      
-      if (hasBreakdownSwap && !this.stickyHandler) {
+      )) {
         requestAnimationFrame(() => this.initStickyHandler());
       }
     });
     
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
-    
+    observer.observe(document.body, { childList: true, subtree: true });
     this.observers.add(observer);
   }
 
-  // Initialize modal functionality
+  // Streamlined modal with cached elements and optimized animations
   initModal() {
     const { log, openLog, closeLog } = DOM_ELEMENTS || {};
     if (!log) return;
     
-    log.style.display = 'none';
+    // Cache modal content element
+    const modalContent = log.querySelector('.modal-content, .log-content, .modal-body') || log.firstElementChild;
     
+    // Pre-calculate styles object to avoid repeated object creation
+    const hiddenStyles = {
+      display: 'none', opacity: '0', transform: 'scale(0.95)',
+      transition: 'opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+      transformOrigin: 'center', backdropFilter: 'blur(0px)', backgroundColor: 'rgba(0, 0, 0, 0)'
+    };
+    
+    const visibleStyles = {
+      opacity: '1', transform: 'scale(1)',
+      backdropFilter: 'blur(8px)', backgroundColor: 'rgba(0, 0, 0, 0.4)'
+    };
+    
+    // Initialize styles
+    Object.assign(log.style, hiddenStyles);
+    
+    if (modalContent) {
+      Object.assign(modalContent.style, {
+        transform: 'translateY(20px) scale(0.95)',
+        transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease-out',
+        opacity: '0.8'
+      });
+    }
+    
+    // Single outside click handler with improved logic
+    const handleOutsideClick = (e) => {
+      if (log.style.display === 'flex' && 
+          modalContent && 
+          !modalContent.contains(e.target) && 
+          e.target !== openLog) {
+        hideModal();
+      }
+    };
+    
+    const showModal = () => {
+      log.style.display = 'flex';
+      
+      requestAnimationFrame(() => {
+        Object.assign(log.style, visibleStyles);
+        
+        if (modalContent) {
+          Object.assign(modalContent.style, {
+            transform: 'translateY(0px) scale(1)', opacity: '1'
+          });
+        }
+      });
+      
+      // Delayed outside click listener
+      setTimeout(() => document.addEventListener('click', handleOutsideClick), 50);
+    };
+    
+    const hideModal = () => {
+      Object.assign(log.style, {
+        opacity: '0', transform: 'scale(0.95)',
+        backdropFilter: 'blur(0px)', backgroundColor: 'rgba(0, 0, 0, 0)'
+      });
+      
+      if (modalContent) {
+        Object.assign(modalContent.style, {
+          transform: 'translateY(-10px) scale(0.98)', opacity: '0.7'
+        });
+      }
+      
+      setTimeout(() => log.style.display = 'none', 300);
+      document.removeEventListener('click', handleOutsideClick);
+    };
+    
+    // Event listeners
     if (openLog) {
-      this.addEventListenerSafe(openLog, 'click', () => {
-        log.style.display = 'flex';
+      this.addEventListenerSafe(openLog, 'click', (e) => {
+        e.stopPropagation();
+        showModal();
       });
     }
     
     if (closeLog) {
-      this.addEventListenerSafe(closeLog, 'click', () => {
-        log.style.display = 'none';
-      });
+      this.addEventListenerSafe(closeLog, 'click', hideModal);
     }
-  }
-
-  // Initialize core functionality
-  initCore() {
-    const coreInitializers = [
-      'bindAllEventListeners',
-      'updateAttackTypeUI', 
-      'updateDynamicFieldLabels'
-    ];
     
-    coreInitializers.forEach(funcName => {
-      if (typeof window[funcName] === 'function') {
-        try {
-          window[funcName]();
-        } catch (error) {
-          console.warn(`Failed to initialize ${funcName}:`, error);
-        }
+    this.addEventListenerSafe(document, 'keydown', (e) => {
+      if (e.key === 'Escape' && log.style.display === 'flex') {
+        hideModal();
       }
     });
   }
 
-  // Initialize viewport change handlers
-  initViewportHandlers() {
-    this.addEventListenerSafe(window, 'scroll', this.viewportChangeHandler, { passive: true });
-    this.addEventListenerSafe(window, 'resize', this.viewportChangeHandler, { passive: true });
+  // Batch core initialization with error containment
+  initCore() {
+    const coreInits = ['bindAllEventListeners', 'updateAttackTypeUI', 'updateDynamicFieldLabels'];
     
-    // iOS viewport fix
-    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+    coreInits.forEach(name => {
+      const fn = window[name];
+      if (typeof fn === 'function') {
+        try { fn(); } catch (e) { console.warn(`${name} failed:`, e); }
+      }
+    });
+  }
+
+  // Optimized viewport handlers with iOS detection caching
+  initViewportHandlers() {
+    const options = { passive: true };
+    this.addEventListenerSafe(window, 'scroll', this.viewportChangeHandler, options);
+    this.addEventListenerSafe(window, 'resize', this.viewportChangeHandler, options);
+    
+    // Cache iOS detection
+    if (!this._isIOS) {
+      this._isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+    }
+    
+    if (this._isIOS) {
       this.addEventListenerSafe(window, 'orientationchange', () => {
-        setTimeout(() => this.viewportChangeHandler(), 200);
+        setTimeout(this.viewportChangeHandler, 200);
       });
     }
   }
 
-  // Initialize validation
+  // Simplified validation init
   initValidation() {
-    if (typeof ValidationSSoT !== 'undefined' && 
-        ValidationSSoT.helpers?.performInitialization) {
-      try {
-        ValidationSSoT.helpers.performInitialization();
-      } catch (error) {
-        console.warn('Validation initialization failed:', error);
-      }
+    try {
+      ValidationSSoT?.helpers?.performInitialization?.();
+    } catch (e) {
+      console.warn('Validation init failed:', e);
     }
   }
 
-  // Legacy method for backward compatibility
+  // Legacy compatibility
   manageStickyElements() {
-    if (this.stickyHandler) {
-      this.stickyHandler.updateStickyState(true);
-    }
+    this.stickyHandler?.updateStickyState(true);
   }
 
-  // Initialize tooltip
+  // Simplified tooltip init
   initTooltip() {
-    if (typeof TOOLTIP_CONFIG !== 'undefined' && typeof setupTooltips === 'function') {
-      try {
+    try {
+      if (typeof setupTooltips === 'function' && typeof TOOLTIP_CONFIG !== 'undefined') {
         setupTooltips(TOOLTIP_CONFIG);
-      } catch (error) {
-        console.warn('Tooltip initialization failed:', error);
       }
+    } catch (e) {
+      console.warn('Tooltip init failed:', e);
     }
   }
 
-  // Main initialization
+  // Streamlined main initialization
   initializeApp() {
     if (!DOM_ELEMENTS?.log) {
       console.warn('DOM_ELEMENTS.log not found');
       return;
     }
     
-    this.initMutationObserver();
-    this.initModal();
-    this.initCore();
-    this.initStickyHandler(); // Initialize sticky handler
-    this.initViewportHandlers();
-    this.initTooltip();
-    this.initValidation();
+    // Batch all initializations
+    const inits = [
+      'initMutationObserver', 'initModal', 'initCore', 
+      'initStickyHandler', 'initViewportHandlers', 
+      'initTooltip', 'initValidation'
+    ];
+    
+    inits.forEach(method => this[method]());
   }
 
-  // Safe initialization with duplicate prevention
+  // Safe initialization with improved duplicate check
   safeInit() {
     if (this.isInitialized) return;
     
@@ -5392,58 +5550,56 @@ class AppInitializer {
     
     try {
       this.initializeApp();
-    } catch (error) {
-      console.error('App initialization failed:', error);
+    } catch (e) {
+      console.error('App init failed:', e);
       this.isInitialized = false;
     }
   }
 
   // Main entry point
   init() {
+    const initFn = () => requestAnimationFrame(() => this.safeInit());
+    
     if (document.readyState === 'loading') {
-      this.addEventListenerSafe(document, 'DOMContentLoaded', 
-        () => this.safeInit(), 
-        { once: true, passive: false }
-      );
+      this.addEventListenerSafe(document, 'DOMContentLoaded', initFn, { once: true, passive: false });
     } else {
-      requestAnimationFrame(() => this.safeInit());
+      initFn();
     }
   }
 
-  // Cleanup method for SPA scenarios
+  // Enhanced cleanup
   destroy() {
-    // Cancel RAF throttle
-    if (this.viewportChangeHandler?.cancel) {
-      this.viewportChangeHandler.cancel();
-    }
+    this.viewportChangeHandler?.cancel();
     
-    // Destroy sticky handler
     if (this.stickyHandler) {
       this.stickyHandler.destroy();
       this.stickyHandler = null;
       window.stickyHandler = null;
     }
     
-    // Remove all event listeners
     this.eventHandlers.forEach(({ element, event, handler, options }) => {
       element.removeEventListener(event, handler, options);
     });
     this.eventHandlers.clear();
     
-    // Disconnect observers
-    this.observers.forEach(observer => observer.disconnect());
+    this.observers.forEach(obs => obs.disconnect());
     this.observers.clear();
+    
+    // Clear cache
+    this._elementCache?.clear();
     
     this.isInitialized = false;
   }
 }
+
+// Initialization and exports (unchanged)
 const appInitializer = new AppInitializer();
+
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { AppInitializer, StickyHandler };
 } else if (typeof window !== 'undefined') {
   window.AppInitializer = AppInitializer;
   window.StickyHandler = StickyHandler;
-  // Legacy global functions
   window.calculateSafeBottomPosition = calculateSafeBottomPosition;
   window.manageStickyElements = manageStickyElements;
 }
@@ -5459,9 +5615,9 @@ function resetAllData() {
   
   isResultShown = false;
   processMainCalculationTimeout = null;
-  isTestReaperActive = false;
-  isTestSpearActive = false;
-  isFlashActive = false;
+  flashState.isTestReaperActive = false;
+  flashState.isTestSpearActive = false;
+  flashState.isFlashActive = false;
   
   selectionOrder = [];
   bindThreeSetListeners();
@@ -5479,7 +5635,9 @@ function resetAllData() {
   // reset test flags and their UI 
   updateAttackTypeUI();
   updateDynamicFieldLabels();
-  scrollAndFocusElement(DOM_ELEMENTS.topOfPage, 'Cleared!')
+  scrollAndFocusElement(DOM_ELEMENTS.topOfPage, 'Cleared!');
+  unlockAllInputs();
+  unbindInputLockGuard();
   
 }
 </script>
