@@ -3646,54 +3646,45 @@ function updateDynamicFieldLabels() {
 
 // ======== VALIDATION =========
 const ValidationSSoT = {
-  // Constants
   INVALID_CLASS: 'invalid-value',
-
-  // Optimized Listener Registry with WeakMap for better GC
+  
+  // Listener management with WeakMap for garbage collection
   listenerRegistry: new Map(),
-  elementRefs: new WeakMap(), // Cross-reference for cleanup
-
-  // Cache for performance
+  elementRefs: new WeakMap(),
+  
+  // Performance cache
   _cache: {
     thresholds: null,
     thresholdTimestamp: 0,
-    CACHE_DURATION: 100 // 100ms cache for rapid calls
+    CACHE_DURATION: 100
   },
 
-  // Helper to identify pen & dmg fields - Optimized
   isPenOrDmgField(element) {
     return element && (element.id === 'pen' || element.id === 'dmg');
   },
 
-  // Ultra-safe listener management with better performance
   attachListener(element, eventType, handler, listenerKey) {
     if (!element || !eventType || !handler || !listenerKey) return;
 
     const elementKey = this.getElementKey(element);
     const fullKey = `${elementKey}_${eventType}_${listenerKey}`;
 
-    // Skip if already exists
     if (this.listenerRegistry.has(fullKey)) return;
 
-    // Use passive listeners where possible for better performance
     const options = (eventType === 'scroll' || eventType === 'touchstart' || eventType === 'touchmove') 
       ? { passive: true } : false;
 
-    // Attach with options
     element.addEventListener(eventType, handler, options);
 
-    // Register with cross-reference for cleanup
     const listenerInfo = { element, eventType, handler, listenerKey, options };
     this.listenerRegistry.set(fullKey, listenerInfo);
     
-    // WeakMap cross-reference for element-based cleanup
     if (!this.elementRefs.has(element)) {
       this.elementRefs.set(element, new Set());
     }
     this.elementRefs.get(element).add(fullKey);
   },
 
-  // Optimized listener removal
   removeListener(element, eventType, listenerKey) {
     if (!element || !eventType || !listenerKey) return;
 
@@ -3705,7 +3696,6 @@ const ValidationSSoT = {
       element.removeEventListener(eventType, listenerInfo.handler, listenerInfo.options);
       this.listenerRegistry.delete(fullKey);
       
-      // Clean cross-reference
       const elementKeys = this.elementRefs.get(element);
       if (elementKeys) {
         elementKeys.delete(fullKey);
@@ -3716,14 +3706,12 @@ const ValidationSSoT = {
     }
   },
 
-  // Ultra-fast element cleanup using WeakMap
   cleanupElementListeners(element) {
     if (!element) return;
 
     const elementKeys = this.elementRefs.get(element);
     if (!elementKeys) return;
 
-    // Batch cleanup
     for (const fullKey of elementKeys) {
       const listenerInfo = this.listenerRegistry.get(fullKey);
       if (listenerInfo) {
@@ -3735,29 +3723,23 @@ const ValidationSSoT = {
     this.elementRefs.delete(element);
   },
 
-  // Optimized element key generation
   getElementKey(element) {
     return element.id || (element.className + '_' + (element.dataset.key || Array.prototype.indexOf.call(element.parentNode?.children || [], element)));
   },
 
-  // ===== OPTIMIZED HELPER METHODS =====
   helpers: {
-    // Cached validation context for performance
     getValidationContext() {
       const now = performance.now();
       
-      // Use cache if fresh
       if (ValidationSSoT._cache.thresholds && 
           (now - ValidationSSoT._cache.thresholdTimestamp) < ValidationSSoT._cache.CACHE_DURATION) {
         return ValidationSSoT._cache.thresholds;
       }
 
-      // Fresh fetch
       const thresholds = ValidationSSoT.getCurrentThresholds();
       const selectedOption = DOM_ELEMENTS.tDef.options[DOM_ELEMENTS.tDef.selectedIndex];
       const targetLabel = selectedOption ? selectedOption.textContent : 'target';
       
-      // Cache result
       const result = { thresholds, targetLabel };
       ValidationSSoT._cache.thresholds = result;
       ValidationSSoT._cache.thresholdTimestamp = now;
@@ -3765,23 +3747,19 @@ const ValidationSSoT = {
       return result;
     },
 
-    // Micro-optimized number validation with comprehensive cache
     isInvalidNumber: (() => {
       const isValidCache = new Map();
       const CACHE_LIMIT = 100;
       
       return function(value) {
-        // Fast path for common cases
         if (value === '' || value === null || value === undefined) return true;
         if (typeof value === 'number') return isNaN(value) || !isFinite(value);
         
-        // Cache check
         if (isValidCache.has(value)) return isValidCache.get(value);
         
         const numValue = +value;
         const result = isNaN(numValue) || !isFinite(numValue);
         
-        // Manage cache size
         if (isValidCache.size >= CACHE_LIMIT) {
           const firstKey = isValidCache.keys().next().value;
           isValidCache.delete(firstKey);
@@ -3792,7 +3770,6 @@ const ValidationSSoT = {
       };
     })(),
 
-    // Check if value exceeds max attribute
     exceedsMaxValue(element, value) {
       if (!element) return false;
       
@@ -3805,10 +3782,7 @@ const ValidationSSoT = {
       return numValue > maxVal;
     },
 
-    // Optimized message generation with template caching
     generateRequirementMessage: (() => {
-      const templateCache = new Map();
-      
       return function(fieldId, threshold, targetLabel) {
         const minRequired = (threshold + 8).toFixed(2);
         
@@ -3832,12 +3806,10 @@ const ValidationSSoT = {
       };
     })(),
 
-    // Optimized initialization with debouncing
     performInitialization: (() => {
       let initTimeout;
       
       return function() {
-        // Debounce rapid calls
         clearTimeout(initTimeout);
         initTimeout = setTimeout(() => {
           if (!ValidationSSoT.statsValidationState.isReady) {
@@ -3846,44 +3818,43 @@ const ValidationSSoT = {
 
           if (DOM_ELEMENTS.tDef) {
             const thresholdChangeHandler = () => {
-              ValidationSSoT._cache.thresholds = null; // Clear cache
+              ValidationSSoT._cache.thresholds = null;
               ValidationSSoT.updateStatsThresholds();
             };
 
             ValidationSSoT.cleanupElementListeners(DOM_ELEMENTS.tDef);
             ValidationSSoT.attachListener(DOM_ELEMENTS.tDef, 'change', thresholdChangeHandler, 'thresholdUpdate');
           }
-        }, 16); // ~1 frame
+        }, 16);
       };
     })()
   },
 
-  // Cached field configuration
+  // DOM-ordered field configuration for consistent validation sequence
   _fieldRules: null,
   getFieldValidationRules() {
     if (!this._fieldRules) {
       this._fieldRules = [
-        { el: DOM_ELEMENTS.atkType, label: 'Attack Type' },
-        { el: DOM_ELEMENTS.weapon, label: 'Weapon Type' },
-        { el: DOM_ELEMENTS.wElem, label: 'Weapon Attribute' },
-        { el: DOM_ELEMENTS.tDef, label: 'Target Boss' },
-        { el: DOM_ELEMENTS.tSize, label: 'Target Size' },
-        { el: DOM_ELEMENTS.tRace, label: 'Target Race', condition: () => !DOM_ELEMENTS.race.disabled },
-        { el: DOM_ELEMENTS.tAttr, label: 'Target Attribute', condition: () => !DOM_ELEMENTS.attr.disabled },
-        { el: DOM_ELEMENTS.pen, label: 'Final P M PEN %', condition: () => DOM_ELEMENTS.atkType.value === 'pen' },
-        { el: DOM_ELEMENTS.crit, label: 'Critical DMG Bonus %', condition: () => DOM_ELEMENTS.atkType.value === 'crit' },
-        { el: DOM_ELEMENTS.dmg, label: 'Final P M DMG Bonus %' },
-        { el: DOM_ELEMENTS.elemEnh, label: 'Element Enhance %' },
-        { el: DOM_ELEMENTS.sizeEnh, label: 'DMG to Size %' },
-        { el: DOM_ELEMENTS.race, label: 'DMG to Race %', condition: () => !DOM_ELEMENTS.race.disabled },
-        { el: DOM_ELEMENTS.attr, label: 'DMG to Attribute %', condition: () => !DOM_ELEMENTS.attr.disabled },
-        { el: DOM_ELEMENTS.dmgStack, label: 'Final DMG Bonus %' }
+        { el: DOM_ELEMENTS.atkType, label: 'Attack Type', type: 'dropdown' },
+        { el: DOM_ELEMENTS.weapon, label: 'Weapon Type', type: 'dropdown' },
+        { el: DOM_ELEMENTS.wElem, label: 'Weapon Attribute', type: 'dropdown' },
+        { el: DOM_ELEMENTS.tDef, label: 'Target Boss', type: 'dropdown' },
+        { el: DOM_ELEMENTS.tSize, label: 'Target Size', type: 'dropdown' },
+        { el: DOM_ELEMENTS.tRace, label: 'Target Race', type: 'dropdown', condition: () => !DOM_ELEMENTS.race.disabled },
+        { el: DOM_ELEMENTS.tAttr, label: 'Target Attribute', type: 'dropdown', condition: () => !DOM_ELEMENTS.attr.disabled },
+        { el: DOM_ELEMENTS.pen, label: 'Final P M PEN %', type: 'stats', condition: () => DOM_ELEMENTS.atkType.value === 'pen' },
+        { el: DOM_ELEMENTS.crit, label: 'Critical DMG Bonus %', type: 'numeric', condition: () => DOM_ELEMENTS.atkType.value === 'crit' },
+        { el: DOM_ELEMENTS.dmg, label: 'Final P M DMG Bonus %', type: 'stats' },
+        { el: DOM_ELEMENTS.elemEnh, label: 'Element Enhance %', type: 'numeric' },
+        { el: DOM_ELEMENTS.sizeEnh, label: 'DMG to Size %', type: 'numeric' },
+        { el: DOM_ELEMENTS.race, label: 'DMG to Race %', type: 'numeric', condition: () => !DOM_ELEMENTS.race.disabled },
+        { el: DOM_ELEMENTS.attr, label: 'DMG to Attribute %', type: 'numeric', condition: () => !DOM_ELEMENTS.attr.disabled },
+        { el: DOM_ELEMENTS.dmgStack, label: 'Final DMG Bonus %', type: 'numeric' }
       ];
     }
     return this._fieldRules;
   },
 
-  // Optimized threshold fetching with error handling
   getCurrentThresholds() {
     try {
       const defData = getTargetDefenseData(DOM_ELEMENTS.tDef.value || '0def');
@@ -3896,14 +3867,13 @@ const ValidationSSoT = {
     }
   },
 
-  // Ultra-optimized class management - REALTIME with smart batching
+  // Realtime class management with batching optimization
   applyClassState: (() => {
-    const pendingUpdates = new Map(); // Use Map for deduplication
+    const pendingUpdates = new Map();
     let updateFrame;
     
     const batchUpdate = () => {
-      for (const [element, { isValid, context }] of pendingUpdates) {
-        // Skip if element no longer exists in DOM
+      for (const [element, { isValid }] of pendingUpdates) {
         if (!element.parentNode) continue;
         
         if (isValid) {
@@ -3911,7 +3881,6 @@ const ValidationSSoT = {
         } else {
           element.classList.add(ValidationSSoT.INVALID_CLASS);
           
-          // Setup realtime removal for invalid elements
           const removeOnValid = () => {
             if (element.value && element.value !== '') {
               element.classList.remove(ValidationSSoT.INVALID_CLASS);
@@ -3928,14 +3897,12 @@ const ValidationSSoT = {
     return function(element, isValid, context = 'default') {
       if (!element) return;
 
-      // Immediate update for critical operations
       if (context === 'immediate') {
         if (isValid) {
           element.classList.remove(this.INVALID_CLASS);
         } else {
           element.classList.add(this.INVALID_CLASS);
           
-          // Setup realtime removal for invalid elements
           const removeOnValid = () => {
             if (element.value && element.value !== '') {
               element.classList.remove(this.INVALID_CLASS);
@@ -3948,7 +3915,6 @@ const ValidationSSoT = {
         return;
       }
 
-      // Batch non-critical updates with deduplication
       pendingUpdates.set(element, { isValid, context });
       
       if (!updateFrame) {
@@ -3960,30 +3926,28 @@ const ValidationSSoT = {
     };
   })(),
 
-  // State tracking with optimizations
+  // Stats validation state tracking
   statsValidationState: {
     isReady: false,
     isStandby: false,
     touchedFields: new Set()
   },
 
-  // Ultra-optimized stats validation setup
+  // Setup realtime validation for PEN/DMG fields
   setupStatsValidation(element) {
     if (!element) return;
 
     this.cleanupElementListeners(element);
 
-    // ===== REALTIME CLASS MANAGEMENT - HYPER-OPTIMIZED =====
+    // Realtime class validation with frame optimization
     const realtimeClassValidation = (() => {
       let validationFrame;
       let lastValue = element.value;
       
       return () => {
-        // Skip if value hasn't changed
         if (element.value === lastValue && validationFrame) return;
         lastValue = element.value;
         
-        // Cancel pending validation
         if (validationFrame) {
           cancelAnimationFrame(validationFrame);
         }
@@ -3996,7 +3960,6 @@ const ValidationSSoT = {
 
           const currentValue = +(element.value) || 0;
           
-          // CHECK MAX FIRST - highest priority
           if (ValidationSSoT.helpers.exceedsMaxValue(element, currentValue)) {
             ValidationSSoT.applyClassState(element, false, 'immediate');
             return;
@@ -4014,20 +3977,18 @@ const ValidationSSoT = {
             isCurrentlyValid = currentValue > 0 && (currentValue - minRequired) > 0;
           }
 
-          // REALTIME CLASS MANAGEMENT
           ValidationSSoT.applyClassState(element, isCurrentlyValid, 'immediate');
         });
       };
     })();
 
-    // ===== OPTIMIZED TOUCH DETECTION =====
     const onTouch = () => {
       ValidationSSoT.statsValidationState.touchedFields.add(element.id);
       ValidationSSoT.statsValidationState.isStandby = false;
       realtimeClassValidation();
     };
 
-    // ===== OPTIMIZED BLUR HANDLERS - INDEPENDENT =====
+    // Independent blur handlers for PEN and DMG
     let onBlur;
 
     if (element.id === 'pen') {
@@ -4069,7 +4030,6 @@ const ValidationSSoT = {
       };
     }
 
-    // ===== ATTACH LISTENERS - BULLETPROOF =====
     this.attachListener(element, "focus", onTouch, "statsTouch");
     this.attachListener(element, "input", realtimeClassValidation, "statsInput");
     this.attachListener(element, "change", realtimeClassValidation, "statsChange");
@@ -4080,39 +4040,32 @@ const ValidationSSoT = {
     this.statsValidationState.isReady = true;
   },
 
-  // Optimized stats class state
   applyStatsClassState(element, isValid) {
     if (!element) return;
     this.applyClassState(element, isValid, 'immediate');
   },
 
-  // Batch initialization
   initializeStatsValidation() {
     const elements = [DOM_ELEMENTS.pen, DOM_ELEMENTS.dmg].filter(Boolean);
     elements.forEach(el => this.setupStatsValidation(el));
   },
 
-  // Optimized threshold update
   updateStatsThresholds() {
     this.statsValidationState.isStandby = true;
     this.statsValidationState.touchedFields.clear();
-    this._cache.thresholds = null; // Clear cache
+    this._cache.thresholds = null;
 
-    // Batch class removal
     [DOM_ELEMENTS.pen, DOM_ELEMENTS.dmg].forEach(el => {
       if (el) el.classList.remove(this.INVALID_CLASS);
     });
   },
 
-  // Optimized threshold change check
   checkStatsAfterThresholdChange() {
     const atkType = DOM_ELEMENTS.atkType.value;
     const { thresholds, targetLabel } = this.helpers.getValidationContext();
 
-    // Batch validation
     const checks = [];
 
-    // PEN check
     if (atkType.toLowerCase() === 'pen' && DOM_ELEMENTS.pen && !this.isEmpty(DOM_ELEMENTS.pen.value)) {
       const penValue = +(DOM_ELEMENTS.pen.value) || 0;
       const defVal = thresholds.defVal;
@@ -4127,7 +4080,6 @@ const ValidationSSoT = {
       }
     }
 
-    // DMG check
     if (DOM_ELEMENTS.dmg && !this.isEmpty(DOM_ELEMENTS.dmg.value)) {
       const dmgValue = +(DOM_ELEMENTS.dmg.value) || 0;
       const dmgredVal = thresholds.dmgredVal;
@@ -4142,26 +4094,21 @@ const ValidationSSoT = {
       }
     }
 
-    // Execute checks
     checks.forEach(check => check());
   },
 
-  // Micro-optimized isEmpty with null safety
   isEmpty: (() => {
     const emptyCache = new Map();
     const CACHE_LIMIT = 50;
     
     return function(value) {
-      // Fast path for obvious cases
       if (value === null || value === undefined || value === '') return true;
       if (typeof value !== 'string') return !value;
       
-      // Cache check
       if (emptyCache.has(value)) return emptyCache.get(value);
       
       const result = value.trim() === '';
       
-      // Manage cache size  
       if (emptyCache.size >= CACHE_LIMIT) {
         const firstKey = emptyCache.keys().next().value;
         emptyCache.delete(firstKey);
@@ -4172,7 +4119,6 @@ const ValidationSSoT = {
     };
   })(),
 
-  // Ultra-optimized numeric normalization
   normalizeNumeric: (() => {
     const normalizeCache = new Map();
     const validPattern = /^\d*\.?\d*$/;
@@ -4185,30 +4131,25 @@ const ValidationSSoT = {
       let v = originalValue.trim();
       let hasChanges = false;
 
-      // Batch replacements for better performance
       const beforeClean = v;
       v = v.replace(/[^\d.,]/g, '').replace(/,/g, '.');
       hasChanges = v !== beforeClean;
 
-      // Handle multiple dots
       const dotIndex = v.indexOf('.');
       if (dotIndex !== -1 && v.indexOf('.', dotIndex + 1) !== -1) {
         v = v.slice(0, dotIndex + 1) + v.slice(dotIndex + 1).replace(/\./g, '');
         hasChanges = true;
       }
 
-      // Clean leading zeros and trailing dots
       const beforeZeros = v;
       v = v.replace(/^0+(?=\d)/, '').replace(/\.$/, '');
       if (v !== beforeZeros) hasChanges = true;
 
-      // Fix leading dot
       if (v.startsWith('.')) {
         v = '0' + v;
         hasChanges = true;
       }
 
-      // Validate pattern
       if (!validPattern.test(v) && v !== '') {
         v = '';
         hasChanges = true;
@@ -4216,7 +4157,6 @@ const ValidationSSoT = {
 
       const result = { value: v, hasChanges };
       
-      // Cache with size limit
       if (normalizeCache.size < 100) {
         normalizeCache.set(originalValue, result);
       }
@@ -4225,7 +4165,6 @@ const ValidationSSoT = {
     };
   })(),
 
-  // Optimized numeric validation
   validateNumericInput(value, element) {
     if (value === '' || isNaN(+value) || !isFinite(+value)) {
       this.applyClassState(element, false, 'immediate');
@@ -4252,7 +4191,6 @@ const ValidationSSoT = {
     return { isValid: true };
   },
 
-  // Enhanced validation with DOM sync control
   validateAndNormalizeInput(element) {
     const originalValue = element.value;
     if (!originalValue) {
@@ -4264,16 +4202,12 @@ const ValidationSSoT = {
 
     const normalized = this.normalizeNumeric(originalValue);
     
-    // Only update DOM if normalization made actual changes
-    // Keep original requirement but optimize DOM writes
     if (normalized.hasChanges) {
-      // Use original value as per requirement, but we could optimize this
       element.value = element.value;
     }
 
     const validationResult = this.validateNumericInput(normalized.value, element);
 
-    // Apply class state only for non-PEN/DMG fields
     if (!this.isPenOrDmgField(element)) {
       this.applyClassState(element, validationResult.isValid, 'immediate');
     }
@@ -4281,7 +4215,7 @@ const ValidationSSoT = {
     return validationResult;
   },
 
-  // FIXED: validateRequiredFieldsWithClasses - PEN/DMG now required
+  // Sequential field validation with consistent DOM order
   validateRequiredFieldsWithClasses() {
     const fields = this.getFieldValidationRules();
 
@@ -4290,30 +4224,68 @@ const ValidationSSoT = {
 
       const fieldValue = field.el.value;
       const isEmpty = this.isEmpty(fieldValue);
-      const isPenOrDmg = this.isPenOrDmgField(field.el);
 
-      // Check if field is empty - PEN/DMG now also required
-      if (isEmpty) {
-        if (!isPenOrDmg) {
+      if (field.type === 'dropdown') {
+        if (isEmpty) {
           this.applyClassState(field.el, false, 'immediate');
+          return { isValid: false, field, element: field.el };
         }
-        // PEN/DMG now also fail validation if empty (but no class applied)
-        return { isValid: false, field, skipClass: isPenOrDmg };
-      }
-
-      // Field has value - validate it for numeric fields
-      if (!isPenOrDmg && field.el.type === 'number' || field.el.classList.contains('numeric-input')) {
+        this.applyClassState(field.el, true, 'immediate');
+        
+      } else if (field.type === 'numeric') {
+        if (isEmpty) {
+          this.applyClassState(field.el, false, 'immediate');
+          return { isValid: false, field, element: field.el };
+        }
         const validationResult = this.validateNumericInput(fieldValue, field.el);
         if (!validationResult.isValid) {
-          return { isValid: false, field, skipClass: false };
+          return { isValid: false, field, element: field.el };
+        }
+        
+      } else if (field.type === 'stats') {
+        if (isEmpty) {
+          return { isValid: false, field, element: field.el };
+        }
+        const statsResult = this.validateSingleStatsField(field.el);
+        if (!statsResult.isValid) {
+          return { isValid: false, field, element: field.el };
         }
       }
     }
 
-    return { isValid: true, field: null, skipClass: false };
+    return { isValid: true, field: null, element: null };
   },
 
-  // Ultra-optimized stats validation with independent paths + max check
+  // Single stats field validation for required validation integration
+  validateSingleStatsField(element) {
+    if (!element) return { isValid: false };
+
+    const value = +(element.value) || 0;
+    
+    if (this.helpers.isInvalidNumber(element.value)) {
+      return { isValid: false };
+    }
+
+    if (this.helpers.exceedsMaxValue(element, value)) {
+      return { isValid: false };
+    }
+
+    const { thresholds } = this.helpers.getValidationContext();
+    
+    if (element.id === 'pen') {
+      const defVal = thresholds.defVal;
+      const isPenValid = value > 0 && (value - defVal) > 0;
+      return { isValid: isPenValid };
+    } else if (element.id === 'dmg') {
+      const dmgredVal = thresholds.dmgredVal;
+      const isDmgValid = value > 0 && (value - dmgredVal) > 0;
+      return { isValid: isDmgValid };
+    }
+
+    return { isValid: false };
+  },
+
+  // Independent stats validation with realtime class management
   validateStatsWithClasses(state, focusedElement = null) {
     try {
       const { thresholds } = this.helpers.getValidationContext();
@@ -4322,7 +4294,7 @@ const ValidationSSoT = {
       let penResult = { isValid: true, element: null };
       let dmgResult = { isValid: true, element: null };
 
-      // ===== INDEPENDENT PEN VALIDATION =====
+      // Independent PEN validation
       if (state.atkType.toLowerCase() === 'pen' && DOM_ELEMENTS.pen) {
         const penVal = +(DOM_ELEMENTS.pen.value) || 0;
 
@@ -4330,7 +4302,6 @@ const ValidationSSoT = {
           this.applyStatsClassState(DOM_ELEMENTS.pen, false);
           penResult = { isValid: false, element: DOM_ELEMENTS.pen };
         } 
-        // Check max value first - highest priority
         else if (this.helpers.exceedsMaxValue(DOM_ELEMENTS.pen, penVal)) {
           this.applyStatsClassState(DOM_ELEMENTS.pen, false);
           penResult = { isValid: false, element: DOM_ELEMENTS.pen };
@@ -4344,7 +4315,7 @@ const ValidationSSoT = {
         }
       }
 
-      // ===== INDEPENDENT DMG VALIDATION =====
+      // Independent DMG validation
       if (DOM_ELEMENTS.dmg) {
         const dmgVal = +(DOM_ELEMENTS.dmg.value) || 0;
 
@@ -4352,7 +4323,6 @@ const ValidationSSoT = {
           this.applyStatsClassState(DOM_ELEMENTS.dmg, false);
           dmgResult = { isValid: false, element: DOM_ELEMENTS.dmg };
         }
-        // Check max value first - highest priority  
         else if (this.helpers.exceedsMaxValue(DOM_ELEMENTS.dmg, dmgVal)) {
           this.applyStatsClassState(DOM_ELEMENTS.dmg, false);
           dmgResult = { isValid: false, element: DOM_ELEMENTS.dmg };
@@ -4366,7 +4336,7 @@ const ValidationSSoT = {
         }
       }
 
-      // ===== CONTEXT-BASED RETURN - INDEPENDENT PATHS =====
+      // Context-based return priority
       if (focusedElement === DOM_ELEMENTS.pen && !penResult.isValid) {
         return penResult;
       }
@@ -4375,7 +4345,6 @@ const ValidationSSoT = {
         return dmgResult;
       }
 
-      // Priority: PEN > DMG
       return !penResult.isValid ? penResult : 
              !dmgResult.isValid ? dmgResult : 
              { isValid: true, element: null };
@@ -4385,27 +4354,27 @@ const ValidationSSoT = {
     }
   }
 };
+
 function normalizeNumericInput(el, pastedValue) {
   if (!el) return;
 
   const value = (pastedValue ?? el.value).trim();
   const norm = ValidationSSoT.normalizeNumeric(value);
 
-  // PEN/DMG fields: Direct normalization only
   if (ValidationSSoT.isPenOrDmgField(el)) {
     el.value = norm.value;
     return;
   }
 
-  // Other fields: Validate normalized value and update element
   const validationResult = ValidationSSoT.validateNumericInput(norm.value, el);
   el.value = norm.value;
 }
+
 function validateRequiredFields() {
   const result = ValidationSSoT.validateRequiredFieldsWithClasses();
 
-  if (!result.isValid && result.field && result.field.el) {
-    scrollAndFocusElement(result.field.el);
+  if (!result.isValid && result.element) {
+    scrollAndFocusElement(result.element);
     return false;
   }
 
@@ -4413,16 +4382,12 @@ function validateRequiredFields() {
 }
 
 function validateStatsVsTarget(state, focusedElement = null) {
-  // Execute validation and get the actual result
   const result = ValidationSSoT.validateStatsWithClasses(state, focusedElement);
   
-  // Additional realtime threshold check on stats change
   if (!ValidationSSoT.statsValidationState.isStandby) {
     ValidationSSoT.checkStatsAfterThresholdChange();
   }
   
-  // FIXED: Return the actual validation result, not always true
-  // If validation failed, scroll and focus the invalid element
   if (!result.isValid && result.element) {
     scrollAndFocusElement(result.element);
     return false;
