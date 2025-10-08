@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
-  66% Claude, 
-  33% ChatGPT, 
+  93% Claude, 
+  6% ChatGPT, 
   1% me just asking AI to write this.
   -->
 <html lang="en">
@@ -14,90 +14,6 @@
     <meta name="msapplication-TileColor" content="#36393f">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <script>
-      (function() {
-        'use strict';
-        
-        // Safe property getter with dot notation
-        if (typeof window.safeGet !== 'function') {
-          window.safeGet = function(obj, path) {
-            if (!path || typeof path !== 'string') return undefined;
-            try {
-              return path.split('.').reduce(function(acc, key) {
-                return (acc && acc[key] !== undefined) ? acc[key] : undefined;
-              }, obj);
-            } catch (e) {
-              return undefined;
-            }
-          };
-        }
-        
-        // Touch handler initialization
-        const initTouchHandler = function() {
-          const container = document.getElementById("altsim");
-          if (!container) return;
-          
-          let lastTouchTime = 0;
-          
-          // Better performance on iOS with passive listeners
-          container.addEventListener("touchstart", function() {
-            lastTouchTime = Date.now();
-          }, { passive: true, capture: true });
-          
-          container.addEventListener("click", function(e) {
-            if (Date.now() - lastTouchTime < 300) {
-              const target = e.target;
-              
-              // Only block clicks on locked input wrappers - fully automatic
-              if (isInsideLockedInputWrap(target)) {
-                e.stopImmediatePropagation();
-                e.preventDefault();
-              }
-            }
-          }, { capture: true });
-        };
-        
-        // Check if element is inside a locked input wrapper
-        const isInsideLockedInputWrap = function(element) {
-          let current = element;
-          while (current && current !== document.body) {
-            if (current.classList &&
-              current.classList.contains('input-wrap') &&
-              current.classList.contains('locked')) {
-              return true;
-            }
-            current = current.parentNode;
-          }
-          return false;
-        };
-        
-        // Snackbar position manager for responsive design
-        const initSnackbarManager = function() {
-          const reposition = function() {
-            const sb = document.querySelector('.snackbar.show');
-            if (sb) {
-              if (!sb.hasAttribute('data-compat-bottom')) {
-                const cur = sb.style.bottom;
-                if (cur) sb.setAttribute('data-compat-bottom', cur);
-              }
-              sb.style.bottom = sb.getAttribute('data-compat-bottom') || '20px';
-            }
-          };
-          window.addEventListener('resize', reposition, { passive: true });
-        };
-        
-        // Initialize when DOM is ready
-        if (document.readyState === 'loading') {
-          document.addEventListener("DOMContentLoaded", function() {
-            initTouchHandler();
-            initSnackbarManager();
-          });
-        } else {
-          initTouchHandler();
-          initSnackbarManager();
-        }
-      })();
-    </script>
     <link rel="stylesheet" href="/gabhut/css/sim.min.css">
   </head>
   <body>
@@ -117,7 +33,7 @@
             Ragnarok X University
           </a>
         </p>
-        <p><i>v1.1.1</i> [<button id="openLog" type="button">Changelog</button>]</p>
+        <p><i>v1.1.3</i> [<button id="openLog" type="button">Changelog</button>]</p>
       </div>
       <details id="howto">
         <summary>
@@ -194,7 +110,7 @@
                 <li>
                   <strong>Spear of Eternity</strong> and <strong>Reaper Scythe</strong>.
                   <ul>
-                    <li><em>Each has 10s duration / 20s cooldown with <strong>+84% or +28%</strong> bonus. This tool normalize <strong>to 42</strong> and <strong>14</strong> for <strong>100% uptime</strong>(?)</em></li>
+                    <li><em>Each has 10s duration / 20s cooldown with <strong>+84% or +28%</strong> bonus. This tool normalize <strong>to 42</strong> and <strong>14</strong> for <strong>100% uptime</strong>(?) in flash bonus contribution. But still using original value for calculation.</em></li>
                   </ul>
                 </li>
               </ul>
@@ -249,7 +165,10 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="targetDefSelect"><span id="tDefLabel">MVP/MINI</span></label>
+          <label for="targetDefSelect">
+          <span id="tDefLabel">MVP/MINI</span>
+          <button type="button" id="mvpminiTips" class="tooltip-button"></button>
+          </label>
           <div class="input-wrap select-wrap">
             <select id="targetDefSelect"></select>
           </div>
@@ -262,12 +181,9 @@
         </div>
         <div class="form-group">
           <label for="targetRaceSelect">
-            <span id="tRaceLabel">Target Race</span>
-            <button type="button" id="targetRaceTips" class="tooltip-button">
-              <svg xmlns="http://www.w3.org/2000/svg" height="70" fill="#dcddde" viewBox="0 -960 960 960" width="70">
-                <path d="M478-240q21 0 35.5-14.5T528-290q0-21-14.5-35.5T478-340q-21 0-35.5 14.5T428-290q0 21 14.5 35.5T478-240Zm-36-154h74q0-33 7.5-52t42.5-52q26-26 41-49.5t15-56.5q0-56-41-86t-97-30q-57 0-92.5 30T342-618l66 26q5-18 22.5-39t53.5-21q32 0 48 17.5t16 38.5q0 20-12 37.5T506-526q-44 39-54 59t-10 73Zm38 314q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
-              </svg>
-            </button>
+          <span id="tRaceLabel">Target Race</span>
+          <button type="button" id="targetRaceTips" class="tooltip-button">
+          </button>
           </label>
           <div class="input-wrap select-wrap">
             <select id="targetRaceSelect"></select>
@@ -275,12 +191,9 @@
         </div>
         <div class="form-group">
           <label for="targetElementSelect">
-            <span id="tAttrLabel">Target Attribute</span>
-            <button type="button" id="targetAttrTips" class="tooltip-button">
-              <svg xmlns="http://www.w3.org/2000/svg" height="70" fill="#dcddde" viewBox="0 -960 960 960" width="70">
-                <path d="M478-240q21 0 35.5-14.5T528-290q0-21-14.5-35.5T478-340q-21 0-35.5 14.5T428-290q0 21 14.5 35.5T478-240Zm-36-154h74q0-33 7.5-52t42.5-52q26-26 41-49.5t15-56.5q0-56-41-86t-97-30q-57 0-92.5 30T342-618l66 26q5-18 22.5-39t53.5-21q32 0 48 17.5t16 38.5q0 20-12 37.5T506-526q-44 39-54 59t-10 73Zm38 314q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
-              </svg>
-            </button>
+          <span id="tAttrLabel">Target Attribute</span>
+          <button type="button" id="targetAttrTips" class="tooltip-button">
+          </button>
           </label>
           <div class="input-wrap select-wrap">
             <select id="targetElementSelect"></select>
@@ -293,7 +206,8 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="blueSet"><span id="blueSetLabel">Blue Set</span></label>
+          <label for="blueSet"><span id="blueSetLabel">Blue Set</span><button type="button" id="blueTips" class="tooltip-button">
+          </button></label>
           <div class="input-wrap select-wrap">
             <select id="blueSet"></select>
           </div>
@@ -306,6 +220,13 @@
         </div>
       </div>
       <div class="form-row">
+        <div class="form-group hidden">
+          <label for="atkValue"><span id="atkLabel">P/M Attack</span>
+          </label>
+          <div class="input-wrap">
+            <input disabled id="attack" type="number" min="1" max="8888888" placeholder="input p/m attack..." />
+          </div>
+        </div>
         <div class="form-group pen-group">
           <label for="pen"><span id="penLabel">Final P M PEN %</span></label>
           <div class="input-wrap">
@@ -338,12 +259,9 @@
         </div>
         <div class="form-group">
           <label for="race">
-            <span id="raceLabel">Race</span>
-            <button type="button" id="dmgRaceTips" class="tooltip-button">
-              <svg xmlns="http://www.w3.org/2000/svg" height="70" fill="#dcddde" viewBox="0 -960 960 960" width="70">
-                <path d="M478-240q21 0 35.5-14.5T528-290q0-21-14.5-35.5T478-340q-21 0-35.5 14.5T428-290q0 21 14.5 35.5T478-240Zm-36-154h74q0-33 7.5-52t42.5-52q26-26 41-49.5t15-56.5q0-56-41-86t-97-30q-57 0-92.5 30T342-618l66 26q5-18 22.5-39t53.5-21q32 0 48 17.5t16 38.5q0 20-12 37.5T506-526q-44 39-54 59t-10 73Zm38 314q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
-              </svg>
-            </button>
+          <span id="raceLabel">Race</span>
+          <button type="button" id="dmgRaceTips" class="tooltip-button">
+          </button>
           </label>
           <div class="input-wrap">
             <input id="race" type="number" min="0" max="888" disabled />
@@ -351,12 +269,9 @@
         </div>
         <div class="form-group">
           <label for="attr">
-            <span id="attrLabel">DMG to Attribute</span>
-            <button type="button" id="dmgAttrTips" class="tooltip-button">
-              <svg xmlns="http://www.w3.org/2000/svg" height="70" fill="#dcddde" viewBox="0 -960 960 960" width="70">
-                <path d="M478-240q21 0 35.5-14.5T528-290q0-21-14.5-35.5T478-340q-21 0-35.5 14.5T428-290q0 21 14.5 35.5T478-240Zm-36-154h74q0-33 7.5-52t42.5-52q26-26 41-49.5t15-56.5q0-56-41-86t-97-30q-57 0-92.5 30T342-618l66 26q5-18 22.5-39t53.5-21q32 0 48 17.5t16 38.5q0 20-12 37.5T506-526q-44 39-54 59t-10 73Zm38 314q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
-              </svg>
-            </button>
+          <span id="attrLabel">DMG to Attribute</span>
+          <button type="button" id="dmgAttrTips" class="tooltip-button">
+          </button>
           </label>
           <div class="input-wrap">
             <input id="attr" type="number" min="0" max="888" disabled />
@@ -364,25 +279,23 @@
         </div>
         <div class="form-group">
           <label for="dmgStack">
-            <span id="dmgStackLabel">Extra: Final DMG Bonus</span>
-            <button type="button" id="dmgStackTips" class="dmgstack-tooltip">
-              <svg xmlns="http://www.w3.org/2000/svg" height="70" fill="#dcddde" viewBox="0 -960 960 960" width="70">
-                <path d="M478-240q21 0 35.5-14.5T528-290q0-21-14.5-35.5T478-340q-21 0-35.5 14.5T428-290q0 21 14.5 35.5T478-240Zm-36-154h74q0-33 7.5-52t42.5-52q26-26 41-49.5t15-56.5q0-56-41-86t-97-30q-57 0-92.5 30T342-618l66 26q5-18 22.5-39t53.5-21q32 0 48 17.5t16 38.5q0 20-12 37.5T506-526q-44 39-54 59t-10 73Zm38 314q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
-              </svg>
-            </button>
+          <span id="dmgStackLabel">Extra: Final DMG Bonus</span>
+          <button type="button" id="dmgStackTips" class="tooltip-button">
+          </button>
           </label>
           <div class="input-wrap">
             <input id="dmgStack" type="number" min="0" max="888" placeholder="input final dmg bonus%..." />
           </div>
         </div>
       </div>
-      <div class="btn-row" id="btn-row  ">
+      <div class="btn-row" id="btn-row">
         <button id="submitBtn" type="button">Calculate</button>
         <button id="testSpear" type="button" disabled>Simulate Spear</button>
         <button id="testReaper" type="button" disabled>Simulate Reaper</button>
         <button class="reset-recommendations reset-rek-btn" id="resetRekomenBtn" type="button" disabled>Refresh Recommendations</button>
         <button id="resetAllBtn" type="button" disabled>Reset All</button>
       </div>
+      <div id="stickyStart"></div>
       <div id="hasil">
         Input stats to see the result...
       </div>
@@ -410,9 +323,28 @@
           <h2>Changelog</h2>
         </div>
         <div class="version">
-          <h3>[Unreleased]</h3>
+          <h3>[1.1.3] - 7 Oct, 2025</h3>
           <ul>
-            <li>MINIGAME!</li>
+            <li>
+              <span class="sub-cats">Added</span>
+              <ul>
+                <li>Lightbox Image Gallery</li>
+              </ul>
+            </li>
+            <li>
+              <span class="sub-cats">Update</span>
+              <ul>
+                <li>Divinity flash use original value for calculation</li>
+                <li>flash bonus contribution (normalize to 100% uptime)</li>
+              </ul>
+            </li>
+            <li>
+              <span class="sub-cats">Improved</span>
+              <ul>
+                <li>Breakdown with tooltip</li>
+                <li>performance</li>
+              </ul>
+            </li>
           </ul>
         </div>
         <div class="version">
@@ -498,21 +430,6 @@
                   <ul>
                     <li>Input validation tips</li>
                     <li>each button has its own feedback</li>
-                  </ul>
-                </li>
-                <li>
-                  Balancing recommendations
-                  <ul>
-                    <li></li>
-                    <li></li>
-                  </ul>
-                </li>
-                <li></li>
-                <li>
-                  Swap Boss
-                  <ul>
-                    <li>stats editable after swap</li>
-                    <li>can skip race / attr field (set to 0)</li>
                   </ul>
                 </li>
               </ul>
@@ -633,6 +550,32 @@
       </div>
     </div>
     <div aria-live="polite" class="snackbar" id="snackbar" role="status"></div>
+    <div class="img-lightbox-overlay" id="img-lightbox-overlay">
+      <span class="img-lightbox-close">&times;</span>
+      <div class="img-lightbox-counter">1 / 1</div>
+      <button class="img-lightbox-nav img-lightbox-prev">‹</button>
+      <button class="img-lightbox-nav img-lightbox-next">›</button>
+      <div class="img-lightbox-inner">
+        <div class="img-lightbox-loader">Loading...</div>
+        <img class="img-lightbox-image" src="" alt="">
+      </div>
+      <div class="img-lightbox-caption"></div>
+    </div>
+    <div style="display: none;">
+      <div data-lightbox-item="my-gallery" 
+        data-lightbox-image="https://masihterjaga.github.io/gabhut/img/Calc_vs_Ingame-0.jpg" data-caption=""></div>
+      <div data-lightbox-item="my-gallery" 
+        data-lightbox-image="https://masihterjaga.github.io/gabhut/img/Calc_vs_Ingame-1.jpg" data-caption="no buff active (P ATTK 325002)"></div>
+      <div data-lightbox-item="my-gallery" 
+        data-lightbox-image="https://masihterjaga.github.io/gabhut/img/Calc_vs_Ingame-2.jpg" 
+        data-caption="5 Stack Vesper (P ATTK 352793)"></div>
+      <div data-lightbox-item="my-gallery" 
+        data-lightbox-image="https://masihterjaga.github.io/gabhut/img/Calc_vs_Ingame-3.jpg" 
+        data-caption="Spear Flash Triggered (P ATTK 325002)"></div>
+      <div data-lightbox-item="my-gallery" 
+        data-lightbox-image="https://masihterjaga.github.io/gabhut/img/Calc_vs_Ingame-4.jpg" 
+        data-caption="Spear + 5 Stack Vesper (P ATTK 352793)"></div>
+    </div>
     <script src="/gabhut/js/sim.min.js"></script>
   </body>
 </html>
